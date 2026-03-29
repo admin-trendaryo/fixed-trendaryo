@@ -139,6 +139,17 @@
         <div class="footer-top">
             <div class="footer-brand-col">
                 <span class="footer-logo-text">TRENDARYO</span>
+                <span class="footer-company-name">TRENDARYO LLC</span>
+                <span class="footer-owner">Owner: Bashir Khan Momand</span>
+                <div class="footer-address">
+                    House 124, Way 122, Al Maabela<br>
+                    Wilayat Al Seeb, Muscat Governorate<br>
+                    OMAN
+                </div>
+                <div class="footer-contact">
+                    <strong>Email:</strong> <a href="mailto:admin@trendaryo.com">admin@trendaryo.com</a><br>
+                    <strong>Phone:</strong> <a href="tel:+13075334512">+1 (307) 533-4512</a>
+                </div>
                 <p>Your premium destination for electronics, fashion, and accessories. Experience the future of shopping with our cutting-edge 3D platform.</p>
                 <div class="footer-social">
                     <a href="https://www.facebook.com/trendaryo" target="_blank" rel="noopener noreferrer" aria-label="Facebook" title="Facebook">📘</a>
@@ -199,7 +210,7 @@
         </div>
 
         <div class="footer-bottom">
-            <p>&copy; ${new Date().getFullYear()} Trendaryo. All rights reserved. Built with ❤ for premium shoppers.</p>
+            <p>&copy; ${new Date().getFullYear()} TRENDARYO LLC. All rights reserved. Owner: Bashir Khan Momand</p>
             <div class="footer-bottom-links">
                 <a href="privacy.html">Privacy</a>
                 <a href="terms.html">Terms</a>

@@ -325,8 +325,49 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     display: block;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
     letter-spacing: 2px;
+}
+
+.footer-brand-col .footer-company-name {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--accent);
+    display: block;
+    margin-bottom: 0.3rem;
+    letter-spacing: 1px;
+}
+
+.footer-brand-col .footer-owner {
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.7);
+    display: block;
+    margin-bottom: 1rem;
+}
+
+.footer-brand-col .footer-address {
+    font-size: 0.88rem;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.6;
+    margin-bottom: 0.8rem;
+}
+
+.footer-brand-col .footer-contact {
+    font-size: 0.88rem;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+.footer-brand-col .footer-contact a {
+    color: var(--accent);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.footer-brand-col .footer-contact a:hover {
+    color: var(--accent-2);
 }
 
 .footer-brand-col p {
