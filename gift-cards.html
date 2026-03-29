@@ -45,7 +45,7 @@
         .store-brand { display: flex; align-items: center; gap: 0.75rem; min-width: 180px; }
         .store-logo { font-family: 'Orbitron', sans-serif; font-size: 1.6rem; font-weight: 900; background: linear-gradient(135deg, var(--accent), var(--accent-2)); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-decoration: none; white-space: nowrap; }
 
-        .page-offset { padding-top: 100px; }
+        .page-offset { padding-top: 180px; }
         
         .gift-cards-container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
         
@@ -54,29 +54,29 @@
         .page-header p { color: rgba(255,255,255,0.8); font-size: 1.2rem; line-height: 1.6; }
         
         .tabs-container { display: flex; justify-content: center; margin-bottom: 3rem; }
-        .tab-button { padding: 1rem 2rem; background: #0a0a2a; border: 2px solid var(--glass-border); border-radius: 12px; color: rgba(255,255,255,0.7); font-family: 'Orbitron', sans-serif; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; margin: 0 0.5rem; }
-        .tab-button.active { background: var(--accent); color: #000; border-color: var(--accent); }
-        .tab-button:hover:not(.active) { border-color: var(--accent); color: var(--accent); }
+        .tab-button { padding: 1rem 2rem; background: var(--glass); border: 1px solid var(--glass-border); border-radius: 12px; color: rgba(255,255,255,0.85); font-family: 'Orbitron', sans-serif; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; margin: 0 0.5rem; }
+        .tab-button.active { background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #000; border-color: transparent; box-shadow: 0 5px 20px rgba(0,240,255,0.3); }
+        .tab-button:hover:not(.active) { border-color: var(--accent); color: var(--accent); background: rgba(0,240,255,0.05); }
         
         .tab-content { display: none; }
         .tab-content.active { display: block; }
         
         .gift-cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-bottom: 3rem; }
         
-        .gift-card { background: linear-gradient(135deg, var(--accent), var(--accent-2)); border-radius: 20px; padding: 2rem; text-align: center; position: relative; overflow: hidden; transition: all 0.3s ease; cursor: pointer; }
-        .gift-card::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%); animation: shimmer 3s infinite; }
-        .gift-card:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 20px 40px rgba(0,240,255,0.3); }
+        .gift-card { background: var(--glass); border: 1px solid var(--glass-border); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-radius: 20px; padding: 2rem; text-align: center; position: relative; overflow: hidden; transition: all 0.3s ease; cursor: pointer; }
+        .gift-card::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(0,240,255,0.05) 0%, transparent 70%); animation: shimmer 3s infinite; }
+        .gift-card:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 20px 40px rgba(0,240,255,0.3); border-color: var(--accent); }
         
         @keyframes shimmer {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
         
-        .gift-card-amount { font-family: 'Orbitron', sans-serif; font-size: 3rem; font-weight: 900; color: #fff; margin-bottom: 0.5rem; position: relative; z-index: 1; }
-        .gift-card-price { font-family: 'Orbitron', sans-serif; font-size: 1.5rem; font-weight: 700; color: #fff; margin-bottom: 1rem; position: relative; z-index: 1; }
-        .gift-card-description { color: rgba(255,255,255,0.9); font-size: 1rem; margin-bottom: 1.5rem; position: relative; z-index: 1; }
-        .buy-button { padding: 1rem 2rem; background: rgba(255,255,255,0.2); border: 2px solid #fff; border-radius: 12px; color: #fff; font-family: 'Orbitron', sans-serif; font-size: 1rem; font-weight: 700; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s ease; position: relative; z-index: 1; }
-        .buy-button:hover { background: #fff; color: var(--accent); transform: scale(1.05); }
+        .gift-card-amount { font-family: 'Orbitron', sans-serif; font-size: 3rem; font-weight: 900; background: linear-gradient(135deg, var(--accent), var(--accent-2)); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 0.5rem; position: relative; z-index: 1; }
+        .gift-card-price { font-family: 'Orbitron', sans-serif; font-size: 1.5rem; font-weight: 700; color: rgba(255,255,255,0.95); margin-bottom: 1rem; position: relative; z-index: 1; }
+        .gift-card-description { color: rgba(255,255,255,0.85); font-size: 1rem; margin-bottom: 1.5rem; position: relative; z-index: 1; }
+        .buy-button { padding: 1rem 2rem; background: var(--glass); border: 1px solid var(--glass-border); border-radius: 12px; color: rgba(255,255,255,0.95); font-family: 'Orbitron', sans-serif; font-size: 1rem; font-weight: 700; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s ease; position: relative; z-index: 1; }
+        .buy-button:hover { background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #000; transform: scale(1.05); box-shadow: 0 5px 20px rgba(0,240,255,0.5); border-color: transparent; }
         
         .redeem-section { max-width: 600px; margin: 0 auto; padding: 3rem; background: var(--glass); border: 1px solid var(--glass-border); border-radius: 20px; }
         .redeem-section h2 { font-family: 'Orbitron', sans-serif; font-size: 1.8rem; font-weight: 700; color: #fff; margin-bottom: 1.5rem; text-align: center; }

@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Manage your email preferences and notification settings at Trendaryo.">
+    <title>Email Preferences - Trendaryo</title>
+    <link rel="stylesheet" href="shared.css">
+    <link rel="stylesheet" href="responsive-universal.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --accent: #00f0ff;
+            --accent-2: #ff00aa;
+            --accent-3: #00ff88;
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Rajdhani', sans-serif; background: #0a0a2a; color: #fff; overflow-x: hidden; }
+        #three-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+
+        .page-offset { padding-top: 120px; }
+
+        .preferences-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .preferences-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .preferences-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .preferences-subtitle {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 1rem;
+        }
+
+        .preferences-card {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-icon {
+            font-size: 1.5rem;
+        }
+
+        .preference-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.2rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            border: 1px solid var(--glass-border);
+        }
+
+        .preference-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .preference-info {
+            flex: 1;
+        }
+
+        .preference-label {
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+            color: #fff;
+        }
+
+        .preference-description {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 60px;
+            height: 34px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 999px;
+            cursor: pointer;
+            border: 1px solid var(--glass-border);
+            transition: all 0.3s ease;
+        }
+
+        .toggle-switch.active {
+            background: rgba(0, 255, 136, 0.2);
+            border-color: var(--accent-3);
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            width: 28px;
+            height: 28px;
+            background: #fff;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: left 0.3s ease;
+        }
+
+        .toggle-switch.active::after {
+            left: 30px;
+        }
+
+        .frequency-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .frequency-option {
+            padding: 1rem;
+            border-radius: 12px;
+            border: 2px solid var(--glass-border);
+            background: transparent;
+            color: rgba(255, 255, 255, 0.8);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-weight: 700;
+        }
+
+        .frequency-option:hover {
+            border-color: var(--accent);
+            background: rgba(0, 240, 255, 0.1);
+        }
+
+        .frequency-option.active {
+            border-color: var(--accent);
+            background: rgba(0, 240, 255, 0.2);
+            color: var(--accent);
+        }
+
+        .email-history {
+            margin-top: 1.5rem;
+        }
+
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            margin-bottom: 0.8rem;
+            border: 1px solid var(--glass-border);
+        }
+
+        .history-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .history-info {
+            flex: 1;
+        }
+
+        .history-type {
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 0.2rem;
+        }
+
+        .history-date {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+
+        .history-status {
+            padding: 0.4rem 0.8rem;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .status-sent {
+            background: rgba(0, 255, 136, 0.2);
+            color: var(--accent-3);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+        }
+
+        .status-pending {
+            background: rgba(255, 215, 0, 0.2);
+            color: #ffd700;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .status-failed {
+            background: rgba(255, 107, 107, 0.2);
+            color: #ff6b6b;
+            border: 1px solid rgba(255, 107, 107, 0.3);
+        }
+
+        .actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-action {
+            padding: 0.9rem 1.8rem;
+            border-radius: 12px;
+            border: none;
+            background: linear-gradient(135deg, var(--accent), var(--accent-3));
+            color: #000;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.3);
+        }
+
+        .btn-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 40px rgba(0, 240, 255, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid var(--glass-border);
+            color: rgba(255, 255, 255, 0.8);
+            box-shadow: none;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent);
+            background: rgba(0, 240, 255, 0.1);
+        }
+
+        .btn-danger {
+            background: rgba(255, 107, 107, 0.2);
+            border: 1px solid rgba(255, 107, 107, 0.3);
+            color: #ff6b6b;
+            box-shadow: none;
+        }
+
+        .btn-danger:hover {
+            background: rgba(255, 107, 107, 0.3);
+            border-color: #ff6b6b;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            display: none;
+            font-size: 0.9rem;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        .alert-success {
+            background: rgba(0, 255, 136, 0.15);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            color: var(--accent-3);
+        }
+
+        .alert-error {
+            background: rgba(255, 107, 107, 0.15);
+            border: 1px solid rgba(255, 107, 107, 0.3);
+            color: #ff6b6b;
+        }
+
+        @media (max-width: 768px) {
+            .preference-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+
+            .btn-action {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="three-canvas"></canvas>
+
+    <div class="page-offset">
+        <div class="preferences-container">
+            <div class="preferences-header">
+                <h1 class="preferences-title">📧 Email Preferences</h1>
+                <p class="preferences-subtitle">Manage your notification settings and email subscriptions</p>
+            </div>
+
+            <div id="alertBox" class="alert"></div>
+
+            <!-- Notification Preferences -->
+            <div class="preferences-card">
+                <div class="section-title">
+                    <span class="section-icon">🔔</span>
+                    Notification Preferences
+                </div>
+
+                <div class="preference-item">
+                    <div class="preference-info">
+                        <div class="preference-label">Order Updates</div>
+                        <div class="preference-description">Receive emails about order confirmations, shipping, and delivery</div>
+                    </div>
+                    <div class="toggle-switch active" id="orderUpdates" onclick="togglePreference(this, 'orderUpdates')"></div>
+                </div>
+
+                <div class="preference-item">
+                    <div class="preference-info">
+                        <div class="preference-label">Promotional Offers</div>
+                        <div class="preference-description">Get notified about special deals, discounts, and exclusive offers</div>
+                    </div>
+                    <div class="toggle-switch active" id="promotions" onclick="togglePreference(this, 'promotions')"></div>
+                </div>
+
+                <div class="preference-item">
+                    <div class="preference-info">
+                        <div class="preference-label">Newsletter</div>
+                        <div class="preference-description">Receive our weekly newsletter with new products and tips</div>
+                    </div>
+                    <div class="toggle-switch active" id="newsletter" onclick="togglePreference(this, 'newsletter')"></div>
+                </div>
+
+                <div class="preference-item">
+                    <div class="preference-info">
+                        <div class="preference-label">Review Requests</div>
+                        <div class="preference-description">Get asked to review products you've purchased</div>
+                    </div>
+                    <div class="toggle-switch active" id="reviews" onclick="togglePreference(this, 'reviews')"></div>
+                </div>
+            </div>
+
+            <!-- Email Frequency -->
+            <div class="preferences-card">
+                <div class="section-title">
+                    <span class="section-icon">⏰</span>
+                    Email Frequency
+                </div>
+
+                <p style="color: rgba(255,255,255,0.7); margin-bottom: 1rem;">How often would you like to receive promotional emails?</p>
+
+                <div class="frequency-selector">
+                    <button class="frequency-option" onclick="setFrequency('daily')">📅 Daily</button>
+                    <button class="frequency-option active" onclick="setFrequency('weekly')">📆 Weekly</button>
+                    <button class="frequency-option" onclick="setFrequency('monthly')">📊 Monthly</button>
+                    <button class="frequency-option" onclick="setFrequency('never')">🚫 Never</button>
+                </div>
+            </div>
+
+            <!-- Email History -->
+            <div class="preferences-card">
+                <div class="section-title">
+                    <span class="section-icon">📬</span>
+                    Recent Emails
+                </div>
+
+                <div id="emailHistory" class="email-history">
+                    <p style="color: rgba(255,255,255,0.6); text-align: center; padding: 2rem;">Loading email history...</p>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="actions">
+                <button class="btn-action" onclick="savePreferences()">💾 Save Preferences</button>
+                <button class="btn-action btn-secondary" onclick="window.location.href='account.html'">👤 Back to Account</button>
+                <button class="btn-action btn-danger" onclick="unsubscribeAll()">🚫 Unsubscribe All</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="auth-manager.js"></script>
+    <script src="email-manager.js"></script>
+    <script src="bg-optimized.js"></script>
+    <script>
+        const alertBox = document.getElementById('alertBox');
+        let preferences = {
+            orderUpdates: true,
+            promotions: true,
+            newsletter: true,
+            reviews: true,
+            frequency: 'weekly'
+        };
+
+        function showAlert(message, type = 'error') {
+            alertBox.textContent = message;
+            alertBox.className = `alert show alert-${type}`;
+            setTimeout(() => {
+                alertBox.classList.remove('show');
+            }, 5000);
+        }
+
+        function togglePreference(element, key) {
+            element.classList.toggle('active');
+            preferences[key] = element.classList.contains('active');
+        }
+
+        function setFrequency(frequency) {
+            document.querySelectorAll('.frequency-option').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            preferences.frequency = frequency;
+        }
+
+        async function savePreferences() {
+            const user = window.AuthManager.getUser();
+            if (!user) {
+                showAlert('Please login to save preferences', 'error');
+                return;
+            }
+
+            const result = await window.EmailManager.updateEmailPreferences(user.email, preferences);
+            if (result.success) {
+                showAlert('✅ Preferences saved successfully', 'success');
+            } else {
+                showAlert(`❌ ${result.error}`, 'error');
+            }
+        }
+
+        async function loadEmailHistory() {
+            const result = await window.EmailManager.getEmailHistory(10, 0);
+            const historyContainer = document.getElementById('emailHistory');
+
+            if (result.success && result.data.length > 0) {
+                historyContainer.innerHTML = result.data.map(email => `
+                    <div class="history-item">
+                        <div class="history-info">
+                            <div class="history-type">${email.template.replace(/_/g, ' ')}</div>
+                            <div class="history-date">${new Date(email.sentAt).toLocaleString()}</div>
+                        </div>
+                        <span class="history-status status-${email.status}">${email.status}</span>
+                    </div>
+                `).join('');
+            } else {
+                historyContainer.innerHTML = `
+                    <p style="color: rgba(255,255,255,0.6); text-align: center; padding: 2rem;">No emails sent yet</p>
+                `;
+            }
+        }
+
+        async function loadPreferences() {
+            const user = window.AuthManager.getUser();
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const result = await window.EmailManager.getEmailPreferences(user.email);
+            if (result.success) {
+                preferences = result.data;
+                updateUI();
+            }
+
+            loadEmailHistory();
+        }
+
+        function updateUI() {
+            document.getElementById('orderUpdates').classList.toggle('active', preferences.orderUpdates);
+            document.getElementById('promotions').classList.toggle('active', preferences.promotions);
+            document.getElementById('newsletter').classList.toggle('active', preferences.newsletter);
+            document.getElementById('reviews').classList.toggle('active', preferences.reviews);
+
+            document.querySelectorAll('.frequency-option').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.textContent.toLowerCase().includes(preferences.frequency)) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+
+        async function unsubscribeAll() {
+            if (!confirm('Are you sure you want to unsubscribe from all emails? You can resubscribe anytime.')) {
+                return;
+            }
+
+            const user = window.AuthManager.getUser();
+            const result = await window.EmailManager.unsubscribeFromEmails(user.email);
+            if (result.success) {
+                showAlert('✅ You have been unsubscribed from all emails', 'success');
+                setTimeout(() => {
+                    window.location.href = 'account.html';
+                }, 2000);
+            } else {
+                showAlert(`❌ ${result.error}`, 'error');
+            }
+        }
+
+        window.addEventListener('load', loadPreferences);
+    </script>
+</body>
+</html>

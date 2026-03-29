@@ -27,7 +27,40 @@
     <link rel="stylesheet" href="responsive.css">
     <script src="performance.js"></script>
     <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">`n    <link rel="stylesheet" href="shared.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="shared.css">
+    <style>
+        :root { --accent: #00f0ff; --accent-2: #ff00aa; --accent-3: #00ff88; --glass: rgba(255,255,255,0.05); --glass-border: rgba(255,255,255,0.1); }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { padding-top: 150px; font-family: 'Rajdhani', sans-serif; background: #0a0a2a; color: #fff; overflow-x: hidden; min-height: 100vh; }
+        
+        .navbar { display: none; }
+        
+        .page-header { padding: 3rem 2rem; text-align: center; margin-bottom: 2rem; }
+        .page-header h1 { font-family: 'Orbitron', sans-serif; font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 900; background: linear-gradient(135deg, #fff, var(--accent)); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1rem; }
+        .page-header p { color: rgba(255,255,255,0.7); font-size: 1.1rem; }
+        
+        .container { max-width: 1000px; margin: 0 auto; padding: 0 2rem; }
+        
+        .content-section { padding: 2rem 0 4rem; }
+        .content-box { background: var(--glass); border: 1px solid var(--glass-border); border-radius: 20px; padding: 3rem; backdrop-filter: blur(10px); }
+        .content-box h2 { font-family: 'Orbitron', sans-serif; font-size: 1.8rem; color: var(--accent); margin-top: 2.5rem; margin-bottom: 1.2rem; }
+        .content-box h2:first-child { margin-top: 0; }
+        .content-box p { color: rgba(255,255,255,0.95); line-height: 1.9; font-size: 1.1rem; margin-bottom: 1.2rem; }
+        .content-box ul { padding-left: 2rem; margin-bottom: 1.5rem; }
+        .content-box li { color: rgba(255,255,255,0.95); line-height: 1.9; font-size: 1.1rem; margin-bottom: 0.8rem; }
+        .content-box strong { color: var(--accent); font-weight: 700; }
+        
+        .footer { display: none; }
+        
+        @media (max-width: 768px) {
+            body { padding-top: 120px; }
+            .content-box { padding: 2rem; }
+            .content-box h2 { font-size: 1.5rem; }
+            .content-box p, .content-box li { font-size: 1rem; }
+        }
+    </style>
 <script src="bg.js"></script>
 </head>
 <body>
@@ -114,7 +147,8 @@
             </div>
         </div>
     </footer>
-    <div id="footer-container"></div>`n    <script src="components.js"></script>`n    <div id="footer-container"></div>`n    <script src="components.js"></script>`n
+    <div id="footer-container"></div>
+    <script src="components.js"></script>
     <!-- Self-Healing System -->
 <script>
 window.onerror = function(msg, url, lineNo, columnNo, error) {

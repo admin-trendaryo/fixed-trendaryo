@@ -22,12 +22,23 @@
         #three-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
 
         .store-header { 
-            position: fixed; top: 0; left: 0; right: 0; z-index: 10000; 
-            background: transparent; border-bottom: 1px solid rgba(255,255,255,0.07); 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            right: 0; 
+            z-index: 10000; 
+            background: transparent;
+            border-bottom: 1px solid rgba(255,255,255,0.07); 
         }
-        .store-header-inner { 
-            max-width: 1200px; margin: 0 auto; padding: 0.8rem 1.25rem; 
-            display: flex; align-items: center; justify-content: space-between; gap: 1rem; 
+        
+        .store-header-inner {
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding: 0.8rem 1.25rem; 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            gap: 1rem;
         }
         .store-brand { display: flex; align-items: center; gap: 0.75rem; min-width: 180px; }
         .store-logo { 
@@ -57,7 +68,11 @@
             transform: translateY(-1px); border-color: rgba(0,240,255,0.6); 
             background: rgba(0,240,255,0.12); 
         }
-        .store-nav { max-width: 1200px; margin: 0 auto; padding: 0 1.25rem 0.85rem; }
+        .store-nav { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding: 0 1.25rem 0.85rem;
+        }
         .store-nav-list { 
             display: flex; align-items: center; justify-content: center; gap: 0.25rem; list-style: none; 
         }
@@ -98,7 +113,7 @@
             color: rgba(255,255,255,0.9); cursor: pointer; 
         }
 
-        .page-offset { padding-top: 120px; }
+        .page-offset { padding-top: 150px; }
 
         /* ═══ QUANTUM PARTICLE CART STYLES ═══ */
         .quantum-cart-hero {
@@ -345,87 +360,7 @@
     </style>
 </head>
 <body>
-    <script src="components.js"></script>
-    
     <canvas id="three-canvas"></canvas>
-
-    <header class="store-header" id="store-header">
-        <div class="store-header-inner">
-            <div class="store-brand">
-                <a href="index.html" class="store-logo">TRENDARYO</a>
-            </div>
-
-            <div class="store-search" role="search">
-                <span aria-hidden="true">🔎</span>
-                <input type="search" placeholder="Search products..." />
-            </div>
-
-            <div class="store-actions">
-                <a href="wishlist.html" class="store-icon-btn" aria-label="Wishlist">❤</a>
-                <a href="compare.html" class="store-icon-btn" aria-label="Compare">⇄</a>
-                <a href="cart.html" class="store-icon-btn" aria-label="Cart" style="position:relative;">
-                    🛒
-                    <span id="cart-count" style="position:absolute;top:-6px;right:-6px;min-width:18px;height:18px;padding:0 5px;border-radius:999px;background:var(--accent-2);color:#fff;font-size:0.7rem;font-weight:800;display:flex;align-items:center;justify-content:center;">0</span>
-                </a>
-                <a href="account.html" class="store-icon-btn" aria-label="Account">👤</a>
-                <button class="store-mobile-toggle" id="store-mobile-toggle" aria-label="Menu" aria-expanded="false">☰</button>
-                <button id="theme-toggle" class="store-icon-btn" aria-label="Theme">☼</button>
-            </div>
-        </div>
-
-        <nav class="store-nav" aria-label="Primary">
-            <ul class="store-nav-list">
-                <li class="store-nav-item">
-                    <a href="index.html" class="store-nav-link">Home</a>
-                </li>
-
-                <li class="store-nav-item" data-dropdown>
-                    <a href="shop.html" class="store-nav-link">Shop <span class="store-caret" aria-hidden="true">▾</span></a>
-                    <div class="store-dropdown" role="menu">
-                        <a href="shop.html">Shop All <small>Browse everything</small></a>
-                        <a href="product.html">Product Page <small>Example product</small></a>
-                        <a href="wishlist.html">Wishlist <small>Saved items</small></a>
-                        <a href="compare.html">Compare <small>Compare products</small></a>
-                    </div>
-                </li>
-
-                <li class="store-nav-item" data-dropdown>
-                    <a href="cart.html" class="store-nav-link" aria-current="page">Cart <span class="store-caret" aria-hidden="true">▾</span></a>
-                    <div class="store-dropdown" role="menu">
-                        <a href="cart.html">Quantum Cart <small>Interactive 3D</small></a>
-                        <a href="checkout.html">Checkout <small>Complete purchase</small></a>
-                        <a href="track-order.html">Track Order <small>Shipping status</small></a>
-                    </div>
-                </li>
-
-                <li class="store-nav-item" data-dropdown>
-                    <a href="account.html" class="store-nav-link">Account <span class="store-caret" aria-hidden="true">▾</span></a>
-                    <div class="store-dropdown" role="menu">
-                        <a href="account.html">My Account <small>Profile</small></a>
-                        <a href="login.html">Login <small>Access account</small></a>
-                        <a href="register.html">Register <small>Create account</small></a>
-                    </div>
-                </li>
-
-                <li class="store-nav-item" data-dropdown>
-                    <a href="faq.html" class="store-nav-link">Support <span class="store-caret" aria-hidden="true">▾</span></a>
-                    <div class="store-dropdown" role="menu">
-                        <a href="faq.html">FAQ <small>Help center</small></a>
-                        <a href="contact.html">Contact <small>Get in touch</small></a>
-                        <a href="shipping.html">Shipping <small>Delivery info</small></a>
-                        <a href="returns.html">Returns <small>Return policy</small></a>
-                    </div>
-                </li>
-
-                <li class="store-nav-item">
-                    <a href="about.html" class="store-nav-link">About</a>
-                </li>
-                <li class="store-nav-item">
-                    <a href="contact.html" class="store-nav-link">Contact</a>
-                </li>
-            </ul>
-        </nav>
-    </header>
 
     <main class="page-offset">
         <section class="quantum-cart-hero">

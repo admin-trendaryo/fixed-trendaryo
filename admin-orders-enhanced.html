@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inventory Management - Admin - Trendaryo</title>
+    <title>Order Management - Admin - Trendaryo</title>
     <link rel="stylesheet" href="shared.css">
     <link rel="stylesheet" href="responsive-universal.css">
     <style>
@@ -79,36 +79,6 @@
             box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
         }
 
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 30px;
-        }
-
-        .stat-card {
-            background: rgba(0, 240, 255, 0.05);
-            border: 1px solid rgba(0, 240, 255, 0.2);
-            border-radius: 10px;
-            padding: 20px;
-            backdrop-filter: blur(10px);
-        }
-
-        .stat-label {
-            font-size: 0.9em;
-            color: #00f0ff;
-            margin-bottom: 10px;
-        }
-
-        .stat-value {
-            font-size: 1.8em;
-            font-weight: bold;
-            background: linear-gradient(135deg, #00f0ff, #ff00aa);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
         .filters {
             display: flex;
             gap: 15px;
@@ -128,6 +98,7 @@
         }
 
         input[type="text"],
+        input[type="date"],
         select {
             padding: 10px;
             background: rgba(0, 240, 255, 0.05);
@@ -138,6 +109,7 @@
         }
 
         input[type="text"]:focus,
+        input[type="date"]:focus,
         select:focus {
             outline: none;
             background: rgba(0, 240, 255, 0.1);
@@ -150,13 +122,6 @@
             border-radius: 10px;
             padding: 20px;
             backdrop-filter: blur(10px);
-        }
-
-        .section-title {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.3em;
-            color: #00f0ff;
-            margin-bottom: 20px;
         }
 
         .table-container {
@@ -186,7 +151,7 @@
             background: rgba(0, 240, 255, 0.05);
         }
 
-        .stock-badge {
+        .status-badge {
             display: inline-block;
             padding: 5px 10px;
             border-radius: 5px;
@@ -194,17 +159,27 @@
             font-weight: bold;
         }
 
-        .stock-in {
-            background: rgba(34, 139, 34, 0.2);
-            color: #228B22;
-        }
-
-        .stock-low {
+        .status-pending {
             background: rgba(255, 165, 0, 0.2);
             color: #FFA500;
         }
 
-        .stock-out {
+        .status-processing {
+            background: rgba(65, 105, 225, 0.2);
+            color: #4169E1;
+        }
+
+        .status-shipped {
+            background: rgba(50, 205, 50, 0.2);
+            color: #32CD32;
+        }
+
+        .status-delivered {
+            background: rgba(34, 139, 34, 0.2);
+            color: #228B22;
+        }
+
+        .status-cancelled {
             background: rgba(220, 20, 60, 0.2);
             color: #DC143C;
         }
@@ -224,6 +199,17 @@
         .action-btn:hover {
             background: rgba(0, 240, 255, 0.3);
             box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+        }
+
+        .action-btn.danger {
+            background: rgba(220, 20, 60, 0.2);
+            border-color: rgba(220, 20, 60, 0.3);
+            color: #DC143C;
+        }
+
+        .action-btn.danger:hover {
+            background: rgba(220, 20, 60, 0.3);
+            box-shadow: 0 0 15px rgba(220, 20, 60, 0.3);
         }
 
         .modal {
@@ -248,7 +234,7 @@
             border: 1px solid rgba(0, 240, 255, 0.2);
             border-radius: 10px;
             padding: 30px;
-            max-width: 500px;
+            max-width: 600px;
             width: 90%;
             max-height: 90vh;
             overflow-y: auto;
@@ -341,6 +327,37 @@
             box-shadow: 0 0 15px rgba(220, 20, 60, 0.3);
         }
 
+        .order-details {
+            background: rgba(0, 240, 255, 0.05);
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .order-details-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(0, 240, 255, 0.1);
+        }
+
+        .order-details-row:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .order-details-label {
+            color: #00f0ff;
+            font-weight: bold;
+        }
+
+        .order-details-value {
+            color: #e0e0e0;
+        }
+
         .loading {
             text-align: center;
             padding: 40px;
@@ -399,10 +416,6 @@
                 justify-content: center;
             }
 
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-
             .filters {
                 flex-direction: column;
             }
@@ -425,17 +438,10 @@
     <div class="container">
         <!-- Header -->
         <div class="header">
-            <h1>📦 Inventory Management</h1>
+            <h1>📦 Order Management</h1>
             <div class="header-actions">
                 <button class="btn" onclick="goBack()">← Back</button>
-                <button class="btn primary" onclick="exportInventory()">📥 Export</button>
-            </div>
-        </div>
-
-        <!-- Statistics -->
-        <div class="stats-grid" id="statsGrid">
-            <div class="loading">
-                <div class="spinner"></div>
+                <button class="btn primary" onclick="exportOrders()">📥 Export</button>
             </div>
         </div>
 
@@ -443,81 +449,102 @@
         <div class="filters">
             <div class="filter-group">
                 <label>Search:</label>
-                <input type="text" id="searchInput" placeholder="Product name or SKU..." onkeyup="handleSearch()">
+                <input type="text" id="searchInput" placeholder="Order ID or customer..." onkeyup="handleSearch()">
             </div>
             <div class="filter-group">
-                <label>Stock Status:</label>
+                <label>Status:</label>
                 <select id="statusFilter" onchange="applyFilters()">
                     <option value="">All</option>
-                    <option value="in_stock">In Stock</option>
-                    <option value="low_stock">Low Stock</option>
-                    <option value="out_of_stock">Out of Stock</option>
+                    <option value="pending">Pending</option>
+                    <option value="processing">Processing</option>
+                    <option value="shipped">Shipped</option>
+                    <option value="delivered">Delivered</option>
+                    <option value="cancelled">Cancelled</option>
                 </select>
+            </div>
+            <div class="filter-group">
+                <label>Date From:</label>
+                <input type="date" id="dateFrom" onchange="applyFilters()">
+            </div>
+            <div class="filter-group">
+                <label>Date To:</label>
+                <input type="date" id="dateTo" onchange="applyFilters()">
             </div>
         </div>
 
-        <!-- Products Table -->
+        <!-- Orders Table -->
         <div class="section">
-            <div class="section-title">Products</div>
-            <div class="table-container" id="productsTable">
+            <div class="table-container" id="ordersTable">
                 <div class="loading">
                     <div class="spinner"></div>
-                    Loading products...
+                    Loading orders...
                 </div>
             </div>
             <div class="pagination" id="pagination"></div>
         </div>
-
-        <!-- Low Stock Alert -->
-        <div class="section" style="margin-top: 30px;">
-            <div class="section-title">⚠️ Low Stock Alert</div>
-            <div class="table-container" id="lowStockTable">
-                <div class="loading">
-                    <div class="spinner"></div>
-                    Loading low stock items...
-                </div>
-            </div>
-        </div>
     </div>
 
-    <!-- Update Stock Modal -->
-    <div class="modal" id="stockModal">
+    <!-- Update Status Modal -->
+    <div class="modal" id="statusModal">
         <div class="modal-content">
             <div class="modal-header">
-                <span>Update Stock</span>
-                <button class="modal-close" onclick="closeModal('stockModal')">✕</button>
+                <span>Update Order Status</span>
+                <button class="modal-close" onclick="closeModal('statusModal')">✕</button>
             </div>
-            <form id="stockForm">
+            <div class="order-details" id="orderInfo"></div>
+            <form id="statusForm">
                 <div class="form-group">
-                    <label>Product</label>
-                    <input type="text" id="productName" disabled>
-                </div>
-                <div class="form-group">
-                    <label>Current Stock</label>
-                    <input type="number" id="currentStock" disabled>
-                </div>
-                <div class="form-group">
-                    <label>New Quantity</label>
-                    <input type="number" id="newQuantity" required>
-                </div>
-                <div class="form-group">
-                    <label>Reason</label>
-                    <select id="reason" required>
-                        <option value="">Select Reason</option>
-                        <option value="restock">Restock</option>
-                        <option value="adjustment">Adjustment</option>
-                        <option value="damage">Damage</option>
-                        <option value="return">Return</option>
-                        <option value="other">Other</option>
+                    <label>New Status</label>
+                    <select id="newStatus" required>
+                        <option value="">Select Status</option>
+                        <option value="pending">Pending</option>
+                        <option value="processing">Processing</option>
+                        <option value="shipped">Shipped</option>
+                        <option value="delivered">Delivered</option>
+                        <option value="cancelled">Cancelled</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label>Notes</label>
-                    <textarea id="notes" rows="3" placeholder="Additional notes..."></textarea>
+                    <textarea id="statusNotes" rows="3" placeholder="Add notes about this status change..."></textarea>
                 </div>
                 <div class="modal-actions">
-                    <button type="button" class="save" onclick="updateStock()">Update Stock</button>
-                    <button type="button" class="cancel" onclick="closeModal('stockModal')">Cancel</button>
+                    <button type="button" class="save" onclick="updateOrderStatus()">Update Status</button>
+                    <button type="button" class="cancel" onclick="closeModal('statusModal')">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Tracking Modal -->
+    <div class="modal" id="trackingModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span>Add Tracking Information</span>
+                <button class="modal-close" onclick="closeModal('trackingModal')">✕</button>
+            </div>
+            <form id="trackingForm">
+                <div class="form-group">
+                    <label>Tracking Number</label>
+                    <input type="text" id="trackingNumber" required>
+                </div>
+                <div class="form-group">
+                    <label>Carrier</label>
+                    <select id="carrier" required>
+                        <option value="">Select Carrier</option>
+                        <option value="UPS">UPS</option>
+                        <option value="FedEx">FedEx</option>
+                        <option value="USPS">USPS</option>
+                        <option value="DHL">DHL</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Estimated Delivery Date</label>
+                    <input type="date" id="estimatedDelivery" required>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="save" onclick="addTracking()">Add Tracking</button>
+                    <button type="button" class="cancel" onclick="closeModal('trackingModal')">Cancel</button>
                 </div>
             </form>
         </div>
@@ -527,7 +554,7 @@
     <script>
         let currentPage = 1;
         let currentFilters = {};
-        let currentProductId = null;
+        let currentOrderId = null;
 
         // Check admin access
         function checkAdminAccess() {
@@ -537,59 +564,25 @@
             }
         }
 
-        // Load inventory stats
-        async function loadInventoryStats() {
-            try {
-                const stats = await window.AdminManager.getInventoryStats();
-                displayStats(stats);
-            } catch (error) {
-                console.error('Error loading stats:', error);
-            }
-        }
-
-        // Display stats
-        function displayStats(stats) {
-            const statsGrid = document.getElementById('statsGrid');
-            statsGrid.innerHTML = `
-                <div class="stat-card">
-                    <div class="stat-label">Total Products</div>
-                    <div class="stat-value">${stats.totalProducts || 0}</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">In Stock</div>
-                    <div class="stat-value">${stats.inStock || 0}</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">Low Stock</div>
-                    <div class="stat-value">${stats.lowStock || 0}</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">Out of Stock</div>
-                    <div class="stat-value">${stats.outOfStock || 0}</div>
-                </div>
-            `;
-        }
-
-        // Load products
-        async function loadProducts(page = 1) {
+        // Load orders
+        async function loadOrders(page = 1) {
             try {
                 currentPage = page;
-                const response = await window.AdminManager.getAllProducts(page, 20, currentFilters);
-                displayProducts(response.data || []);
+                const response = await window.AdminManager.getAllOrders(page, 20, currentFilters);
+                displayOrders(response.data || []);
                 displayPagination(response.pagination || {});
-                loadLowStockProducts();
             } catch (error) {
-                console.error('Error loading products:', error);
-                document.getElementById('productsTable').innerHTML = 
-                    '<div class="error-message">Failed to load products</div>';
+                console.error('Error loading orders:', error);
+                document.getElementById('ordersTable').innerHTML = 
+                    '<div class="error-message">Failed to load orders</div>';
             }
         }
 
-        // Display products
-        function displayProducts(products) {
-            if (products.length === 0) {
-                document.getElementById('productsTable').innerHTML = 
-                    '<p style="text-align: center; color: #00f0ff; padding: 20px;">No products found</p>';
+        // Display orders
+        function displayOrders(orders) {
+            if (orders.length === 0) {
+                document.getElementById('ordersTable').innerHTML = 
+                    '<p style="text-align: center; color: #00f0ff; padding: 20px;">No orders found</p>';
                 return;
             }
 
@@ -597,89 +590,32 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>Product</th>
-                            <th>SKU</th>
-                            <th>Current Stock</th>
+                            <th>Order ID</th>
+                            <th>Customer</th>
+                            <th>Amount</th>
                             <th>Status</th>
-                            <th>Reorder Level</th>
+                            <th>Date</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        ${products.map(product => {
-                            let statusClass = 'stock-in';
-                            let statusText = 'In Stock';
-                            if (product.quantity === 0) {
-                                statusClass = 'stock-out';
-                                statusText = 'Out of Stock';
-                            } else if (product.quantity <= product.reorderLevel) {
-                                statusClass = 'stock-low';
-                                statusText = 'Low Stock';
-                            }
-                            return `
-                                <tr>
-                                    <td>${product.name}</td>
-                                    <td>${product.sku}</td>
-                                    <td>${product.quantity}</td>
-                                    <td><span class="stock-badge ${statusClass}">${statusText}</span></td>
-                                    <td>${product.reorderLevel}</td>
-                                    <td>
-                                        <button class="action-btn" onclick="openStockModal('${product.id}', '${product.name}', ${product.quantity})">Update</button>
-                                    </td>
-                                </tr>
-                            `;
-                        }).join('')}
-                    </tbody>
-                </table>
-            `;
-            document.getElementById('productsTable').innerHTML = table;
-        }
-
-        // Load low stock products
-        async function loadLowStockProducts() {
-            try {
-                const response = await window.AdminManager.getLowStockProducts(10);
-                displayLowStockProducts(response.data || []);
-            } catch (error) {
-                console.error('Error loading low stock products:', error);
-            }
-        }
-
-        // Display low stock products
-        function displayLowStockProducts(products) {
-            if (products.length === 0) {
-                document.getElementById('lowStockTable').innerHTML = 
-                    '<p style="text-align: center; color: #00f0ff; padding: 20px;">No low stock items</p>';
-                return;
-            }
-
-            const table = `
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Product</th>
-                            <th>Current Stock</th>
-                            <th>Reorder Level</th>
-                            <th>Shortage</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${products.map(product => `
+                        ${orders.map(order => `
                             <tr>
-                                <td>${product.name}</td>
-                                <td>${product.quantity}</td>
-                                <td>${product.reorderLevel}</td>
-                                <td>${product.reorderLevel - product.quantity}</td>
+                                <td>#${order.id}</td>
+                                <td>${order.customerName || 'N/A'}</td>
+                                <td>${window.AdminManager.formatCurrency(order.total || 0)}</td>
+                                <td><span class="status-badge status-${order.status}">${order.status}</span></td>
+                                <td>${window.AdminManager.formatDate(order.createdAt)}</td>
                                 <td>
-                                    <button class="action-btn" onclick="openStockModal('${product.id}', '${product.name}', ${product.quantity})">Restock</button>
+                                    <button class="action-btn" onclick="updateStatus('${order.id}')">Status</button>
+                                    <button class="action-btn" onclick="addTrackingInfo('${order.id}')">Tracking</button>
                                 </td>
                             </tr>
                         `).join('')}
                     </tbody>
                 </table>
             `;
-            document.getElementById('lowStockTable').innerHTML = table;
+            document.getElementById('ordersTable').innerHTML = table;
         }
 
         // Display pagination
@@ -692,15 +628,15 @@
 
             let html = '';
             if (pagination.page > 1) {
-                html += `<button onclick="loadProducts(${pagination.page - 1})">← Previous</button>`;
+                html += `<button onclick="loadOrders(${pagination.page - 1})">← Previous</button>`;
             }
 
             for (let i = 1; i <= pagination.totalPages; i++) {
-                html += `<button ${i === pagination.page ? 'class="active"' : ''} onclick="loadProducts(${i})">${i}</button>`;
+                html += `<button ${i === pagination.page ? 'class="active"' : ''} onclick="loadOrders(${i})">${i}</button>`;
             }
 
             if (pagination.page < pagination.totalPages) {
-                html += `<button onclick="loadProducts(${pagination.page + 1})">Next →</button>`;
+                html += `<button onclick="loadOrders(${pagination.page + 1})">Next →</button>`;
             }
 
             paginationDiv.innerHTML = html;
@@ -719,52 +655,107 @@
         function applyFilters() {
             currentFilters = {
                 search: document.getElementById('searchInput').value,
-                status: document.getElementById('statusFilter').value
+                status: document.getElementById('statusFilter').value,
+                dateFrom: document.getElementById('dateFrom').value,
+                dateTo: document.getElementById('dateTo').value
             };
-            loadProducts(1);
+            loadOrders(1);
         }
 
-        // Open stock modal
-        function openStockModal(productId, productName, currentStock) {
-            currentProductId = productId;
-            document.getElementById('productName').value = productName;
-            document.getElementById('currentStock').value = currentStock;
-            document.getElementById('newQuantity').value = currentStock;
-            document.getElementById('reason').value = '';
-            document.getElementById('notes').value = '';
-            openModal('stockModal');
-        }
-
-        // Update stock
-        async function updateStock() {
+        // Update status
+        async function updateStatus(orderId) {
             try {
-                const newQuantity = parseInt(document.getElementById('newQuantity').value);
-                const reason = document.getElementById('reason').value;
-                const notes = document.getElementById('notes').value;
-
-                if (!reason) {
-                    alert('Please select a reason');
-                    return;
-                }
-
-                await window.AdminManager.updateProductStock(currentProductId, newQuantity, reason);
-                alert('Stock updated successfully');
-                closeModal('stockModal');
-                loadProducts(currentPage);
+                currentOrderId = orderId;
+                const order = await window.AdminManager.getOrderById(orderId);
+                document.getElementById('orderInfo').innerHTML = `
+                    <div class="order-details-row">
+                        <span class="order-details-label">Order ID:</span>
+                        <span class="order-details-value">#${order.id}</span>
+                    </div>
+                    <div class="order-details-row">
+                        <span class="order-details-label">Customer:</span>
+                        <span class="order-details-value">${order.customerName}</span>
+                    </div>
+                    <div class="order-details-row">
+                        <span class="order-details-label">Current Status:</span>
+                        <span class="order-details-value">${order.status}</span>
+                    </div>
+                    <div class="order-details-row">
+                        <span class="order-details-label">Amount:</span>
+                        <span class="order-details-value">${window.AdminManager.formatCurrency(order.total)}</span>
+                    </div>
+                `;
+                document.getElementById('newStatus').value = '';
+                document.getElementById('statusNotes').value = '';
+                openModal('statusModal');
             } catch (error) {
-                console.error('Error updating stock:', error);
-                alert('Failed to update stock');
+                console.error('Error loading order:', error);
+                alert('Failed to load order details');
             }
         }
 
-        // Export inventory
-        async function exportInventory() {
+        // Update order status
+        async function updateOrderStatus() {
             try {
-                const response = await window.AdminManager.exportInventory(currentFilters);
-                window.AdminManager.exportToCSV(response.data, 'inventory');
+                const status = document.getElementById('newStatus').value;
+                const notes = document.getElementById('statusNotes').value;
+
+                if (!status) {
+                    alert('Please select a status');
+                    return;
+                }
+
+                await window.AdminManager.updateOrderStatus(currentOrderId, status, notes);
+                alert('Order status updated successfully');
+                closeModal('statusModal');
+                loadOrders(currentPage);
             } catch (error) {
-                console.error('Error exporting inventory:', error);
-                alert('Failed to export inventory');
+                console.error('Error updating order:', error);
+                alert('Failed to update order status');
+            }
+        }
+
+        // Add tracking info
+        function addTrackingInfo(orderId) {
+            currentOrderId = orderId;
+            document.getElementById('trackingNumber').value = '';
+            document.getElementById('carrier').value = '';
+            document.getElementById('estimatedDelivery').value = '';
+            openModal('trackingModal');
+        }
+
+        // Add tracking
+        async function addTracking() {
+            try {
+                const trackingData = {
+                    trackingNumber: document.getElementById('trackingNumber').value,
+                    carrier: document.getElementById('carrier').value,
+                    estimatedDelivery: document.getElementById('estimatedDelivery').value
+                };
+
+                if (!trackingData.trackingNumber || !trackingData.carrier || !trackingData.estimatedDelivery) {
+                    alert('Please fill in all tracking fields');
+                    return;
+                }
+
+                await window.AdminManager.addTracking(currentOrderId, trackingData);
+                alert('Tracking information added successfully');
+                closeModal('trackingModal');
+                loadOrders(currentPage);
+            } catch (error) {
+                console.error('Error adding tracking:', error);
+                alert('Failed to add tracking information');
+            }
+        }
+
+        // Export orders
+        async function exportOrders() {
+            try {
+                const response = await window.AdminManager.exportOrders(currentFilters);
+                window.AdminManager.exportToCSV(response.data, 'orders');
+            } catch (error) {
+                console.error('Error exporting orders:', error);
+                alert('Failed to export orders');
             }
         }
 
@@ -785,8 +776,7 @@
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
             checkAdminAccess();
-            loadInventoryStats();
-            loadProducts();
+            loadOrders();
         });
     </script>
 </body>

@@ -33,14 +33,14 @@
         :root { --accent: #00f0ff; --accent-2: #ff00aa; --accent-3: #00ff88; --glass: rgba(255,255,255,0.05); --glass-border: rgba(255,255,255,0.1); }
         
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Rajdhani', sans-serif; background: #0a0a2a; color: #fff; overflow-x: hidden; transition: background 1s ease-in-out; }
+        body { padding-top: 150px; font-family: 'Rajdhani', sans-serif; background: #0a0a2a; color: #fff; overflow-x: hidden; transition: background 1s ease-in-out; min-height: 100vh; padding-bottom: 3rem; }
         #three-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none;}
 
-        .help-container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+        .help-container { max-width: 1200px; margin: 0 auto; padding: 2rem; padding-bottom: 4rem; }
         
         .help-header { text-align: center; margin-bottom: 3rem; padding: 2rem; background: var(--glass); border: 1px solid var(--glass-border); border-radius: 20px; }
         .help-title { font-family: 'Orbitron', sans-serif; font-size: 2.5rem; font-weight: 900; background: linear-gradient(135deg, var(--accent), var(--accent-2)); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1rem; }
-        .help-subtitle { color: rgba(255,255,255,0.8); font-size: 1.1rem; }
+        .help-subtitle { color: rgba(255,255,255,0.9); font-size: 1.15rem; }
         
         .help-search { display: flex; gap: 1rem; margin-bottom: 2rem; }
         .help-search-input { flex: 1; padding: 1rem 1.5rem; background: var(--glass); border: 1px solid var(--glass-border); border-radius: 50px; color: #fff; font-size: 1rem; transition: all 0.3s ease; }
@@ -59,7 +59,7 @@
         
         .category-icon { font-size: 2.5rem; margin-bottom: 1rem; }
         .category-title { font-family: 'Orbitron', sans-serif; font-size: 1.2rem; font-weight: 700; color: #fff; }
-        .category-description { color: rgba(255,255,255,0.8); font-size: 1rem; }
+        .category-description { color: rgba(255,255,255,0.9); font-size: 1rem; }
         
         .help-articles { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
         
@@ -69,9 +69,9 @@
         .article-title { font-family: 'Orbitron', sans-serif; font-size: 1.3rem; font-weight: 700; color: #fff; margin-bottom: 1rem; }
         .article-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
         .article-category { padding: 0.5rem 1rem; background: var(--accent-2); border-radius: 20px; color: #fff; font-size: 0.8rem; font-weight: 600; }
-        .article-date { color: rgba(255,255,255,0.6); font-size: 0.9rem; }
+        .article-date { color: rgba(255,255,255,0.75); font-size: 0.9rem; }
         
-        .article-excerpt { color: rgba(255,255,255,0.8); font-size: 1rem; line-height: 1.6; margin-bottom: 1.5rem; }
+        .article-excerpt { color: rgba(255,255,255,0.9); font-size: 1.05rem; line-height: 1.7; margin-bottom: 1.5rem; }
         .article-link { color: var(--accent); text-decoration: none; font-weight: 600; transition: color 0.3s ease; }
         .article-link:hover { color: var(--accent-2); }
         
@@ -84,7 +84,7 @@
         
         .contact-icon { font-size: 2rem; margin-bottom: 1rem; }
         .contact-title { font-family: 'Orbitron', sans-serif; font-size: 1.1rem; font-weight: 700; color: #fff; }
-        .contact-description { color: rgba(255,255,255,0.8); font-size: 1rem; margin-bottom: 0.5rem; }
+        .contact-description { color: rgba(255,255,255,0.9); font-size: 1.05rem; margin-bottom: 0.5rem; }
         
         .contact-button { padding: 0.75rem 1.5rem; background: linear-gradient(135deg, var(--accent), var(--accent-2)); border: none; border-radius: 8px; color: #fff; font-family: 'Orbitron', sans-serif; font-size: 0.9rem; font-weight: 600; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s ease; }
         .contact-button:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(0,240,255,0.5); }
@@ -99,10 +99,11 @@
         
         .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
         .faq-answer.active { max-height: 500px; }
-        .faq-answer-content { color: rgba(255,255,255,0.8); line-height: 1.6; padding: 1rem; }
+        .faq-answer-content { color: rgba(255,255,255,0.9); line-height: 1.7; padding: 1rem; }
         
-        .live-chat { position: fixed; bottom: 2rem; right: 2rem; width: 350px; background: var(--glass); border: 1px solid var(--glass-border); border-radius: 16px 16px 16px; z-index: 10000; transition: all 0.3s ease; }
-        .live-chat.minimized { width: 60px; height: 60px; border-radius: 50%; }
+        .live-chat { position: fixed; bottom: 2rem; right: 2rem; width: 350px; background: var(--glass); border: 1px solid var(--glass-border); border-radius: 16px; z-index: 9999; transition: all 0.3s ease; display: none; }
+        .live-chat.active { display: block; }
+        .live-chat.minimized { width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
         .live-chat-header { padding: 1rem; background: var(--accent); color: #000; display: flex; justify-content: space-between; align-items: center; }
         .live-chat-title { font-family: 'Orbitron', sans-serif; font-size: 0.9rem; font-weight: 700; }
         .live-chat-status { width: 8px; height: 8px; background: #00ff00; border-radius: 50%; }
@@ -115,13 +116,14 @@
         .chat-bubble.user { background: var(--accent); align-self: flex-end; }
         .chat-bubble.support { background: var(--accent-2); align-self: flex-start; }
         .chat-message-content { color: #fff; word-wrap: break-word; }
-        .chat-time { font-size: 0.8rem; color: rgba(255,255,255,0.6); margin-bottom: 0.5rem; }
+        .chat-time { font-size: 0.8rem; color: rgba(255,255,255,0.75); margin-bottom: 0.5rem; }
         
         .chat-input-container { display: flex; gap: 0.5rem; padding: 1rem; background: rgba(255,255,255,0.1); }
         .chat-input { flex: 1; padding: 0.75rem; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); border-radius: 8px; color: #fff; font-size: 1rem; }
         .chat-send-button { padding: 0.75rem 1rem; background: var(--accent); border: none; border-radius: 8px; color: #000; font-family: 'Orbitron', sans-serif; font-size: 0.9rem; font-weight: 700; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; }
         
         @media (max-width: 768px) {
+            body { padding-top: 120px; }
             .live-chat { width: 300px; right: 1rem; }
             .help-categories { grid-template-columns: 1fr; }
             .help-articles { grid-template-columns: 1fr; }
@@ -450,6 +452,7 @@
         
         function startLiveChat() {
             const chatWidget = document.getElementById('liveChat');
+            chatWidget.classList.add('active');
             chatWidget.classList.remove('minimized');
             
             // Simulate connecting to support
@@ -469,6 +472,7 @@
         function minimizeChat() {
             const chatWidget = document.getElementById('liveChat');
             chatWidget.classList.add('minimized');
+            chatWidget.classList.remove('active');
         }
         
         function createTicket() {
@@ -528,70 +532,72 @@
             renderArticles();
         });
     </script>
-    <div id="footer-container"></div>`n    <script src="components.js"></script>`n    <div id="footer-container"></div>`n    <script src="components.js"></script>`n    
+    <div id="footer-container"></div>
+    <script src="components.js"></script>
+    
     <!-- Help Topics -->
-    <section style="max-width: 1200px; margin: 3rem auto; padding: 2rem;">
+    <section style="max-width: 1200px; margin: 3rem auto 5rem; padding: 2rem;">
         <h2 style="font-family: 'Orbitron', sans-serif; text-align: center; margin-bottom: 2rem;">Browse Help Topics</h2>
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
             <a href="faq.html" style="padding: 2rem; background: var(--glass); border: 1px solid var(--glass-border); border-radius: 16px; text-decoration: none; color: #fff; text-align: center; transition: all 0.3s;">
                 <div style="font-size: 2rem; margin-bottom: 1rem;">❓</div>
                 <h3 style="font-family: 'Orbitron', sans-serif; margin-bottom: 0.5rem;">FAQ</h3>
-                <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">Common questions answered</p>
+                <p style="color: rgba(255,255,255,0.85); font-size: 0.95rem;">Common questions answered</p>
             </a>
             <a href="shipping.html" style="padding: 2rem; background: var(--glass); border: 1px solid var(--glass-border); border-radius: 16px; text-decoration: none; color: #fff; text-align: center; transition: all 0.3s;">
                 <div style="font-size: 2rem; margin-bottom: 1rem;">📦</div>
                 <h3 style="font-family: 'Orbitron', sans-serif; margin-bottom: 0.5rem;">Shipping</h3>
-                <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">Delivery information</p>
+                <p style="color: rgba(255,255,255,0.85); font-size: 0.95rem;">Delivery information</p>
             </a>
             <a href="returns.html" style="padding: 2rem; background: var(--glass); border: 1px solid var(--glass-border); border-radius: 16px; text-decoration: none; color: #fff; text-align: center; transition: all 0.3s;">
                 <div style="font-size: 2rem; margin-bottom: 1rem;">🔄</div>
                 <h3 style="font-family: 'Orbitron', sans-serif; margin-bottom: 0.5rem;">Returns</h3>
-                <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">Return & exchange policy</p>
+                <p style="color: rgba(255,255,255,0.85); font-size: 0.95rem;">Return & exchange policy</p>
             </a>
             <a href="track-order.html" style="padding: 2rem; background: var(--glass); border: 1px solid var(--glass-border); border-radius: 16px; text-decoration: none; color: #fff; text-align: center; transition: all 0.3s;">
                 <div style="font-size: 2rem; margin-bottom: 1rem;">🚚</div>
                 <h3 style="font-family: 'Orbitron', sans-serif; margin-bottom: 0.5rem;">Track Order</h3>
-                <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">Check delivery status</p>
+                <p style="color: rgba(255,255,255,0.85); font-size: 0.95rem;">Check delivery status</p>
             </a>
             <a href="contact.html" style="padding: 2rem; background: var(--glass); border: 1px solid var(--glass-border); border-radius: 16px; text-decoration: none; color: #fff; text-align: center; transition: all 0.3s;">
                 <div style="font-size: 2rem; margin-bottom: 1rem;">💬</div>
                 <h3 style="font-family: 'Orbitron', sans-serif; margin-bottom: 0.5rem;">Contact Us</h3>
-                <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">Get in touch</p>
+                <p style="color: rgba(255,255,255,0.85); font-size: 0.95rem;">Get in touch</p>
             </a>
             <a href="account.html" style="padding: 2rem; background: var(--glass); border: 1px solid var(--glass-border); border-radius: 16px; text-decoration: none; color: #fff; text-align: center; transition: all 0.3s;">
                 <div style="font-size: 2rem; margin-bottom: 1rem;">👤</div>
                 <h3 style="font-family: 'Orbitron', sans-serif; margin-bottom: 0.5rem;">My Account</h3>
-                <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">Manage your profile</p>
+                <p style="color: rgba(255,255,255,0.85); font-size: 0.95rem;">Manage your profile</p>
             </a>
             <a href="privacy.html" style="padding: 2rem; background: var(--glass); border: 1px solid var(--glass-border); border-radius: 16px; text-decoration: none; color: #fff; text-align: center; transition: all 0.3s;">
                 <div style="font-size: 2rem; margin-bottom: 1rem;">🔒</div>
                 <h3 style="font-family: 'Orbitron', sans-serif; margin-bottom: 0.5rem;">Privacy</h3>
-                <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">Your data protection</p>
+                <p style="color: rgba(255,255,255,0.85); font-size: 0.95rem;">Your data protection</p>
             </a>
             <a href="terms.html" style="padding: 2rem; background: var(--glass); border: 1px solid var(--glass-border); border-radius: 16px; text-decoration: none; color: #fff; text-align: center; transition: all 0.3s;">
                 <div style="font-size: 2rem; margin-bottom: 1rem;">📄</div>
                 <h3 style="font-family: 'Orbitron', sans-serif; margin-bottom: 0.5rem;">Terms</h3>
-                <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">Terms of service</p>
+                <p style="color: rgba(255,255,255,0.85); font-size: 0.95rem;">Terms of service</p>
             </a>
             <a href="size-guide.html" style="padding: 2rem; background: var(--glass); border: 1px solid var(--glass-border); border-radius: 16px; text-decoration: none; color: #fff; text-align: center; transition: all 0.3s;">
                 <div style="font-size: 2rem; margin-bottom: 1rem;">📏</div>
                 <h3 style="font-family: 'Orbitron', sans-serif; margin-bottom: 0.5rem;">Size Guide</h3>
-                <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">Find your perfect fit</p>
+                <p style="color: rgba(255,255,255,0.85); font-size: 0.95rem;">Find your perfect fit</p>
             </a>
             <a href="gift-cards.html" style="padding: 2rem; background: var(--glass); border: 1px solid var(--glass-border); border-radius: 16px; text-decoration: none; color: #fff; text-align: center; transition: all 0.3s;">
                 <div style="font-size: 2rem; margin-bottom: 1rem;">🎁</div>
                 <h3 style="font-family: 'Orbitron', sans-serif; margin-bottom: 0.5rem;">Gift Cards</h3>
-                <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">Perfect gift option</p>
+                <p style="color: rgba(255,255,255,0.85); font-size: 0.95rem;">Perfect gift option</p>
             </a>
             <a href="affiliate.html" style="padding: 2rem; background: var(--glass); border: 1px solid var(--glass-border); border-radius: 16px; text-decoration: none; color: #fff; text-align: center; transition: all 0.3s;">
                 <div style="font-size: 2rem; margin-bottom: 1rem;">💰</div>
                 <h3 style="font-family: 'Orbitron', sans-serif; margin-bottom: 0.5rem;">Affiliate</h3>
-                <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">Earn with us</p>
+                <p style="color: rgba(255,255,255,0.85); font-size: 0.95rem;">Earn with us</p>
             </a>
             <a href="blog.html" style="padding: 2rem; background: var(--glass); border: 1px solid var(--glass-border); border-radius: 16px; text-decoration: none; color: #fff; text-align: center; transition: all 0.3s;">
                 <div style="font-size: 2rem; margin-bottom: 1rem;">📝</div>
                 <h3 style="font-family: 'Orbitron', sans-serif; margin-bottom: 0.5rem;">Blog</h3>
-                <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">Latest news & tips</p>
+                <p style="color: rgba(255,255,255,0.85); font-size: 0.95rem;">Latest news & tips</p>
             </a>
         </div>
     </section>

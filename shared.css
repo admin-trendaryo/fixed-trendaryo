@@ -282,7 +282,7 @@
 }
 
 /* ── Page offset (accounts for sticky header height) ── */
-.page-offset { padding-top: 150px; }
+.page-offset { padding-top: 0; }
 
 /* ── Footer ── */
 .site-footer {

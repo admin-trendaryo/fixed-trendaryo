@@ -3,123 +3,710 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="View and manage your orders at Trendaryo. Track shipments and view order history.">
     <title>My Orders - Trendaryo</title>
-    <link rel="stylesheet" href="responsive.css">
-    <script src="performance.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="shared.css">
+    <link rel="stylesheet" href="responsive-universal.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        :root{--accent:#00f0ff;--accent-2:#ff00aa;--accent-3:#00ff88;--glass:rgba(255,255,255,0.05);--glass-border:rgba(255,255,255,0.1);}
-        *{margin:0;padding:0;box-sizing:border-box;}
-        body{font-family:'Rajdhani',sans-serif;background:linear-gradient(180deg,#0a0a2a,#1a1a40);color:#fff;padding-top:80px;}
-        .container{max-width:1200px;margin:0 auto;padding:2rem;}
-        h1{font-family:'Orbitron',sans-serif;margin-bottom:2rem;}
-        .orders-list{display:grid;gap:2rem;}
-        .order-card{background:var(--glass);border:1px solid var(--glass-border);border-radius:20px;padding:2rem;transition:all 0.2s;}
-        .order-card:hover{border-color:var(--accent);}
-        .order-header{display:flex;justify-content:space-between;align-items:start;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem;}
-        .order-info h3{font-family:'Orbitron',sans-serif;margin-bottom:0.5rem;}
-        .order-meta{color:#888;font-size:0.9rem;}
-        .order-status{padding:0.5rem 1rem;border-radius:20px;font-weight:600;font-size:0.9rem;}
-        .order-status.processing{background:rgba(255,170,0,0.2);color:#ffaa00;}
-        .order-status.shipped{background:rgba(0,240,255,0.2);color:var(--accent);}
-        .order-status.delivered{background:rgba(0,255,136,0.2);color:var(--accent-3);}
-        .order-items{display:grid;gap:1rem;margin-bottom:1.5rem;}
-        .order-item{display:flex;gap:1rem;padding:1rem;background:rgba(0,0,0,0.3);border-radius:10px;}
-        .order-item img{width:60px;height:60px;object-fit:cover;border-radius:8px;}
-        .order-item-info{flex:1;}
-        .order-item-name{font-weight:600;margin-bottom:0.3rem;}
-        .order-item-price{color:var(--accent);}
-        .order-footer{display:flex;justify-content:space-between;align-items:center;padding-top:1.5rem;border-top:1px solid var(--glass-border);}
-        .order-total{font-size:1.3rem;font-weight:700;color:var(--accent);}
-        .btn{padding:0.6rem 1.2rem;border:none;border-radius:8px;font-weight:600;cursor:pointer;transition:all 0.2s;font-family:inherit;text-decoration:none;display:inline-block;}
-        .btn-primary{background:var(--accent);color:#000;}
-        .btn-secondary{background:var(--glass);color:#fff;border:1px solid var(--glass-border);}
-        .btn:hover{transform:translateY(-2px);}
-        .empty-state{text-align:center;padding:4rem 2rem;color:#888;}
-        .empty-state h2{margin-bottom:1rem;}
-        @media(max-width:768px){.order-header{flex-direction:column;}.order-footer{flex-direction:column;gap:1rem;align-items:stretch;}}
+        :root {
+            --accent: #00f0ff;
+            --accent-2: #ff00aa;
+            --accent-3: #00ff88;
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Rajdhani', sans-serif; background: #0a0a2a; color: #fff; overflow-x: hidden; }
+        #three-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+
+        /* Override any header styles to ensure transparency */
+        .store-header {
+            background: transparent !important;
+        }
+        
+        .store-header.scrolled {
+            background: rgba(0,0,0,0.12) !important;
+        }
+
+        /* Fix nav menu text colors */
+        .store-nav-link {
+            color: rgba(255,255,255,0.85) !important;
+        }
+        
+        .store-nav-link:hover {
+            color: rgba(255,255,255,1) !important;
+        }
+        
+        .store-nav-link[aria-current="page"] {
+            color: rgba(255,255,255,1) !important;
+        }
+
+        .page-offset { 
+            padding-top: 150px; 
+            padding-bottom: 4rem;
+            min-height: 100vh;
+        }
+
+        .orders-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem 6rem 2rem;
+        }
+
+        .orders-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .orders-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .orders-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-action {
+            padding: 0.9rem 1.8rem;
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+            background: transparent;
+            color: rgba(255, 255, 255, 0.8);
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-action:hover {
+            border-color: var(--accent);
+            background: rgba(0, 240, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .filters-section {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .filters-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            color: var(--accent);
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .filter-label {
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .filter-input {
+            padding: 0.8rem;
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+            background: rgba(0, 0, 0, 0.2);
+            color: #fff;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 0.95rem;
+        }
+
+        .filter-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: rgba(0, 240, 255, 0.05);
+        }
+
+        .orders-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+
+        .orders-list {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .order-card {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .order-card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.1);
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .order-id {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--accent);
+        }
+
+        .order-status {
+            padding: 0.5rem 1rem;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .status-pending {
+            background: rgba(255, 215, 0, 0.2);
+            color: #ffd700;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .status-processing {
+            background: rgba(0, 240, 255, 0.2);
+            color: var(--accent);
+            border: 1px solid rgba(0, 240, 255, 0.3);
+        }
+
+        .status-shipped {
+            background: rgba(0, 255, 136, 0.2);
+            color: var(--accent-3);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+        }
+
+        .status-delivered {
+            background: rgba(0, 255, 136, 0.2);
+            color: var(--accent-3);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+        }
+
+        .status-cancelled {
+            background: rgba(255, 107, 107, 0.2);
+            color: #ff6b6b;
+            border: 1px solid rgba(255, 107, 107, 0.3);
+        }
+
+        .order-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .detail-label {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.85rem;
+        }
+
+        .detail-value {
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .order-items {
+            margin-bottom: 1.5rem;
+        }
+
+        .items-title {
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .item-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .item-row:last-child {
+            border-bottom: none;
+        }
+
+        .item-name {
+            flex: 1;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .item-qty {
+            color: rgba(255, 255, 255, 0.6);
+            margin: 0 1rem;
+        }
+
+        .item-price {
+            font-weight: 700;
+            color: var(--accent);
+            min-width: 80px;
+            text-align: right;
+        }
+
+        .order-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .order-total {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 900;
+            color: var(--accent-3);
+        }
+
+        .order-actions {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-order {
+            padding: 0.7rem 1.4rem;
+            border-radius: 10px;
+            border: 1px solid var(--glass-border);
+            background: transparent;
+            color: rgba(255, 255, 255, 0.8);
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-order:hover {
+            border-color: var(--accent);
+            background: rgba(0, 240, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .btn-order-primary {
+            background: linear-gradient(135deg, var(--accent), var(--accent-3));
+            border: none;
+            color: #000;
+            font-weight: 800;
+        }
+
+        .btn-order-primary:hover {
+            background: linear-gradient(135deg, var(--accent-3), var(--accent));
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+        }
+
+        .empty-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .empty-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            color: var(--accent);
+        }
+
+        .empty-text {
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 2rem;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            display: none;
+            font-size: 0.9rem;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        .alert-success {
+            background: rgba(0, 255, 136, 0.15);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            color: var(--accent-3);
+        }
+
+        .alert-error {
+            background: rgba(255, 107, 107, 0.15);
+            border: 1px solid rgba(255, 107, 107, 0.3);
+            color: #ff6b6b;
+        }
+
+        @media (max-width: 900px) {
+            .orders-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .filters-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .order-details {
+                grid-template-columns: 1fr;
+            }
+
+            .order-footer {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
     </style>
-<script src="bg.js"></script>
 </head>
 <body>
-    <canvas id="three-canvas" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;pointer-events:none;"></canvas>
-    <div id="header-container"></div>
-    
-    <div class="container">
-        <h1>My Orders</h1>
-        <div class="orders-list" id="orders-list"></div>
-    </div>
-    
-    <div id="footer-container"></div>
     <script src="components.js"></script>
+    <canvas id="three-canvas"></canvas>
+
+    <div class="page-offset">
+        <div class="orders-container">
+            <div class="orders-header">
+                <h1 class="orders-title">📦 My Orders</h1>
+                <div class="orders-actions">
+                    <button class="btn-action" onclick="exportOrders('csv')">📥 Export CSV</button>
+                    <button class="btn-action" onclick="exportOrders('json')">📥 Export JSON</button>
+                    <button class="btn-action" onclick="window.location.href='account.html'">👤 Account</button>
+                </div>
+            </div>
+
+            <div id="alertBox" class="alert"></div>
+
+            <!-- Statistics -->
+            <div class="orders-stats">
+                <div class="stat-card">
+                    <div class="stat-value" id="totalOrders">0</div>
+                    <div class="stat-label">Total Orders</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="totalSpent">$0.00</div>
+                    <div class="stat-label">Total Spent</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="averageOrder">$0.00</div>
+                    <div class="stat-label">Average Order</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="deliveredCount">0</div>
+                    <div class="stat-label">Delivered</div>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="filters-section">
+                <div class="filters-title">🔍 Filter Orders</div>
+                <div class="filters-grid">
+                    <div class="filter-group">
+                        <label class="filter-label">Status</label>
+                        <select id="statusFilter" class="filter-input" onchange="applyFilters()">
+                            <option value="">All Statuses</option>
+                            <option value="pending">Pending</option>
+                            <option value="processing">Processing</option>
+                            <option value="shipped">Shipped</option>
+                            <option value="delivered">Delivered</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Sort By</label>
+                        <select id="sortFilter" class="filter-input" onchange="applyFilters()">
+                            <option value="date-desc">Newest First</option>
+                            <option value="date-asc">Oldest First</option>
+                            <option value="amount-desc">Highest Amount</option>
+                            <option value="amount-asc">Lowest Amount</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Orders List -->
+            <div class="orders-list" id="ordersList">
+                <div class="empty-state">
+                    <div class="empty-icon">📭</div>
+                    <div class="empty-title">No Orders Yet</div>
+                    <p class="empty-text">You haven't placed any orders yet. Start shopping to see your orders here.</p>
+                    <button class="btn-action" onclick="window.location.href='shop.html'">🛍️ Start Shopping</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="auth-manager.js"></script>
+    <script src="order-manager.js"></script>
+    <script src="bg-optimized.js"></script>
     <script>
-        function loadOrders() {
-            const orders = JSON.parse(localStorage.getItem('trendaryo_orders') || '[]');
-            const container = document.getElementById('orders-list');
+        const alertBox = document.getElementById('alertBox');
+        let allOrders = [];
+
+        function showAlert(message, type = 'error') {
+            alertBox.textContent = message;
+            alertBox.className = `alert show alert-${type}`;
+            setTimeout(() => {
+                alertBox.classList.remove('show');
+            }, 5000);
+        }
+
+        async function loadOrders() {
+            const result = await window.OrderManager.getOrders(50, 0);
             
+            if (result.success) {
+                allOrders = result.data;
+            } else {
+                // Use local orders if API fails
+                allOrders = window.OrderManager.getLocalOrders();
+            }
+
+            updateStatistics();
+            renderOrders(allOrders);
+        }
+
+        function updateStatistics() {
+            const stats = window.OrderManager.getOrdersByStatus();
+            const totalOrders = window.OrderManager.getOrderCount();
+            const totalSpent = window.OrderManager.getTotalSpent();
+            const averageOrder = window.OrderManager.getAverageOrderValue();
+
+            document.getElementById('totalOrders').textContent = totalOrders;
+            document.getElementById('totalSpent').textContent = `$${totalSpent.toFixed(2)}`;
+            document.getElementById('averageOrder').textContent = `$${averageOrder.toFixed(2)}`;
+            document.getElementById('deliveredCount').textContent = stats.delivered;
+        }
+
+        function renderOrders(orders) {
+            const ordersList = document.getElementById('ordersList');
+
             if (orders.length === 0) {
-                container.innerHTML = `
+                ordersList.innerHTML = `
                     <div class="empty-state">
-                        <h2>No Orders Yet</h2>
-                        <p>Start shopping to see your orders here</p>
-                        <a href="shop.html" class="btn btn-primary" style="margin-top:1.5rem;">Browse Products</a>
+                        <div class="empty-icon">📭</div>
+                        <div class="empty-title">No Orders Found</div>
+                        <p class="empty-text">No orders match your filters. Try adjusting your search criteria.</p>
                     </div>
                 `;
                 return;
             }
-            
-            container.innerHTML = orders.reverse().map(order => `
+
+            ordersList.innerHTML = orders.map(order => `
                 <div class="order-card">
                     <div class="order-header">
-                        <div class="order-info">
-                            <h3>Order #${order.id}</h3>
-                            <div class="order-meta">
-                                Placed on ${new Date(order.date).toLocaleDateString()} • 
-                                ${order.items.length} item${order.items.length > 1 ? 's' : ''}
-                            </div>
-                        </div>
-                        <span class="order-status ${order.status}">${order.status}</span>
+                        <div class="order-id">Order #${order.id.substring(0, 8).toUpperCase()}</div>
+                        <span class="order-status status-${order.status}">
+                            ${window.OrderManager.getStatusIcon(order.status)} ${order.status.toUpperCase()}
+                        </span>
                     </div>
-                    
+
+                    <div class="order-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Order Date</span>
+                            <span class="detail-value">${window.OrderManager.formatOrderDate(order.createdAt)}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Items</span>
+                            <span class="detail-value">${order.items.length} item${order.items.length !== 1 ? 's' : ''}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Shipping</span>
+                            <span class="detail-value">${order.shippingMethod === 'express' ? 'Express' : 'Standard'}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Delivery To</span>
+                            <span class="detail-value">${order.shippingAddress.city}, ${order.shippingAddress.state}</span>
+                        </div>
+                    </div>
+
                     <div class="order-items">
+                        <div class="items-title">Items:</div>
                         ${order.items.map(item => `
-                            <div class="order-item">
-                                <img src="${item.image}" alt="${item.name}">
-                                <div class="order-item-info">
-                                    <div class="order-item-name">${item.name}</div>
-                                    <div>Quantity: ${item.quantity}</div>
-                                    <div class="order-item-price">$${(item.price * item.quantity).toFixed(2)}</div>
-                                </div>
+                            <div class="item-row">
+                                <span class="item-name">${item.name}</span>
+                                <span class="item-qty">x${item.quantity}</span>
+                                <span class="item-price">$${(item.price * item.quantity).toFixed(2)}</span>
                             </div>
                         `).join('')}
                     </div>
-                    
+
                     <div class="order-footer">
                         <div class="order-total">Total: $${order.total.toFixed(2)}</div>
-                        <div style="display:flex;gap:0.5rem;">
-                            <a href="order-success.html?id=${order.id}" class="btn btn-primary">View Details</a>
-                            <a href="track-order.html?id=${order.id}" class="btn btn-secondary">Track Order</a>
+                        <div class="order-actions">
+                            <button class="btn-order" onclick="viewOrderDetails('${order.id}')">👁️ View Details</button>
+                            <button class="btn-order" onclick="trackOrder('${order.id}')">📍 Track</button>
+                            ${order.status !== 'delivered' && order.status !== 'cancelled' ? `
+                                <button class="btn-order" onclick="cancelOrder('${order.id}')">❌ Cancel</button>
+                            ` : ''}
                         </div>
                     </div>
                 </div>
             `).join('');
         }
-        
-        loadOrders();
-    </script>
 
-    <!-- Self-Healing System -->
-<script>
-window.onerror = function(msg, url, lineNo, columnNo, error) {
-  console.log('Error caught:', msg);
-  const errorDiv = document.createElement('div');
-  errorDiv.style.cssText = 'position:fixed; bottom:20px; right:20px; background:#f3f4f6; padding:10px; border-radius:5px; z-index:9999; border:1px solid #ccc;';
-  errorDiv.innerHTML = '⚠️ Something went wrong. Retrying...';
-  document.body.appendChild(errorDiv);
-  setTimeout(() => errorDiv.remove(), 3000);
-  return false;
-};
-</script>
+        function applyFilters() {
+            const statusFilter = document.getElementById('statusFilter').value;
+            const sortFilter = document.getElementById('sortFilter').value;
+
+            let filtered = allOrders;
+
+            // Apply status filter
+            if (statusFilter) {
+                filtered = filtered.filter(order => order.status === statusFilter);
+            }
+
+            // Apply sorting
+            if (sortFilter === 'date-asc') {
+                filtered = window.OrderManager.sortOrdersByDate(true);
+            } else if (sortFilter === 'date-desc') {
+                filtered = window.OrderManager.sortOrdersByDate(false);
+            } else if (sortFilter === 'amount-asc') {
+                filtered = window.OrderManager.sortOrdersByAmount(true);
+            } else if (sortFilter === 'amount-desc') {
+                filtered = window.OrderManager.sortOrdersByAmount(false);
+            }
+
+            renderOrders(filtered);
+        }
+
+        async function viewOrderDetails(orderId) {
+            window.location.href = `order-details.html?orderId=${orderId}`;
+        }
+
+        async function trackOrder(orderId) {
+            const result = await window.OrderManager.getTrackingInfo(orderId);
+            if (result.success) {
+                window.location.href = `track-order.html?orderId=${orderId}`;
+            } else {
+                showAlert('Unable to load tracking information', 'error');
+            }
+        }
+
+        async function cancelOrder(orderId) {
+            if (!confirm('Are you sure you want to cancel this order?')) return;
+
+            const reason = prompt('Please provide a reason for cancellation:');
+            if (!reason) return;
+
+            const result = await window.OrderManager.cancelOrder(orderId, reason);
+            if (result.success) {
+                showAlert('✅ Order cancelled successfully', 'success');
+                loadOrders();
+            } else {
+                showAlert(`❌ ${result.error}`, 'error');
+            }
+        }
+
+        function exportOrders(format) {
+            if (format === 'csv') {
+                window.OrderManager.exportOrdersToCSV();
+                showAlert('✅ Orders exported as CSV', 'success');
+            } else if (format === 'json') {
+                window.OrderManager.exportOrdersToJSON();
+                showAlert('✅ Orders exported as JSON', 'success');
+            }
+        }
+
+        window.addEventListener('load', () => {
+            if (!window.AuthManager.isLoggedIn()) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            loadOrders();
+        });
+    </script>
 </body>
 </html>

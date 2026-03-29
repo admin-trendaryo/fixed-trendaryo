@@ -3,294 +3,741 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analytics Dashboard - Trendaryo Admin</title>
+    <title>Analytics - Admin - Trendaryo</title>
     <link rel="stylesheet" href="shared.css">
     <link rel="stylesheet" href="responsive-universal.css">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --accent: #00f0ff;
-            --accent-2: #ff00aa;
-            --accent-3: #00ff88;
-            --glass: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.1);
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Rajdhani', sans-serif; background: #0a0a2a; color: #fff; overflow-x: hidden; }
-        html { background: #0a0a2a; }
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+        }
 
-        #three-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
 
-        .admin-container { max-width: 1400px; margin: 0 auto; padding: 2rem; }
-        .admin-header { margin-bottom: 3rem; }
-        .admin-title { font-family: 'Orbitron', sans-serif; font-size: 2.5rem; font-weight: 900; background: linear-gradient(135deg, var(--accent), var(--accent-2)); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 0.5rem; }
-        .admin-subtitle { color: rgba(255,255,255,0.7); font-size: 1.1rem; }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(0, 240, 255, 0.05);
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
 
-        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-bottom: 3rem; }
-        .stat-card { background: var(--glass); border: 1px solid var(--glass-border); border-radius: 16px; padding: 2rem; text-align: center; transition: all 0.3s; }
-        .stat-card:hover { border-color: var(--accent); box-shadow: 0 0 30px rgba(0,240,255,0.2); }
-        .stat-label { color: rgba(255,255,255,0.6); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.5rem; }
-        .stat-value { font-family: 'Orbitron', sans-serif; font-size: 2.5rem; font-weight: 900; color: var(--accent); }
-        .stat-change { font-size: 0.85rem; color: var(--accent-3); margin-top: 0.5rem; }
+        .header h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2em;
+            background: linear-gradient(135deg, #00f0ff, #ff00aa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
 
-        .section { background: var(--glass); border: 1px solid var(--glass-border); border-radius: 16px; padding: 2rem; margin-bottom: 2rem; }
-        .section-title { font-family: 'Orbitron', sans-serif; font-size: 1.5rem; font-weight: 800; color: var(--accent); margin-bottom: 1.5rem; }
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
 
-        .table-container { overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; }
-        th { background: rgba(0,240,255,0.1); padding: 1rem; text-align: left; font-weight: 700; border-bottom: 1px solid var(--glass-border); }
-        td { padding: 1rem; border-bottom: 1px solid var(--glass-border); }
-        tr:hover { background: rgba(0,240,255,0.05); }
+        .btn {
+            padding: 10px 20px;
+            background: rgba(0, 240, 255, 0.1);
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            color: #00f0ff;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Rajdhani', sans-serif;
+        }
 
-        .chart-container { height: 300px; background: rgba(0,0,0,0.2); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; display: flex; align-items: flex-end; gap: 0.5rem; }
-        .chart-bar { flex: 1; background: linear-gradient(180deg, var(--accent), var(--accent-2)); border-radius: 8px 8px 0 0; min-height: 20px; transition: all 0.3s; position: relative; }
-        .chart-bar:hover { opacity: 0.8; }
-        .chart-bar-label { position: absolute; bottom: -25px; left: 50%; transform: translateX(-50%); font-size: 0.75rem; white-space: nowrap; }
+        .btn:hover {
+            background: rgba(0, 240, 255, 0.2);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
+        }
 
-        .button-group { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
-        .btn { padding: 0.8rem 1.5rem; border-radius: 8px; border: 1px solid var(--glass-border); background: var(--glass); color: #fff; cursor: pointer; font-family: 'Orbitron', sans-serif; font-weight: 700; transition: all 0.3s; }
-        .btn:hover { border-color: var(--accent); background: rgba(0,240,255,0.1); }
-        .btn-primary { background: linear-gradient(135deg, var(--accent), var(--accent-2)); border: none; color: #000; }
-        .btn-primary:hover { opacity: 0.9; }
+        .btn.primary {
+            background: rgba(0, 255, 136, 0.2);
+            border-color: rgba(0, 255, 136, 0.3);
+            color: #00ff88;
+        }
 
-        .metric-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1rem; }
-        .metric { background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 8px; border-left: 3px solid var(--accent); }
-        .metric-label { font-size: 0.85rem; color: rgba(255,255,255,0.6); }
-        .metric-value { font-family: 'Orbitron', sans-serif; font-size: 1.5rem; font-weight: 900; color: var(--accent); margin-top: 0.5rem; }
+        .btn.primary:hover {
+            background: rgba(0, 255, 136, 0.3);
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+        }
 
-        .device-info { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; }
-        .device-item { background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 8px; text-align: center; }
-        .device-icon { font-size: 2rem; margin-bottom: 0.5rem; }
-        .device-name { font-weight: 700; margin-bottom: 0.25rem; }
-        .device-count { color: var(--accent); font-weight: 700; }
+        .filters {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
 
-        .event-list { max-height: 400px; overflow-y: auto; }
-        .event-item { background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 8px; margin-bottom: 0.75rem; border-left: 3px solid var(--accent-2); }
-        .event-name { font-weight: 700; color: var(--accent-2); }
-        .event-time { font-size: 0.85rem; color: rgba(255,255,255,0.5); margin-top: 0.25rem; }
+        .filter-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
 
-        .status-badge { display: inline-block; padding: 0.4rem 0.8rem; border-radius: 999px; font-size: 0.75rem; font-weight: 700; }
-        .status-active { background: rgba(0,255,136,0.2); color: var(--accent-3); }
-        .status-inactive { background: rgba(255,0,170,0.2); color: var(--accent-2); }
+        .filter-group label {
+            color: #00f0ff;
+            font-weight: bold;
+        }
 
-        @media (max-width: 900px) {
-            .admin-container { padding: 1rem; }
-            .admin-title { font-size: 1.8rem; }
-            .dashboard-grid { grid-template-columns: 1fr; }
-            .metric-row { grid-template-columns: 1fr; }
+        select {
+            padding: 10px;
+            background: rgba(0, 240, 255, 0.05);
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            color: #e0e0e0;
+            border-radius: 5px;
+            font-family: 'Rajdhani', sans-serif;
+        }
+
+        select:focus {
+            outline: none;
+            background: rgba(0, 240, 255, 0.1);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: rgba(0, 240, 255, 0.05);
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            background: rgba(0, 240, 255, 0.1);
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.3);
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            color: #00f0ff;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            background: linear-gradient(135deg, #00f0ff, #ff00aa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .stat-change {
+            font-size: 0.85em;
+            color: #00ff88;
+        }
+
+        .stat-change.negative {
+            color: #ff0055;
+        }
+
+        .section {
+            background: rgba(0, 240, 255, 0.05);
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3em;
+            color: #00f0ff;
+            margin-bottom: 20px;
+        }
+
+        .chart-container {
+            background: rgba(0, 240, 255, 0.05);
+            border: 1px solid rgba(0, 240, 255, 0.1);
+            border-radius: 5px;
+            padding: 20px;
+            min-height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #00f0ff;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: rgba(0, 240, 255, 0.1);
+            padding: 12px;
+            text-align: left;
+            color: #00f0ff;
+            font-weight: bold;
+            border-bottom: 1px solid rgba(0, 240, 255, 0.2);
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid rgba(0, 240, 255, 0.1);
+        }
+
+        tr:hover {
+            background: rgba(0, 240, 255, 0.05);
+        }
+
+        .rank-badge {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(135deg, #00f0ff, #ff00aa);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #0a0e27;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #00f0ff;
+        }
+
+        .spinner {
+            border: 3px solid rgba(0, 240, 255, 0.2);
+            border-top: 3px solid #00f0ff;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(0, 240, 255, 0.2);
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            background: none;
+            border: none;
+            color: #00f0ff;
+            cursor: pointer;
+            font-family: 'Rajdhani', sans-serif;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn:hover {
+            color: #ff00aa;
+        }
+
+        .tab-btn.active {
+            border-bottom-color: #00f0ff;
+            color: #00f0ff;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .header-actions {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filters {
+                flex-direction: column;
+            }
+
+            .filter-group {
+                flex-direction: column;
+            }
+
+            table {
+                font-size: 0.9em;
+            }
+
+            th, td {
+                padding: 8px;
+            }
         }
     </style>
 </head>
 <body>
-    <canvas id="three-canvas"></canvas>
-
-    <div class="admin-container">
-        <div class="admin-header">
-            <h1 class="admin-title">📊 Analytics Dashboard</h1>
-            <p class="admin-subtitle">Real-time insights into user behavior and platform performance</p>
-        </div>
-
-        <!-- Key Metrics -->
-        <div class="dashboard-grid">
-            <div class="stat-card">
-                <div class="stat-label">Session Duration</div>
-                <div class="stat-value" id="sessionDuration">0s</div>
-                <div class="stat-change">Current session</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Total Events</div>
-                <div class="stat-value" id="totalEvents">0</div>
-                <div class="stat-change">This session</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Page Views</div>
-                <div class="stat-value" id="pageViews">0</div>
-                <div class="stat-change">Unique pages</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Conversion Rate</div>
-                <div class="stat-value" id="conversionRate">0%</div>
-                <div class="stat-change">Events to conversions</div>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>📈 Analytics</h1>
+            <div class="header-actions">
+                <button class="btn" onclick="goBack()">← Back</button>
+                <button class="btn primary" onclick="downloadReport()">📥 Download Report</button>
             </div>
         </div>
 
-        <!-- Device Information -->
-        <div class="section">
-            <h2 class="section-title">🖥️ Device Information</h2>
-            <div class="device-info" id="deviceInfo"></div>
-        </div>
-
-        <!-- Top Products -->
-        <div class="section">
-            <h2 class="section-title">🏆 Top Products</h2>
-            <div class="chart-container" id="topProductsChart"></div>
-            <div id="topProductsList"></div>
-        </div>
-
-        <!-- Event Distribution -->
-        <div class="section">
-            <h2 class="section-title">📈 Event Distribution</h2>
-            <div class="metric-row" id="eventDistribution"></div>
-        </div>
-
-        <!-- Recent Events -->
-        <div class="section">
-            <h2 class="section-title">⚡ Recent Events</h2>
-            <div class="event-list" id="recentEvents"></div>
-        </div>
-
-        <!-- Actions -->
-        <div class="section">
-            <h2 class="section-title">⚙️ Actions</h2>
-            <div class="button-group">
-                <button class="btn btn-primary" onclick="exportAnalytics()">📥 Export Analytics</button>
-                <button class="btn" onclick="exportErrors()">📥 Export Errors</button>
-                <button class="btn" onclick="clearAnalytics()">🗑️ Clear Data</button>
-                <button class="btn" onclick="refreshDashboard()">🔄 Refresh</button>
+        <!-- Filters -->
+        <div class="filters">
+            <div class="filter-group">
+                <label>Period:</label>
+                <select id="periodFilter" onchange="applyFilters()">
+                    <option value="week">This Week</option>
+                    <option value="month" selected>This Month</option>
+                    <option value="quarter">This Quarter</option>
+                    <option value="year">This Year</option>
+                </select>
             </div>
         </div>
 
-        <!-- Error Tracking -->
-        <div class="section">
-            <h2 class="section-title">🚨 Error Tracking</h2>
-            <div id="errorStats"></div>
-            <div class="event-list" id="recentErrors"></div>
+        <!-- Overview Stats -->
+        <div class="stats-grid" id="statsGrid">
+            <div class="loading">
+                <div class="spinner"></div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('sales')">Sales</button>
+            <button class="tab-btn" onclick="switchTab('customers')">Customers</button>
+            <button class="tab-btn" onclick="switchTab('products')">Products</button>
+            <button class="tab-btn" onclick="switchTab('conversion')">Conversion</button>
+        </div>
+
+        <!-- Sales Tab -->
+        <div id="sales" class="tab-content active">
+            <div class="section">
+                <div class="section-title">Sales Trend</div>
+                <div class="chart-container" id="salesChart">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Revenue by Payment Method</div>
+                <div class="table-container" id="paymentMethodsTable">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Customers Tab -->
+        <div id="customers" class="tab-content">
+            <div class="section">
+                <div class="section-title">Top Customers</div>
+                <div class="table-container" id="topCustomersTable">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Customer Metrics</div>
+                <div class="chart-container" id="customerChart">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Products Tab -->
+        <div id="products" class="tab-content">
+            <div class="section">
+                <div class="section-title">Top Products</div>
+                <div class="table-container" id="topProductsTable">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Conversion Tab -->
+        <div id="conversion" class="tab-content">
+            <div class="section">
+                <div class="section-title">Conversion Metrics</div>
+                <div class="chart-container" id="conversionChart">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Traffic Analytics</div>
+                <div class="chart-container" id="trafficChart">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <script src="advanced-features.js"></script>
-    <script src="bg-optimized.js"></script>
+    <script src="admin-manager.js"></script>
     <script>
-        function updateDashboard() {
-            const analytics = Analytics.getAnalytics();
+        let currentPeriod = 'month';
 
-            // Update stat cards
-            document.getElementById('sessionDuration').textContent = analytics.sessionDuration + 's';
-            document.getElementById('totalEvents').textContent = analytics.totalEvents;
-            document.getElementById('pageViews').textContent = analytics.totalPageViews;
-            document.getElementById('conversionRate').textContent = analytics.conversionRate;
-
-            // Device info
-            const deviceInfo = analytics.deviceInfo;
-            document.getElementById('deviceInfo').innerHTML = `
-                <div class="device-item">
-                    <div class="device-icon">${deviceInfo.isMobile ? '📱' : deviceInfo.isTablet ? '📱' : '💻'}</div>
-                    <div class="device-name">Device Type</div>
-                    <div class="device-count">${deviceInfo.isMobile ? 'Mobile' : deviceInfo.isTablet ? 'Tablet' : 'Desktop'}</div>
-                </div>
-                <div class="device-item">
-                    <div class="device-icon">🌐</div>
-                    <div class="device-name">Browser</div>
-                    <div class="device-count">${deviceInfo.browser}</div>
-                </div>
-                <div class="device-item">
-                    <div class="device-icon">⚙️</div>
-                    <div class="device-name">OS</div>
-                    <div class="device-count">${deviceInfo.os}</div>
-                </div>
-            `;
-
-            // Top products
-            const topProducts = analytics.topProducts;
-            if (topProducts.length > 0) {
-                const maxViews = Math.max(...topProducts.map(p => p.views));
-                document.getElementById('topProductsChart').innerHTML = topProducts.map(p => `
-                    <div class="chart-bar" style="height: ${(p.views / maxViews) * 100}%;">
-                        <div class="chart-bar-label">Product ${p.productId}</div>
-                    </div>
-                `).join('');
-
-                document.getElementById('topProductsList').innerHTML = `
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Product ID</th>
-                                <th>Views</th>
-                                <th>Percentage</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${topProducts.map(p => `
-                                <tr>
-                                    <td>Product ${p.productId}</td>
-                                    <td>${p.views}</td>
-                                    <td>${((p.views / analytics.totalEvents) * 100).toFixed(1)}%</td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                `;
+        // Check admin access
+        function checkAdminAccess() {
+            if (!window.AdminManager.isAdmin()) {
+                alert('Access denied. Admin privileges required.');
+                window.location.href = 'admin-login.html';
             }
+        }
 
-            // Event distribution
-            const eventCounts = {};
-            analytics.events.forEach(e => {
-                eventCounts[e.name] = (eventCounts[e.name] || 0) + 1;
+        // Switch tab
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
             });
-            document.getElementById('eventDistribution').innerHTML = Object.entries(eventCounts).map(([name, count]) => `
-                <div class="metric">
-                    <div class="metric-label">${name}</div>
-                    <div class="metric-value">${count}</div>
-                </div>
-            `).join('');
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
 
-            // Recent events
-            document.getElementById('recentEvents').innerHTML = analytics.events.slice(-10).reverse().map(e => `
-                <div class="event-item">
-                    <div class="event-name">${e.name}</div>
-                    <div class="event-time">${new Date(e.timestamp).toLocaleTimeString()}</div>
-                </div>
-            `).join('');
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
 
-            // Error tracking
-            const errors = ErrorTracker.getErrors();
-            document.getElementById('errorStats').innerHTML = `
-                <div class="metric-row">
-                    <div class="metric">
-                        <div class="metric-label">Total Errors</div>
-                        <div class="metric-value">${errors.length}</div>
-                    </div>
-                    <div class="metric">
-                        <div class="metric-label">Error Types</div>
-                        <div class="metric-value">${new Set(errors.map(e => e.type)).size}</div>
-                    </div>
-                </div>
-            `;
-
-            document.getElementById('recentErrors').innerHTML = errors.slice(-5).reverse().map(e => `
-                <div class="event-item">
-                    <div class="event-name">${e.type}: ${e.message}</div>
-                    <div class="event-time">${new Date(e.timestamp).toLocaleTimeString()}</div>
-                </div>
-            `).join('') || '<p style="color: rgba(255,255,255,0.5);">No errors recorded</p>';
-        }
-
-        function exportAnalytics() {
-            Analytics.exportAnalytics();
-            alert('✅ Analytics exported successfully!');
-        }
-
-        function exportErrors() {
-            ErrorTracker.exportErrors();
-            alert('✅ Errors exported successfully!');
-        }
-
-        function clearAnalytics() {
-            if (confirm('Are you sure? This will clear all analytics data.')) {
-                localStorage.removeItem('trendaryo_analytics');
-                location.reload();
+            if (tabName === 'sales') {
+                loadSalesAnalytics();
+            } else if (tabName === 'customers') {
+                loadCustomerAnalytics();
+            } else if (tabName === 'products') {
+                loadProductAnalytics();
+            } else if (tabName === 'conversion') {
+                loadConversionAnalytics();
             }
         }
 
-        function refreshDashboard() {
-            updateDashboard();
-            alert('✅ Dashboard refreshed!');
+        // Load overview stats
+        async function loadOverviewStats() {
+            try {
+                const overview = await window.AdminManager.getDashboardOverview();
+                displayOverviewStats(overview);
+            } catch (error) {
+                console.error('Error loading overview:', error);
+            }
         }
 
-        // Update dashboard on load and every 5 seconds
-        window.addEventListener('load', updateDashboard);
-        setInterval(updateDashboard, 5000);
+        // Display overview stats
+        function displayOverviewStats(data) {
+            const statsGrid = document.getElementById('statsGrid');
+            statsGrid.innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-label">Total Revenue</div>
+                    <div class="stat-value">${window.AdminManager.formatCurrency(data.totalRevenue || 0)}</div>
+                    <div class="stat-change">${data.revenueChange || '+0%'}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Total Orders</div>
+                    <div class="stat-value">${data.totalOrders || 0}</div>
+                    <div class="stat-change">${data.ordersChange || '+0%'}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Average Order Value</div>
+                    <div class="stat-value">${window.AdminManager.formatCurrency(data.avgOrderValue || 0)}</div>
+                    <div class="stat-change">${data.aovChange || '+0%'}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Conversion Rate</div>
+                    <div class="stat-value">${data.conversionRate || '0%'}</div>
+                    <div class="stat-change">${data.conversionChange || '+0%'}</div>
+                </div>
+            `;
+        }
+
+        // Load sales analytics
+        async function loadSalesAnalytics() {
+            try {
+                const sales = await window.AdminManager.getSalesAnalytics(currentPeriod);
+                displaySalesChart(sales);
+                loadPaymentMethods();
+            } catch (error) {
+                console.error('Error loading sales analytics:', error);
+                document.getElementById('salesChart').innerHTML = 
+                    '<div class="error-message">Failed to load sales data</div>';
+            }
+        }
+
+        // Display sales chart
+        function displaySalesChart(data) {
+            const chart = document.getElementById('salesChart');
+            chart.innerHTML = `
+                <div style="width: 100%; text-align: center; color: #00f0ff;">
+                    <p>Sales Chart Placeholder</p>
+                    <p>Total Sales: ${window.AdminManager.formatCurrency(data.totalSales || 0)}</p>
+                    <p>Orders: ${data.totalOrders || 0}</p>
+                </div>
+            `;
+        }
+
+        // Load payment methods
+        async function loadPaymentMethods() {
+            try {
+                const methods = await window.AdminManager.getPaymentMethodsBreakdown();
+                displayPaymentMethods(methods);
+            } catch (error) {
+                console.error('Error loading payment methods:', error);
+            }
+        }
+
+        // Display payment methods
+        function displayPaymentMethods(data) {
+            const table = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Payment Method</th>
+                            <th>Transactions</th>
+                            <th>Revenue</th>
+                            <th>Percentage</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${(data.methods || []).map(method => `
+                            <tr>
+                                <td>${method.name}</td>
+                                <td>${method.count}</td>
+                                <td>${window.AdminManager.formatCurrency(method.revenue)}</td>
+                                <td>${method.percentage}%</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+            document.getElementById('paymentMethodsTable').innerHTML = table;
+        }
+
+        // Load customer analytics
+        async function loadCustomerAnalytics() {
+            try {
+                const customers = await window.AdminManager.getCustomerAnalytics(currentPeriod);
+                loadTopCustomers();
+                displayCustomerChart(customers);
+            } catch (error) {
+                console.error('Error loading customer analytics:', error);
+            }
+        }
+
+        // Load top customers
+        async function loadTopCustomers() {
+            try {
+                const customers = await window.AdminManager.getTopCustomers(10);
+                displayTopCustomers(customers);
+            } catch (error) {
+                console.error('Error loading top customers:', error);
+            }
+        }
+
+        // Display top customers
+        function displayTopCustomers(data) {
+            const table = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Customer</th>
+                            <th>Orders</th>
+                            <th>Total Spent</th>
+                            <th>Avg Order</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${(data.customers || []).map((customer, index) => `
+                            <tr>
+                                <td><span class="rank-badge">${index + 1}</span></td>
+                                <td>${customer.name}</td>
+                                <td>${customer.orderCount}</td>
+                                <td>${window.AdminManager.formatCurrency(customer.totalSpent)}</td>
+                                <td>${window.AdminManager.formatCurrency(customer.avgOrder)}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+            document.getElementById('topCustomersTable').innerHTML = table;
+        }
+
+        // Display customer chart
+        function displayCustomerChart(data) {
+            const chart = document.getElementById('customerChart');
+            chart.innerHTML = `
+                <div style="width: 100%; text-align: center; color: #00f0ff;">
+                    <p>Customer Metrics</p>
+                    <p>New Customers: ${data.newCustomers || 0}</p>
+                    <p>Returning Customers: ${data.returningCustomers || 0}</p>
+                    <p>Customer Retention: ${data.retentionRate || '0%'}</p>
+                </div>
+            `;
+        }
+
+        // Load product analytics
+        async function loadProductAnalytics() {
+            try {
+                const products = await window.AdminManager.getTopProducts(10);
+                displayTopProducts(products);
+            } catch (error) {
+                console.error('Error loading product analytics:', error);
+            }
+        }
+
+        // Display top products
+        function displayTopProducts(data) {
+            const table = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Product</th>
+                            <th>Units Sold</th>
+                            <th>Revenue</th>
+                            <th>Avg Rating</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${(data.products || []).map((product, index) => `
+                            <tr>
+                                <td><span class="rank-badge">${index + 1}</span></td>
+                                <td>${product.name}</td>
+                                <td>${product.unitsSold}</td>
+                                <td>${window.AdminManager.formatCurrency(product.revenue)}</td>
+                                <td>${product.rating || 'N/A'}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+            document.getElementById('topProductsTable').innerHTML = table;
+        }
+
+        // Load conversion analytics
+        async function loadConversionAnalytics() {
+            try {
+                const conversion = await window.AdminManager.getConversionAnalytics(currentPeriod);
+                displayConversionChart(conversion);
+                loadTrafficAnalytics();
+            } catch (error) {
+                console.error('Error loading conversion analytics:', error);
+            }
+        }
+
+        // Display conversion chart
+        function displayConversionChart(data) {
+            const chart = document.getElementById('conversionChart');
+            chart.innerHTML = `
+                <div style="width: 100%; text-align: center; color: #00f0ff;">
+                    <p>Conversion Metrics</p>
+                    <p>Conversion Rate: ${data.conversionRate || '0%'}</p>
+                    <p>Cart Abandonment: ${data.cartAbandonment || '0%'}</p>
+                    <p>Avg Cart Value: ${window.AdminManager.formatCurrency(data.avgCartValue || 0)}</p>
+                </div>
+            `;
+        }
+
+        // Load traffic analytics
+        async function loadTrafficAnalytics() {
+            try {
+                const traffic = await window.AdminManager.getTrafficAnalytics(currentPeriod);
+                displayTrafficChart(traffic);
+            } catch (error) {
+                console.error('Error loading traffic analytics:', error);
+            }
+        }
+
+        // Display traffic chart
+        function displayTrafficChart(data) {
+            const chart = document.getElementById('trafficChart');
+            chart.innerHTML = `
+                <div style="width: 100%; text-align: center; color: #00f0ff;">
+                    <p>Traffic Analytics</p>
+                    <p>Total Visitors: ${data.totalVisitors || 0}</p>
+                    <p>Unique Visitors: ${data.uniqueVisitors || 0}</p>
+                    <p>Bounce Rate: ${data.bounceRate || '0%'}</p>
+                </div>
+            `;
+        }
+
+        // Apply filters
+        function applyFilters() {
+            currentPeriod = document.getElementById('periodFilter').value;
+            loadOverviewStats();
+            loadSalesAnalytics();
+        }
+
+        // Download report
+        function downloadReport() {
+            alert('Report download feature coming soon');
+        }
+
+        // Go back
+        function goBack() {
+            window.location.href = 'admin-dashboard-enhanced.html';
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            checkAdminAccess();
+            loadOverviewStats();
+            loadSalesAnalytics();
+        });
     </script>
 </body>
 </html>

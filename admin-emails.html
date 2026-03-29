@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inventory Management - Admin - Trendaryo</title>
+    <title>Email Management - Admin - Trendaryo</title>
     <link rel="stylesheet" href="shared.css">
     <link rel="stylesheet" href="responsive-universal.css">
     <style>
@@ -79,34 +79,39 @@
             box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
         }
 
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 30px;
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(0, 240, 255, 0.2);
         }
 
-        .stat-card {
-            background: rgba(0, 240, 255, 0.05);
-            border: 1px solid rgba(0, 240, 255, 0.2);
-            border-radius: 10px;
-            padding: 20px;
-            backdrop-filter: blur(10px);
-        }
-
-        .stat-label {
-            font-size: 0.9em;
+        .tab-btn {
+            padding: 10px 20px;
+            background: none;
+            border: none;
             color: #00f0ff;
-            margin-bottom: 10px;
+            cursor: pointer;
+            font-family: 'Rajdhani', sans-serif;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
         }
 
-        .stat-value {
-            font-size: 1.8em;
-            font-weight: bold;
-            background: linear-gradient(135deg, #00f0ff, #ff00aa);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+        .tab-btn:hover {
+            color: #ff00aa;
+        }
+
+        .tab-btn.active {
+            border-bottom-color: #00f0ff;
+            color: #00f0ff;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
         }
 
         .filters {
@@ -128,6 +133,7 @@
         }
 
         input[type="text"],
+        input[type="date"],
         select {
             padding: 10px;
             background: rgba(0, 240, 255, 0.05);
@@ -138,6 +144,7 @@
         }
 
         input[type="text"]:focus,
+        input[type="date"]:focus,
         select:focus {
             outline: none;
             background: rgba(0, 240, 255, 0.1);
@@ -150,13 +157,6 @@
             border-radius: 10px;
             padding: 20px;
             backdrop-filter: blur(10px);
-        }
-
-        .section-title {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.3em;
-            color: #00f0ff;
-            margin-bottom: 20px;
         }
 
         .table-container {
@@ -186,7 +186,7 @@
             background: rgba(0, 240, 255, 0.05);
         }
 
-        .stock-badge {
+        .status-badge {
             display: inline-block;
             padding: 5px 10px;
             border-radius: 5px;
@@ -194,19 +194,24 @@
             font-weight: bold;
         }
 
-        .stock-in {
+        .status-sent {
             background: rgba(34, 139, 34, 0.2);
             color: #228B22;
         }
 
-        .stock-low {
+        .status-pending {
             background: rgba(255, 165, 0, 0.2);
             color: #FFA500;
         }
 
-        .stock-out {
+        .status-failed {
             background: rgba(220, 20, 60, 0.2);
             color: #DC143C;
+        }
+
+        .status-bounced {
+            background: rgba(65, 105, 225, 0.2);
+            color: #4169E1;
         }
 
         .action-btn {
@@ -224,6 +229,11 @@
         .action-btn:hover {
             background: rgba(0, 240, 255, 0.3);
             box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+        }
+
+        .action-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
 
         .modal {
@@ -248,7 +258,7 @@
             border: 1px solid rgba(0, 240, 255, 0.2);
             border-radius: 10px;
             padding: 30px;
-            max-width: 500px;
+            max-width: 600px;
             width: 90%;
             max-height: 90vh;
             overflow-y: auto;
@@ -399,8 +409,8 @@
                 justify-content: center;
             }
 
-            .stats-grid {
-                grid-template-columns: 1fr;
+            .tabs {
+                flex-wrap: wrap;
             }
 
             .filters {
@@ -425,99 +435,109 @@
     <div class="container">
         <!-- Header -->
         <div class="header">
-            <h1>📦 Inventory Management</h1>
+            <h1>📧 Email Management</h1>
             <div class="header-actions">
                 <button class="btn" onclick="goBack()">← Back</button>
-                <button class="btn primary" onclick="exportInventory()">📥 Export</button>
+                <button class="btn primary" onclick="openModal('bulkEmailModal')">📤 Send Bulk Email</button>
             </div>
         </div>
 
-        <!-- Statistics -->
-        <div class="stats-grid" id="statsGrid">
-            <div class="loading">
-                <div class="spinner"></div>
-            </div>
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('history')">Email History</button>
+            <button class="tab-btn" onclick="switchTab('templates')">Templates</button>
         </div>
 
-        <!-- Filters -->
-        <div class="filters">
-            <div class="filter-group">
-                <label>Search:</label>
-                <input type="text" id="searchInput" placeholder="Product name or SKU..." onkeyup="handleSearch()">
-            </div>
-            <div class="filter-group">
-                <label>Stock Status:</label>
-                <select id="statusFilter" onchange="applyFilters()">
-                    <option value="">All</option>
-                    <option value="in_stock">In Stock</option>
-                    <option value="low_stock">Low Stock</option>
-                    <option value="out_of_stock">Out of Stock</option>
-                </select>
-            </div>
-        </div>
-
-        <!-- Products Table -->
-        <div class="section">
-            <div class="section-title">Products</div>
-            <div class="table-container" id="productsTable">
-                <div class="loading">
-                    <div class="spinner"></div>
-                    Loading products...
+        <!-- Email History Tab -->
+        <div id="history" class="tab-content active">
+            <!-- Filters -->
+            <div class="filters">
+                <div class="filter-group">
+                    <label>Search:</label>
+                    <input type="text" id="searchInput" placeholder="Email or recipient..." onkeyup="handleSearch()">
+                </div>
+                <div class="filter-group">
+                    <label>Type:</label>
+                    <select id="typeFilter" onchange="applyFilters()">
+                        <option value="">All</option>
+                        <option value="order_confirmation">Order Confirmation</option>
+                        <option value="shipping">Shipping Notification</option>
+                        <option value="delivery">Delivery Confirmation</option>
+                        <option value="review_request">Review Request</option>
+                        <option value="promotional">Promotional</option>
+                        <option value="welcome">Welcome</option>
+                        <option value="password_reset">Password Reset</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Status:</label>
+                    <select id="statusFilter" onchange="applyFilters()">
+                        <option value="">All</option>
+                        <option value="sent">Sent</option>
+                        <option value="pending">Pending</option>
+                        <option value="failed">Failed</option>
+                        <option value="bounced">Bounced</option>
+                    </select>
                 </div>
             </div>
-            <div class="pagination" id="pagination"></div>
+
+            <!-- Email History Table -->
+            <div class="section">
+                <div class="table-container" id="emailsTable">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        Loading emails...
+                    </div>
+                </div>
+                <div class="pagination" id="pagination"></div>
+            </div>
         </div>
 
-        <!-- Low Stock Alert -->
-        <div class="section" style="margin-top: 30px;">
-            <div class="section-title">⚠️ Low Stock Alert</div>
-            <div class="table-container" id="lowStockTable">
-                <div class="loading">
-                    <div class="spinner"></div>
-                    Loading low stock items...
+        <!-- Templates Tab -->
+        <div id="templates" class="tab-content">
+            <div class="section">
+                <div class="table-container" id="templatesTable">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        Loading templates...
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Update Stock Modal -->
-    <div class="modal" id="stockModal">
+    <!-- Bulk Email Modal -->
+    <div class="modal" id="bulkEmailModal">
         <div class="modal-content">
             <div class="modal-header">
-                <span>Update Stock</span>
-                <button class="modal-close" onclick="closeModal('stockModal')">✕</button>
+                <span>Send Bulk Email</span>
+                <button class="modal-close" onclick="closeModal('bulkEmailModal')">✕</button>
             </div>
-            <form id="stockForm">
+            <form id="bulkEmailForm">
                 <div class="form-group">
-                    <label>Product</label>
-                    <input type="text" id="productName" disabled>
+                    <label>Recipients (comma-separated emails)</label>
+                    <textarea id="recipients" rows="4" placeholder="email1@example.com, email2@example.com..." required></textarea>
                 </div>
                 <div class="form-group">
-                    <label>Current Stock</label>
-                    <input type="number" id="currentStock" disabled>
+                    <label>Subject</label>
+                    <input type="text" id="subject" required>
                 </div>
                 <div class="form-group">
-                    <label>New Quantity</label>
-                    <input type="number" id="newQuantity" required>
-                </div>
-                <div class="form-group">
-                    <label>Reason</label>
-                    <select id="reason" required>
-                        <option value="">Select Reason</option>
-                        <option value="restock">Restock</option>
-                        <option value="adjustment">Adjustment</option>
-                        <option value="damage">Damage</option>
-                        <option value="return">Return</option>
-                        <option value="other">Other</option>
+                    <label>Template</label>
+                    <select id="template" required>
+                        <option value="">Select Template</option>
+                        <option value="promotional">Promotional</option>
+                        <option value="newsletter">Newsletter</option>
+                        <option value="announcement">Announcement</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Notes</label>
-                    <textarea id="notes" rows="3" placeholder="Additional notes..."></textarea>
+                    <label>Message</label>
+                    <textarea id="message" rows="5" placeholder="Email message..." required></textarea>
                 </div>
                 <div class="modal-actions">
-                    <button type="button" class="save" onclick="updateStock()">Update Stock</button>
-                    <button type="button" class="cancel" onclick="closeModal('stockModal')">Cancel</button>
+                    <button type="button" class="save" onclick="sendBulkEmail()">Send Email</button>
+                    <button type="button" class="cancel" onclick="closeModal('bulkEmailModal')">Cancel</button>
                 </div>
             </form>
         </div>
@@ -527,7 +547,6 @@
     <script>
         let currentPage = 1;
         let currentFilters = {};
-        let currentProductId = null;
 
         // Check admin access
         function checkAdminAccess() {
@@ -537,59 +556,46 @@
             }
         }
 
-        // Load inventory stats
-        async function loadInventoryStats() {
-            try {
-                const stats = await window.AdminManager.getInventoryStats();
-                displayStats(stats);
-            } catch (error) {
-                console.error('Error loading stats:', error);
+        // Switch tab
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+
+            if (tabName === 'history') {
+                loadEmails();
+            } else if (tabName === 'templates') {
+                loadTemplates();
             }
         }
 
-        // Display stats
-        function displayStats(stats) {
-            const statsGrid = document.getElementById('statsGrid');
-            statsGrid.innerHTML = `
-                <div class="stat-card">
-                    <div class="stat-label">Total Products</div>
-                    <div class="stat-value">${stats.totalProducts || 0}</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">In Stock</div>
-                    <div class="stat-value">${stats.inStock || 0}</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">Low Stock</div>
-                    <div class="stat-value">${stats.lowStock || 0}</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">Out of Stock</div>
-                    <div class="stat-value">${stats.outOfStock || 0}</div>
-                </div>
-            `;
-        }
-
-        // Load products
-        async function loadProducts(page = 1) {
+        // Load emails
+        async function loadEmails(page = 1) {
             try {
                 currentPage = page;
-                const response = await window.AdminManager.getAllProducts(page, 20, currentFilters);
-                displayProducts(response.data || []);
+                const response = await window.AdminManager.getAllEmails(page, 20, currentFilters);
+                displayEmails(response.data || []);
                 displayPagination(response.pagination || {});
-                loadLowStockProducts();
             } catch (error) {
-                console.error('Error loading products:', error);
-                document.getElementById('productsTable').innerHTML = 
-                    '<div class="error-message">Failed to load products</div>';
+                console.error('Error loading emails:', error);
+                document.getElementById('emailsTable').innerHTML = 
+                    '<div class="error-message">Failed to load emails</div>';
             }
         }
 
-        // Display products
-        function displayProducts(products) {
-            if (products.length === 0) {
-                document.getElementById('productsTable').innerHTML = 
-                    '<p style="text-align: center; color: #00f0ff; padding: 20px;">No products found</p>';
+        // Display emails
+        function displayEmails(emails) {
+            if (emails.length === 0) {
+                document.getElementById('emailsTable').innerHTML = 
+                    '<p style="text-align: center; color: #00f0ff; padding: 20px;">No emails found</p>';
                 return;
             }
 
@@ -597,89 +603,85 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>Product</th>
-                            <th>SKU</th>
-                            <th>Current Stock</th>
+                            <th>ID</th>
+                            <th>Recipient</th>
+                            <th>Type</th>
+                            <th>Subject</th>
                             <th>Status</th>
-                            <th>Reorder Level</th>
+                            <th>Sent Date</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        ${products.map(product => {
-                            let statusClass = 'stock-in';
-                            let statusText = 'In Stock';
-                            if (product.quantity === 0) {
-                                statusClass = 'stock-out';
-                                statusText = 'Out of Stock';
-                            } else if (product.quantity <= product.reorderLevel) {
-                                statusClass = 'stock-low';
-                                statusText = 'Low Stock';
-                            }
-                            return `
-                                <tr>
-                                    <td>${product.name}</td>
-                                    <td>${product.sku}</td>
-                                    <td>${product.quantity}</td>
-                                    <td><span class="stock-badge ${statusClass}">${statusText}</span></td>
-                                    <td>${product.reorderLevel}</td>
-                                    <td>
-                                        <button class="action-btn" onclick="openStockModal('${product.id}', '${product.name}', ${product.quantity})">Update</button>
-                                    </td>
-                                </tr>
-                            `;
-                        }).join('')}
-                    </tbody>
-                </table>
-            `;
-            document.getElementById('productsTable').innerHTML = table;
-        }
-
-        // Load low stock products
-        async function loadLowStockProducts() {
-            try {
-                const response = await window.AdminManager.getLowStockProducts(10);
-                displayLowStockProducts(response.data || []);
-            } catch (error) {
-                console.error('Error loading low stock products:', error);
-            }
-        }
-
-        // Display low stock products
-        function displayLowStockProducts(products) {
-            if (products.length === 0) {
-                document.getElementById('lowStockTable').innerHTML = 
-                    '<p style="text-align: center; color: #00f0ff; padding: 20px;">No low stock items</p>';
-                return;
-            }
-
-            const table = `
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Product</th>
-                            <th>Current Stock</th>
-                            <th>Reorder Level</th>
-                            <th>Shortage</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${products.map(product => `
+                        ${emails.map(email => `
                             <tr>
-                                <td>${product.name}</td>
-                                <td>${product.quantity}</td>
-                                <td>${product.reorderLevel}</td>
-                                <td>${product.reorderLevel - product.quantity}</td>
+                                <td>#${email.id}</td>
+                                <td>${email.recipient}</td>
+                                <td>${email.type}</td>
+                                <td>${email.subject}</td>
+                                <td><span class="status-badge status-${email.status}">${email.status}</span></td>
+                                <td>${window.AdminManager.formatDate(email.sentAt)}</td>
                                 <td>
-                                    <button class="action-btn" onclick="openStockModal('${product.id}', '${product.name}', ${product.quantity})">Restock</button>
+                                    <button class="action-btn" onclick="viewEmail('${email.id}')">View</button>
+                                    <button class="action-btn" onclick="resendEmail('${email.id}')" ${email.status === 'sent' ? '' : 'disabled'}>Resend</button>
                                 </td>
                             </tr>
                         `).join('')}
                     </tbody>
                 </table>
             `;
-            document.getElementById('lowStockTable').innerHTML = table;
+            document.getElementById('emailsTable').innerHTML = table;
+        }
+
+        // Load templates
+        async function loadTemplates() {
+            try {
+                const response = await window.AdminManager.getEmailTemplates();
+                displayTemplates(response.data || []);
+            } catch (error) {
+                console.error('Error loading templates:', error);
+                document.getElementById('templatesTable').innerHTML = 
+                    '<div class="error-message">Failed to load templates</div>';
+            }
+        }
+
+        // Display templates
+        function displayTemplates(templates) {
+            if (templates.length === 0) {
+                document.getElementById('templatesTable').innerHTML = 
+                    '<p style="text-align: center; color: #00f0ff; padding: 20px;">No templates found</p>';
+                return;
+            }
+
+            const table = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Type</th>
+                            <th>Subject</th>
+                            <th>Last Updated</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${templates.map(template => `
+                            <tr>
+                                <td>#${template.id}</td>
+                                <td>${template.name}</td>
+                                <td>${template.type}</td>
+                                <td>${template.subject}</td>
+                                <td>${window.AdminManager.formatDate(template.updatedAt)}</td>
+                                <td>
+                                    <button class="action-btn" onclick="editTemplate('${template.id}')">Edit</button>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+            document.getElementById('templatesTable').innerHTML = table;
         }
 
         // Display pagination
@@ -692,15 +694,15 @@
 
             let html = '';
             if (pagination.page > 1) {
-                html += `<button onclick="loadProducts(${pagination.page - 1})">← Previous</button>`;
+                html += `<button onclick="loadEmails(${pagination.page - 1})">← Previous</button>`;
             }
 
             for (let i = 1; i <= pagination.totalPages; i++) {
-                html += `<button ${i === pagination.page ? 'class="active"' : ''} onclick="loadProducts(${i})">${i}</button>`;
+                html += `<button ${i === pagination.page ? 'class="active"' : ''} onclick="loadEmails(${i})">${i}</button>`;
             }
 
             if (pagination.page < pagination.totalPages) {
-                html += `<button onclick="loadProducts(${pagination.page + 1})">Next →</button>`;
+                html += `<button onclick="loadEmails(${pagination.page + 1})">Next →</button>`;
             }
 
             paginationDiv.innerHTML = html;
@@ -719,52 +721,70 @@
         function applyFilters() {
             currentFilters = {
                 search: document.getElementById('searchInput').value,
+                type: document.getElementById('typeFilter').value,
                 status: document.getElementById('statusFilter').value
             };
-            loadProducts(1);
+            loadEmails(1);
         }
 
-        // Open stock modal
-        function openStockModal(productId, productName, currentStock) {
-            currentProductId = productId;
-            document.getElementById('productName').value = productName;
-            document.getElementById('currentStock').value = currentStock;
-            document.getElementById('newQuantity').value = currentStock;
-            document.getElementById('reason').value = '';
-            document.getElementById('notes').value = '';
-            openModal('stockModal');
-        }
-
-        // Update stock
-        async function updateStock() {
+        // View email
+        async function viewEmail(emailId) {
             try {
-                const newQuantity = parseInt(document.getElementById('newQuantity').value);
-                const reason = document.getElementById('reason').value;
-                const notes = document.getElementById('notes').value;
-
-                if (!reason) {
-                    alert('Please select a reason');
-                    return;
-                }
-
-                await window.AdminManager.updateProductStock(currentProductId, newQuantity, reason);
-                alert('Stock updated successfully');
-                closeModal('stockModal');
-                loadProducts(currentPage);
+                const email = await window.AdminManager.getEmailById(emailId);
+                alert(`Email #${email.id}\nTo: ${email.recipient}\nSubject: ${email.subject}\nStatus: ${email.status}`);
             } catch (error) {
-                console.error('Error updating stock:', error);
-                alert('Failed to update stock');
+                console.error('Error loading email:', error);
+                alert('Failed to load email details');
             }
         }
 
-        // Export inventory
-        async function exportInventory() {
+        // Resend email
+        async function resendEmail(emailId) {
+            if (!confirm('Are you sure you want to resend this email?')) return;
+
             try {
-                const response = await window.AdminManager.exportInventory(currentFilters);
-                window.AdminManager.exportToCSV(response.data, 'inventory');
+                await window.AdminManager.resendEmail(emailId);
+                alert('Email resent successfully');
+                loadEmails(currentPage);
             } catch (error) {
-                console.error('Error exporting inventory:', error);
-                alert('Failed to export inventory');
+                console.error('Error resending email:', error);
+                alert('Failed to resend email');
+            }
+        }
+
+        // Edit template
+        function editTemplate(templateId) {
+            alert('Template editing coming soon');
+        }
+
+        // Send bulk email
+        async function sendBulkEmail() {
+            try {
+                const recipients = document.getElementById('recipients').value
+                    .split(',')
+                    .map(email => email.trim())
+                    .filter(email => email);
+                const subject = document.getElementById('subject').value;
+                const template = document.getElementById('template').value;
+                const message = document.getElementById('message').value;
+
+                if (recipients.length === 0) {
+                    alert('Please enter at least one recipient');
+                    return;
+                }
+
+                if (!subject || !template || !message) {
+                    alert('Please fill in all fields');
+                    return;
+                }
+
+                await window.AdminManager.sendBulkEmail(recipients, subject, template, { message });
+                alert(`Email sent to ${recipients.length} recipient(s)`);
+                closeModal('bulkEmailModal');
+                loadEmails(1);
+            } catch (error) {
+                console.error('Error sending bulk email:', error);
+                alert('Failed to send bulk email');
             }
         }
 
@@ -785,8 +805,7 @@
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
             checkAdminAccess();
-            loadInventoryStats();
-            loadProducts();
+            loadEmails();
         });
     </script>
 </body>
