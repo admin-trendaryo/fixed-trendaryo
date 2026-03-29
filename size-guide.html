@@ -30,29 +30,40 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" href="assets/favicon-crown-star.svg">
     <style>
+        body {
+            padding-top: 180px;
+        }
+        
+        .navbar {
+            display: none;
+        }
+        
         .size-guide-nav {
             display: flex;
             gap: 1rem;
             margin-bottom: 2rem;
-            border-bottom: 2px solid #e5e5e5;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
             padding-bottom: 1rem;
         }
         
         .size-guide-nav button {
             padding: 0.75rem 1.5rem;
-            border: none;
-            background: none;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255,255,255,0.05) !important;
+            backdrop-filter: blur(10px) !important;
             font-size: 1rem;
             cursor: pointer;
-            color: #666;
+            color: rgba(255, 255, 255, 0.85);
             border-radius: 8px;
             transition: all 0.3s;
+            box-shadow: none !important;
         }
         
         .size-guide-nav button.active {
-            background: #d4af37;
-            color: white;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            color: #000;
             font-weight: 600;
+            border-color: transparent;
         }
         
         .size-guide-content {
@@ -67,31 +78,51 @@
             width: 100%;
             border-collapse: collapse;
             margin: 1.5rem 0;
-            background: white;
+            background: rgba(255,255,255,0.05) !important;
+            backdrop-filter: blur(10px) !important;
             border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: none !important;
         }
         
         .size-chart th,
         .size-chart td {
             padding: 1rem;
             text-align: center;
-            border-bottom: 1px solid #e5e5e5;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.9);
+            background: transparent !important;
         }
         
         .size-chart th {
-            background: #f5f5f5;
+            background: rgba(255, 255, 255, 0.05) !important;
             font-weight: 600;
         }
         
+        .size-chart tbody {
+            background: transparent !important;
+        }
+        
+        .size-chart tbody tr {
+            background: transparent !important;
+        }
+        
+        .size-chart tbody td {
+            background: transparent !important;
+        }
+        
         .size-chart tr:hover {
-            background: #fafafa;
+            background: rgba(255, 255, 255, 0.05) !important;
+        }
+        
+        .size-chart tr:hover td {
+            background: transparent !important;
         }
         
         .size-chart .selected {
-            background: #d4af37;
-            color: white;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            color: #000;
         }
         
         .measurement-guide {
@@ -102,10 +133,17 @@
         }
         
         .measurement-card {
-            background: white;
+            background: rgba(255,255,255,0.05) !important;
+            backdrop-filter: blur(10px) !important;
             padding: 2rem;
             border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: none !important;
+        }
+        
+        .measurement-guide > div {
+            background: transparent !important;
+            box-shadow: none !important;
         }
         
         .measurement-card h3 {
@@ -113,6 +151,11 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            color: rgba(255, 255, 255, 0.95);
+        }
+        
+        .measurement-card h4 {
+            color: rgba(255, 255, 255, 0.9);
         }
         
         .measurement-steps {
@@ -124,6 +167,7 @@
             padding: 0.5rem 0;
             padding-left: 1.5rem;
             position: relative;
+            color: rgba(255, 255, 255, 0.85);
         }
         
         .measurement-steps li::before {
@@ -134,11 +178,23 @@
         }
         
         .tip-box {
-            background: #f0f9ff;
-            border-left: 4px solid #3b82f6;
+            background: rgba(255,255,255,0.05) !important;
+            backdrop-filter: blur(10px) !important;
+            border-left: 4px solid var(--accent);
             padding: 1rem;
             margin: 1rem 0;
             border-radius: 0 8px 8px 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-left: 4px solid var(--accent);
+            box-shadow: none !important;
+        }
+        
+        .tip-box strong {
+            color: rgba(255, 255, 255, 0.95);
+        }
+        
+        .tip-box {
+            color: rgba(255, 255, 255, 0.85);
         }
         
         .fit-guide {
@@ -151,18 +207,47 @@
         .fit-option {
             text-align: center;
             padding: 1.5rem;
-            background: white;
-            border: 2px solid #e5e5e5;
+            background: rgba(255,255,255,0.05) !important;
+            backdrop-filter: blur(10px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 12px;
+            transition: all 0.3s;
+            box-shadow: none !important;
         }
         
         .fit-option.active {
-            border-color: #d4af37;
-            background: #fffbeb;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2)) !important;
+            border-color: transparent;
+        }
+        
+        .fit-option.active h4,
+        .fit-option.active p {
+            color: #000;
         }
         
         .fit-option h4 {
             margin-bottom: 0.5rem;
+            color: rgba(255, 255, 255, 0.95);
+        }
+        
+        .fit-option p {
+            color: rgba(255, 255, 255, 0.85);
+        }
+        
+        h1, h2, h3 {
+            color: rgba(255, 255, 255, 0.95);
+        }
+        
+        .page-header p {
+            color: rgba(255, 255, 255, 0.85);
+        }
+        
+        section h2 {
+            color: rgba(255, 255, 255, 0.95);
+        }
+        
+        section p {
+            color: rgba(255, 255, 255, 0.85);
         }
     </style>
 <script src="bg.js"></script>
@@ -193,7 +278,7 @@
     </nav>
 
     <!-- Main Content -->
-    <main class="main-content" style="padding-top: 120px; padding-bottom: 4rem;">
+    <main class="main-content" style="padding-bottom: 4rem;">
         <div class="container">
             <div class="page-header text-center">
                 <h1>Size Guide</h1>
@@ -570,26 +655,7 @@
         </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-grid">
-                <div class="footer-section">
-                    <h3>Trendaryo</h3>
-                    <p>Your premium destination for electronics, fashion, and accessories.</p>
-                </div>
-                <div class="footer-section">
-                    <h4>Quick Links</h4>
-                    <a href="shop.html">Shop</a>
-                    <a href="about.html">About</a>
-                    <a href="contact.html">Contact</a>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2024 Trendaryo. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
+
 
     <script>
         function showSizeGuide(section) {
@@ -610,7 +676,9 @@
             event.target.classList.add('active');
         }
     </script>
-    <div id="footer-container"></div>`n    <script src="components.js"></script>`n    <div id="footer-container"></div>`n    <script src="components.js"></script>`n    <!-- Self-Healing System -->
+    <div id="footer-container"></div>
+    <script src="components.js"></script>
+    <!-- Self-Healing System -->
 <script>
 window.onerror = function(msg, url, lineNo, columnNo, error) {
   console.log('Error caught:', msg);
