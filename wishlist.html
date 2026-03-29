@@ -1,0 +1,356 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="View and manage your saved products. Add items to cart or share your wishlist with friends.">
+    <meta name="keywords" content="wishlist, saved items, favorites">
+    <meta name="robots" content="noindex, follow">
+    <meta name="author" content="Trendaryo">
+    <link rel="canonical" href="https://trendaryo.com/wishlist.html">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://trendaryo.com/wishlist.html">
+    <meta property="og:title" content="My Wishlist - Trendaryo">
+    <meta property="og:description" content="View and manage your saved products. Add items to cart or share your wishlist with friends.">
+    <meta property="og:image" content="https://trendaryo.com/assets/trendaryo-crown-star-logo.svg">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://trendaryo.com/wishlist.html">
+    <meta property="twitter:title" content="My Wishlist - Trendaryo">
+    <meta property="twitter:description" content="View and manage your saved products. Add items to cart or share your wishlist with friends.">
+    <meta property="twitter:image" content="https://trendaryo.com/assets/trendaryo-crown-star-logo.svg">
+    <title>My Wishlist - Trendaryo</title>
+    <link rel="stylesheet" href="responsive.css">
+    <link rel="stylesheet" href="shared.css">
+    <script src="performance.js"></script>
+    <link rel="stylesheet" href="styles.css">
+    <script src="bg.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --accent: #00f0ff; --accent-2: #ff00aa; --accent-3: #00ff88; --glass: rgba(255,255,255,0.05); --glass-border: rgba(255,255,255,0.1); }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Rajdhani', sans-serif; background: #0a0a2a; color: #fff; overflow-x: hidden; transition: background 1s ease-in-out; }
+        #three-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none;}
+
+        .store-header { position: fixed; top: 0; left: 0; right: 0; z-index: 10000; 
+        param($m)
+        $m.Value -replace 'rgba\(0,0,0,0\.(65|72|8|85|9|92)\)', 'rgba(0,0,0,0.08)'
+    : blur(18px); border-bottom: 1px solid var(--glass-border); }
+        .store-header-inner { max-width: 1200px; margin: 0 auto; padding: 0.8rem 1.25rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+        .store-brand { display: flex; align-items: center; gap: 0.75rem; min-width: 180px; }
+        .store-logo { font-family: 'Orbitron', sans-serif; font-size: 1.6rem; font-weight: 900; background: linear-gradient(135deg, var(--accent), var(--accent-2)); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-decoration: none; white-space: nowrap; }
+        .store-search { flex: 1; display: flex; align-items: center; gap: 0.5rem; padding: 0.55rem 0.9rem; border-radius: 999px; background: var(--glass); border: 1px solid var(--glass-border); min-width: 220px; }
+        .store-search input { width: 100%; border: none; outline: none; background: #0a0a2a; color: rgba(255,255,255,0.9); font-family: inherit; font-size: 1rem; }
+        .store-search input::placeholder { color: rgba(255,255,255,0.55); }
+        .store-actions { display: flex; align-items: center; gap: 0.6rem; }
+        .store-icon-btn { width: 42px; height: 42px; border-radius: 999px; background: var(--glass); border: 1px solid var(--glass-border); display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.9); text-decoration: none; transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease; cursor: pointer; position: relative; }
+        .store-icon-btn:hover { transform: translateY(-1px); border-color: rgba(0,240,255,0.6); background: rgba(0,240,255,0.12); }
+        .store-mobile-toggle { display: none; width: 42px; height: 42px; border-radius: 999px; background: var(--glass); border: 1px solid var(--glass-border); color: rgba(255,255,255,0.9); cursor: pointer; }
+
+        .store-nav { max-width: 1200px; margin: 0 auto; padding: 0 1.25rem 0.85rem; }
+        .store-nav-list { display: flex; align-items: center; justify-content: center; gap: 0.25rem; list-style: none; }
+        .store-nav-item { position: relative; }
+        .store-nav-link { font-family: 'Orbitron', sans-serif; font-size: 0.82rem; font-weight: 700; letter-spacing: 1.6px; text-transform: uppercase; color: rgba(255,255,255,0.85); text-decoration: none; padding: 0.65rem 0.9rem; border-radius: 999px; display: inline-flex; align-items: center; gap: 0.5rem; transition: background 0.2s ease, color 0.2s ease; }
+        .store-nav-link:hover { background: rgba(255,255,255,0.08); color: rgba(255,255,255,1); }
+        .store-nav-link[aria-current="page"] { background: rgba(0,240,255,0.14); color: rgba(255,255,255,1); border: 1px solid rgba(0,240,255,0.25); }
+        .store-caret { font-size: 0.8rem; opacity: 0.85; }
+        .store-dropdown { position: absolute; left: 0; top: calc(100% + 10px); min-width: 240px; background: rgba(10,10,42,0.92); border: 1px solid var(--glass-border); border-radius: 14px; padding: 0.5rem; box-shadow: 0 18px 48px rgba(0,0,0,0.45); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); opacity: 0; visibility: hidden; transform: translateY(-6px); transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s ease; }
+        .store-dropdown a { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; padding: 0.7rem 0.8rem; border-radius: 10px; color: rgba(255,255,255,0.88); text-decoration: none; transition: background 0.18s ease, color 0.18s ease; }
+        .store-dropdown a:hover { background: rgba(0,240,255,0.12); color: #fff; }
+        .store-dropdown small { color: rgba(255,255,255,0.55); font-size: 0.85rem; }
+        .store-nav-item:hover .store-dropdown { opacity: 1; visibility: visible; transform: translateY(0); }
+        .store-nav-item.is-open .store-dropdown { opacity: 1; visibility: visible; transform: translateY(0); }
+
+        .page-offset { padding-top: 150px; }
+        
+        .page-header-3d { padding: 10rem 2rem 4rem; text-align: center; }
+        .page-title-3d { font-family: 'Orbitron', sans-serif; font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 900; background: linear-gradient(135deg, #fff, var(--accent)); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1rem; }
+        .page-subtitle-3d { color: #888; font-size: 1.2rem; }
+        
+        .wishlist-section-3d { padding: 2rem; min-height: 80vh; max-width: 1200px; margin: 0 auto; }
+        
+        .wishlist-grid-3d { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
+        
+        .wishlist-card-3d { background: var(--glass); border: 1px solid var(--glass-border); border-radius: 16px; overflow: hidden; transition: all 0.4s; backdrop-filter: blur(10px); }
+        .wishlist-card-3d:hover { transform: translateY(-10px); border-color: var(--accent); box-shadow: 0 20px 60px rgba(0,240,255,0.2); }
+        
+        .wishlist-image-3d { height: 220px; overflow: hidden; position: relative; background: rgba(0,0,0,0.3); }
+        .wishlist-image-3d img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+        .wishlist-card-3d:hover .wishlist-image-3d img { transform: scale(1.1); }
+        
+        .wishlist-remove-3d { position: absolute; top: 12px; right: 12px; width: 36px; height: 36px; border-radius: 50%; background: rgba(0,0,0,0.6); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s; }
+        .wishlist-remove-3d:hover { background: #ff4444; transform: scale(1.1); }
+        
+        .wishlist-info-3d { padding: 1.5rem; }
+        .wishlist-name-3d { font-family: 'Orbitron', sans-serif; font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .wishlist-price-3d { font-family: 'Orbitron', sans-serif; font-size: 1.3rem; font-weight: 800; color: var(--accent); margin-bottom: 1rem; }
+        
+        .wishlist-actions-3d { display: flex; gap: 0.5rem; }
+        .btn-add-cart-3d { flex: 1; padding: 0.8rem; background: linear-gradient(135deg, var(--accent), var(--accent-3)); border: none; border-radius: 8px; font-family: 'Orbitron', sans-serif; font-size: 0.8rem; font-weight: 700; color: #000; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s; }
+        .btn-add-cart-3d:hover { box-shadow: 0 0 20px rgba(0,240,255,0.5); }
+        .btn-share-wishlist-3d { padding: 0.8rem 1.2rem; background: linear-gradient(135deg, var(--accent-2), #ff4444); border: none; border-radius: 8px; font-family: 'Orbitron', sans-serif; font-size: 0.8rem; font-weight: 700; color: #fff; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s; }
+        .btn-share-wishlist-3d:hover { box-shadow: 0 0 20px rgba(255,0,170,0.5); }
+        
+        .wishlist-header-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; padding: 1.5rem; background: var(--glass); border: 1px solid var(--glass-border); border-radius: 12px; }
+        .wishlist-title-section h2 { font-family: 'Orbitron', sans-serif; font-size: 1.5rem; font-weight: 700; color: #fff; margin-bottom: 0.5rem; }
+        .wishlist-title-section p { color: rgba(255,255,255,0.7); }
+        .wishlist-share-section { display: flex; gap: 0.75rem; align-items: center; }
+        
+        .share-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; z-index: 10000; }
+        .share-modal.active { display: flex; }
+        .share-modal-content { background: var(--glass); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 20px; padding: 2rem; max-width: 500px; width: 90%; max-height: 80vh; overflow-y: auto; }
+        .share-modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+        .share-modal-title { font-family: 'Orbitron', sans-serif; font-size: 1.5rem; font-weight: 700; color: #fff; }
+        .share-modal-close { background: none; border: none; color: rgba(255,255,255,0.7); font-size: 1.5rem; cursor: pointer; transition: color 0.3s ease; }
+        .share-modal-close:hover { color: #fff; }
+        
+        .share-options { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+        .share-option { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; padding: 1rem; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); border-radius: 12px; cursor: pointer; transition: all 0.3s ease; text-decoration: none; color: #fff; }
+        .share-option:hover { background: rgba(0,240,255,0.1); border-color: var(--accent); transform: translateY(-2px); }
+        .share-option-icon { font-size: 2rem; }
+        .share-option-label { font-size: 0.9rem; text-align: center; }
+        
+        .share-link-section { margin-top: 1.5rem; }
+        .share-link-input { display: flex; gap: 0.5rem; }
+        .share-link-input input { flex: 1; padding: 0.875rem; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); border-radius: 8px; color: #fff; font-size: 0.9rem; }
+        .share-link-input button { padding: 0.875rem 1.5rem; background: var(--accent); border: none; border-radius: 8px; color: #000; font-weight: 600; cursor: pointer; transition: all 0.3s ease; }
+        .share-link-input button:hover { background: var(--accent-2); }
+        
+        .empty-wishlist-3d { text-align: center; padding: 6rem 2rem; }
+        .empty-wishlist-3d svg { width: 100px; height: 100px; color: var(--glass-border); margin-bottom: 2rem; }
+        .empty-wishlist-3d h3 { font-family: 'Orbitron', sans-serif; font-size: 1.8rem; margin-bottom: 1rem; }
+        .empty-wishlist-3d p { color: #888; margin-bottom: 2rem; }
+        
+        .preloader-3d { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 99999; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 2rem; }
+        .preloader-3d.hidden { opacity: 0; pointer-events: none; transition: opacity 0.5s; }
+        .preloader-logo-3d { font-family: 'Orbitron', sans-serif; font-size: 2rem; font-weight: 900; background: linear-gradient(135deg, var(--accent), var(--accent-2)); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .preloader-spinner-3d { width: 50px; height: 50px; border: 3px solid var(--glass-border); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; }
+        
+        @media (max-width: 900px) {
+            .store-search { display: none; }
+            .store-mobile-toggle { display: inline-flex; align-items: center; justify-content: center; }
+            .store-nav { display: none; }
+            .store-header.is-open .store-nav { display: block; padding-bottom: 1rem; }
+            .store-nav-list { flex-direction: column; align-items: stretch; justify-content: flex-start; gap: 0.5rem; }
+            .store-nav-link { width: 100%; justify-content: space-between; }
+            .store-dropdown { position: static; opacity: 1; visibility: visible; transform: none; box-shadow: none; background: rgba(255,255,255,0.04); }
+            .store-nav-item:hover .store-dropdown { opacity: 1; visibility: visible; transform: none; }
+            .page-offset { padding-top: 120px; }
+        }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0a0a0a; }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, var(--accent), var(--accent-2)); border-radius: 4px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+    <script src="components.js"></script>
+    <div class="preloader-3d" id="preloader"><div class="preloader-logo-3d">TRENDARYO</div><div class="preloader-spinner-3d"></div></div>
+    <canvas id="three-canvas" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;pointer-events:none;"></canvas>
+    
+    <header class="store-header" id="store-header">
+        <div class="store-header-inner">
+            <div class="store-brand">
+                <a href="index.html" class="store-logo">TRENDARYO</a>
+            </div>
+
+            <div class="store-search" role="search">
+                <span aria-hidden="true">🔎</span>
+                <input type="search" placeholder="Search products..." />
+            </div>
+
+            <div class="store-actions">
+                <a href="wishlist.html" class="store-icon-btn" aria-label="Wishlist">❤</a>
+                <a href="compare.html" class="store-icon-btn" aria-label="Compare">⇄</a>
+                <a href="cart.html" class="store-icon-btn" aria-label="Cart">🛒</a>
+                <a href="account.html" class="store-icon-btn" aria-label="Account">👤</a>
+                <button class="store-mobile-toggle" id="store-mobile-toggle" aria-label="Menu" aria-expanded="false">☰</button>
+                <button id="theme-toggle" class="store-icon-btn" aria-label="Theme">☼</button>
+            </div>
+        </div>
+
+        <nav class="store-nav" aria-label="Primary">
+            <ul class="store-nav-list">
+                <li class="store-nav-item">
+                    <a href="index.html" class="store-nav-link">Home</a>
+                </li>
+
+                <li class="store-nav-item" data-dropdown>
+                    <a href="shop.html" class="store-nav-link">Shop <span class="store-caret" aria-hidden="true">▾</span></a>
+                    <div class="store-dropdown" role="menu">
+                        <a href="shop.html">Shop All <small>Browse everything</small></a>
+                        <a href="product.html">Product Page <small>Example product</small></a>
+                        <a href="wishlist.html">Wishlist <small>Saved items</small></a>
+                        <a href="compare.html">Compare <small>Compare products</small></a>
+                    </div>
+                </li>
+
+                <li class="store-nav-item" data-dropdown>
+                    <a href="cart.html" class="store-nav-link">Cart <span class="store-caret" aria-hidden="true">▾</span></a>
+                    <div class="store-dropdown" role="menu">
+                        <a href="cart.html">View Cart <small>Items & totals</small></a>
+                        <a href="checkout.html">Checkout <small>Complete purchase</small></a>
+                        <a href="track-order.html">Track Order <small>Shipping status</small></a>
+                    </div>
+                </li>
+
+                <li class="store-nav-item" data-dropdown>
+                    <a href="account.html" class="store-nav-link">Account <span class="store-caret" aria-hidden="true">▾</span></a>
+                    <div class="store-dropdown" role="menu">
+                        <a href="account.html">My Account <small>Profile</small></a>
+                        <a href="login.html">Login <small>Access account</small></a>
+                        <a href="register.html">Register <small>Create account</small></a>
+                    </div>
+                </li>
+
+                <li class="store-nav-item" data-dropdown>
+                    <a href="faq.html" class="store-nav-link">Support <span class="store-caret" aria-hidden="true">▾</span></a>
+                    <div class="store-dropdown" role="menu">
+                        <a href="faq.html">FAQ <small>Help center</small></a>
+                        <a href="contact.html">Contact <small>Get in touch</small></a>
+                        <a href="shipping.html">Shipping <small>Delivery info</small></a>
+                        <a href="returns.html">Returns <small>Return policy</small></a>
+                    </div>
+                </li>
+
+                <li class="store-nav-item">
+                    <a href="about.html" class="store-nav-link">About</a>
+                </li>
+                <li class="store-nav-item">
+                    <a href="contact.html" class="store-nav-link">Contact</a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="page-offset">
+    
+    <section class="page-header-3d">
+        <h1 class="page-title-3d">MY WISHLIST</h1>
+        <p class="page-subtitle-3d">Your favorite products in 3D</p>
+    </section>
+    
+    <section class="wishlist-section-3d">
+        <div class="wishlist-header-actions">
+            <div class="wishlist-title-section">
+                <h2>My Wishlist</h2>
+                <p id="wishlist-count">0 items</p>
+            </div>
+            <div class="wishlist-share-section">
+                <button class="btn-share-wishlist-3d" onclick="openShareModal()">
+                    Share Wishlist
+                </button>
+            </div>
+        </div>
+        
+        <div class="wishlist-grid-3d" id="wishlist-grid">
+            <!-- Wishlist items will be rendered here -->
+        </div>
+    </section>
+
+    <!-- Share Modal -->
+    <div class="share-modal" id="shareModal">
+        <div class="share-modal-content">
+            <div class="share-modal-header">
+                <h3 class="share-modal-title">Share Your Wishlist</h3>
+                <button class="share-modal-close" onclick="closeShareModal()">×</button>
+            </div>
+            
+            <div class="share-options">
+                <a href="#" class="share-option" onclick="shareOnSocial('facebook'); return false;">
+                    <div class="share-option-icon">📘</div>
+                    <div class="share-option-label">Facebook</div>
+                </a>
+                <a href="#" class="share-option" onclick="shareOnSocial('twitter'); return false;">
+                    <div class="share-option-icon">🐦</div>
+                    <div class="share-option-label">Twitter</div>
+                </a>
+                <a href="#" class="share-option" onclick="shareOnSocial('whatsapp'); return false;">
+                    <div class="share-option-icon">💬</div>
+                    <div class="share-option-label">WhatsApp</div>
+                </a>
+                <a href="#" class="share-option" onclick="shareOnSocial('email'); return false;">
+                    <div class="share-option-icon">📧</div>
+                    <div class="share-option-label">Email</div>
+                </a>
+                <a href="#" class="share-option" onclick="copyShareLink(); return false;">
+                    <div class="share-option-icon">🔗</div>
+                    <div class="share-option-label">Copy Link</div>
+                </a>
+            </div>
+            
+            <div class="share-link-section">
+                <div class="share-link-input">
+                    <input type="text" id="shareLink" readonly value="">
+                    <button onclick="copyShareLink()">Copy</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    </main>
+
+    <script>
+        // Theme toggle logic
+        const themes = [
+            "linear-gradient(180deg, #0a0a2a 0%, #1a1a40 100%)", // Deep Navy
+            "linear-gradient(180deg, #2a003f 0%, #3b0066 100%)", // Cosmic Purple
+            "linear-gradient(180deg, #002b36 0%, #004f66 100%)", // Dark Teal
+            "linear-gradient(180deg, #2a003f 0%, #1a1a40 100%)"  // Purple + Golden Accent
+        ];
+
+        let currentTheme = 0;
+        const themeToggle = document.getElementById("theme-toggle");
+        if (themeToggle) {
+            themeToggle.addEventListener("click", () => {
+                currentTheme = (currentTheme + 1) % themes.length;
+                (window.__themeBgDiv || document.body).style.background = themes[currentTheme];
+
+                // Apply golden accents when Purple + Golden theme is active
+                if (currentTheme === 3) {
+                    document.querySelectorAll("h1, h2, h3, .product-title, .hero-title-3d, .page-title-3d").forEach(el => {
+                        el.style.color = "#FFD700";
+                    });
+                    document.querySelectorAll("button, .btn-3d").forEach(btn => {
+                        btn.style.background = "#6a0dad";
+                        btn.style.color = "#FFD700";
+                    });
+                } else {
+                    // Reset to default white text for other themes
+                    document.querySelectorAll("h1, h2, h3, .product-title, .hero-title-3d, .page-title-3d").forEach(el => {
+                        el.style.color = "";
+                    });
+                    document.querySelectorAll("button, .btn-3d").forEach(btn => {
+                        btn.style.background = "";
+                        btn.style.color = "";
+                    });
+                }
+            });
+        }
+    </script>
+
+    <script src="bg.js"></script>
+    <!-- Self-Healing System -->
+<script>
+window.onerror = function(msg, url, lineNo, columnNo, error) {
+  console.log('Error caught:', msg);
+  const errorDiv = document.createElement('div');
+  errorDiv.style.cssText = 'position:fixed; bottom:20px; right:20px; background:#f3f4f6; padding:10px; border-radius:5px; z-index:9999; border:1px solid #ccc;';
+  errorDiv.innerHTML = '⚠️ Something went wrong. Retrying...';
+  document.body.appendChild(errorDiv);
+  setTimeout(() => errorDiv.remove(), 3000);
+  return false;
+};
+</script>
+    <script>
+        // Preloader: failsafe ensures it always hides
+        function hidePreloader() { var p = document.getElementById('preloader'); if (p) p.classList.add('hidden'); }
+        if (document.readyState === 'complete') { setTimeout(hidePreloader, 800); }
+        else { window.addEventListener('load', function () { setTimeout(hidePreloader, 800); }); }
+        setTimeout(hidePreloader, 2000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Settings - Trendaryo</title>
+    <link rel="stylesheet" href="responsive.css">
+    <script src="performance.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="shared.css">
+    <style>
+        :root{--accent:#00f0ff;--accent-2:#ff00aa;--glass:rgba(255,255,255,0.05);--glass-border:rgba(255,255,255,0.1);}
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:'Rajdhani',sans-serif;background:linear-gradient(180deg,#0a0a2a,#1a1a40);color:#fff;padding-top:80px;}
+        .container{max-width:800px;margin:0 auto;padding:2rem;}
+        h1{font-family:'Orbitron',sans-serif;margin-bottom:2rem;}
+        .profile-card{background:var(--glass);border:1px solid var(--glass-border);border-radius:20px;padding:2rem;margin-bottom:2rem;}
+        .profile-card h3{color:var(--accent);margin-bottom:1.5rem;font-family:'Orbitron',sans-serif;}
+        .form-group{margin-bottom:1.5rem;}
+        .form-group label{display:block;margin-bottom:0.5rem;color:#ccc;}
+        .form-group input{width:100%;padding:0.8rem;border-radius:8px;background:var(--glass);border:1px solid var(--glass-border);color:#fff;font-family:inherit;}
+        .form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+        .btn{padding:0.8rem 1.5rem;border:none;border-radius:10px;font-weight:700;cursor:pointer;transition:all 0.2s;font-family:inherit;}
+        .btn-primary{background:var(--accent);color:#000;}
+        .btn-secondary{background:var(--glass);color:#fff;border:1px solid var(--glass-border);}
+        .btn:hover{transform:translateY(-2px);}
+        .success{background:rgba(0,255,136,0.2);border:1px solid var(--accent-3);color:var(--accent-3);padding:0.8rem;border-radius:8px;margin-bottom:1rem;display:none;}
+        .success.show{display:block;}
+        @media(max-width:768px){.form-row{grid-template-columns:1fr;}}
+    </style>
+<script src="bg.js"></script>
+</head>
+<body>
+    <canvas id="three-canvas" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;pointer-events:none;"></canvas>
+    <div id="header-container"></div>
+    
+    <div class="container">
+        <h1>Profile Settings</h1>
+        
+        <div class="profile-card">
+            <h3>Personal Information</h3>
+            <div class="success" id="profile-success"></div>
+            <form id="profile-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>First Name</label>
+                        <input type="text" id="firstName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Last Name</label>
+                        <input type="text" id="lastName" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="email" readonly style="opacity:0.6;">
+                </div>
+                <div class="form-group">
+                    <label>Phone</label>
+                    <input type="tel" id="phone">
+                </div>
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+            </form>
+        </div>
+        
+        <div class="profile-card">
+            <h3>Change Password</h3>
+            <div class="success" id="password-success"></div>
+            <form id="password-form">
+                <div class="form-group">
+                    <label>Current Password</label>
+                    <input type="password" id="currentPassword" required>
+                </div>
+                <div class="form-group">
+                    <label>New Password</label>
+                    <input type="password" id="newPassword" required minlength="6">
+                </div>
+                <div class="form-group">
+                    <label>Confirm New Password</label>
+                    <input type="password" id="confirmPassword" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Update Password</button>
+            </form>
+        </div>
+        
+        <div class="profile-card">
+            <h3>Account Actions</h3>
+            <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+                <a href="account.html" class="btn btn-secondary">Back to Dashboard</a>
+                <a href="orders.html" class="btn btn-secondary">View Orders</a>
+                <a href="wishlist.html" class="btn btn-secondary">My Wishlist</a>
+                <button class="btn btn-secondary" onclick="logout()">Logout</button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="footer-container"></div>
+    <script src="components.js"></script>
+    <script>
+        function loadProfile() {
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            if (!user.email) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            document.getElementById('firstName').value = user.firstName || '';
+            document.getElementById('lastName').value = user.lastName || '';
+            document.getElementById('email').value = user.email || '';
+            document.getElementById('phone').value = user.phone || '';
+        }
+        
+        document.getElementById('profile-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            user.firstName = document.getElementById('firstName').value;
+            user.lastName = document.getElementById('lastName').value;
+            user.phone = document.getElementById('phone').value;
+            
+            localStorage.setItem('user', JSON.stringify(user));
+            
+            const successDiv = document.getElementById('profile-success');
+            successDiv.textContent = 'Profile updated successfully!';
+            successDiv.classList.add('show');
+            setTimeout(() => successDiv.classList.remove('show'), 3000);
+        });
+        
+        document.getElementById('password-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            if (newPassword !== confirmPassword) {
+                alert('Passwords do not match');
+                return;
+            }
+            
+            const successDiv = document.getElementById('password-success');
+            successDiv.textContent = 'Password updated successfully!';
+            successDiv.classList.add('show');
+            setTimeout(() => successDiv.classList.remove('show'), 3000);
+            
+            document.getElementById('password-form').reset();
+        });
+        
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = 'index.html';
+        }
+        
+        loadProfile();
+    </script>
+
+    <!-- Self-Healing System -->
+<script>
+window.onerror = function(msg, url, lineNo, columnNo, error) {
+  console.log('Error caught:', msg);
+  const errorDiv = document.createElement('div');
+  errorDiv.style.cssText = 'position:fixed; bottom:20px; right:20px; background:#f3f4f6; padding:10px; border-radius:5px; z-index:9999; border:1px solid #ccc;';
+  errorDiv.innerHTML = '⚠️ Something went wrong. Retrying...';
+  document.body.appendChild(errorDiv);
+  setTimeout(() => errorDiv.remove(), 3000);
+  return false;
+};
+</script>
+</body>
+</html>

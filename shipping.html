@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Free shipping on orders over $50. Fast delivery worldwide. Track your order in real-time. Learn about our shipping policies.">
+    <meta name="keywords" content="shipping, delivery, free shipping, tracking">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="Trendaryo">
+    <link rel="canonical" href="https://trendaryo.com/shipping.html">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://trendaryo.com/shipping.html">
+    <meta property="og:title" content="Shipping Information - Trendaryo | Fast & Free Delivery">
+    <meta property="og:description" content="Free shipping on orders over $50. Fast delivery worldwide. Track your order in real-time. Learn about our shipping policies.">
+    <meta property="og:image" content="https://trendaryo.com/assets/trendaryo-crown-star-logo.svg">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://trendaryo.com/shipping.html">
+    <meta property="twitter:title" content="Shipping Information - Trendaryo | Fast & Free Delivery">
+    <meta property="twitter:description" content="Free shipping on orders over $50. Fast delivery worldwide. Track your order in real-time. Learn about our shipping policies.">
+    <meta property="twitter:image" content="https://trendaryo.com/assets/trendaryo-crown-star-logo.svg">
+    <title>Shipping Information - Trendaryo | Fast & Free Delivery</title>
+    <link rel="stylesheet" href="responsive.css">
+    <link rel="stylesheet" href="shared.css">
+    <script src="bg.js"></script>
+    <script src="performance.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --accent: #00f0ff; --accent-2: #ff00aa; --accent-3: #00ff88; --glass: rgba(255,255,255,0.05); --glass-border: rgba(255,255,255,0.1); }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { padding-top: 210px; font-family: 'Rajdhani', sans-serif; background: #0a0a2a; color: #fff; overflow-x: hidden; }
+        #three-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none;}
+
+        .page-header-3d { padding: 4rem 2rem 4rem; text-align: center; }
+        .page-title-3d { font-family: 'Orbitron', sans-serif; font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 900; background: linear-gradient(135deg, #fff, var(--accent)); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .content-section-3d { padding: 2rem; max-width: 900px; margin: 0 auto; }
+        .content-card-3d { background: transparent; border: 1px solid rgba(0,240,255,0.15); border-radius: 20px; padding: 2.5rem; margin-bottom: 2rem; backdrop-filter: blur(0px); box-shadow: 0 0 20px rgba(0,240,255,0.08), inset 0 0 20px rgba(0,240,255,0.01); }
+        .content-card-3d h2 { font-family: 'Orbitron', sans-serif; font-size: 1.5rem; margin-bottom: 1.5rem; color: var(--accent); }
+        .content-card-3d p, .content-card-3d li { color: #aaa; line-height: 1.8; font-size: 1.05rem; }
+        .content-card-3d ul { padding-left: 1.5rem; }
+        .content-card-3d li { margin-bottom: 0.75rem; }
+        .shipping-options-3d { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; }
+        .shipping-option-3d { background: transparent; border: 1px solid rgba(0,240,255,0.15); border-radius: 16px; padding: 1.5rem; text-align: center; transition: all 0.3s; box-shadow: 0 0 15px rgba(0,240,255,0.05), inset 0 0 15px rgba(0,240,255,0.01); }
+        .shipping-option-3d:hover { border-color: rgba(0,240,255,0.4); transform: translateY(-5px); box-shadow: 0 0 30px rgba(0,240,255,0.15), inset 0 0 20px rgba(0,240,255,0.05); }
+        .shipping-option-3d h3 { font-family: 'Orbitron', sans-serif; margin-bottom: 0.5rem; }
+        .shipping-option-3d .price { font-size: 1.5rem; font-weight: 700; color: var(--accent); }
+        .shipping-option-3d .time { color: #888; font-size: 0.9rem; }
+        .preloader-3d { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 99999; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 2rem; }
+        .preloader-3d.hidden { opacity: 0; pointer-events: none; transition: opacity 0.5s; }
+        .preloader-logo-3d { font-family: 'Orbitron', sans-serif; font-size: 2rem; background: linear-gradient(135deg, var(--accent), var(--accent-2)); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .preloader-spinner-3d { width: 50px; height: 50px; border: 3px solid var(--glass-border); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; }
+        @media(max-width: 900px){ .store-mobile-toggle { display: flex; align-items: center; justify-content: center; } }
+                @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+<!-- cache-bust: 1773610048940 -->
+</head>
+<body>
+    <div class="preloader-3d" id="preloader"><div class="preloader-logo-3d">TRENDARYO</div><div class="preloader-spinner-3d"></div></div>
+    <canvas id="three-canvas" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;pointer-events:none;"></canvas>
+    <header class="store-header" id="store-header">
+        <div class="store-header-inner">
+            <div class="store-brand">
+                <a href="index.html" class="store-logo">TRENDARYO</a>
+            </div>
+            <div class="store-search" role="search">
+                <span aria-hidden="true">🔎</span>
+                <input type="search" placeholder="Search products..." />
+            </div>
+            <div class="store-actions">
+                <a href="wishlist.html" class="store-icon-btn" aria-label="Wishlist">❤</a>
+                <a href="compare.html" class="store-icon-btn" aria-label="Compare">⇄</a>
+                <a href="cart.html" class="store-icon-btn" aria-label="Cart">🛒</a>
+                <a href="account.html" class="store-icon-btn" aria-label="Account">👤</a>
+                <button class="store-mobile-toggle" id="store-mobile-toggle" aria-label="Menu" aria-expanded="false">☰</button>
+                <button id="theme-toggle" class="store-icon-btn" aria-label="Theme">☼</button>
+            </div>
+        </div>
+        <nav class="store-nav" aria-label="Primary">
+            <ul class="store-nav-list">
+                <li class="store-nav-item"><a href="index.html" class="store-nav-link">Home</a></li>
+                <li class="store-nav-item" data-dropdown>
+                    <a href="shop.html" class="store-nav-link">Shop <span class="store-caret" aria-hidden="true">▾</span></a>
+                    <div class="store-dropdown" role="menu">
+                        <a href="shop.html">Shop All <small>Browse everything</small></a>
+                        <a href="product.html">Product Page <small>Example product</small></a>
+                        <a href="wishlist.html">Wishlist <small>Saved items</small></a>
+                        <a href="compare.html">Compare <small>Compare products</small></a>
+                    </div>
+                </li>
+                <li class="store-nav-item" data-dropdown>
+                    <a href="cart.html" class="store-nav-link">Cart <span class="store-caret" aria-hidden="true">▾</span></a>
+                    <div class="store-dropdown" role="menu">
+                        <a href="cart.html">View Cart <small>Items & totals</small></a>
+                        <a href="checkout.html">Checkout <small>Complete purchase</small></a>
+                        <a href="track-order.html">Track Order <small>Shipping status</small></a>
+                    </div>
+                </li>
+                <li class="store-nav-item" data-dropdown>
+                    <a href="account.html" class="store-nav-link">Account <span class="store-caret" aria-hidden="true">▾</span></a>
+                    <div class="store-dropdown" role="menu">
+                        <a href="account.html">My Account <small>Profile</small></a>
+                        <a href="login.html">Login <small>Access account</small></a>
+                        <a href="register.html">Register <small>Create account</small></a>
+                    </div>
+                </li>
+                <li class="store-nav-item" data-dropdown>
+                    <a href="faq.html" class="store-nav-link" aria-current="page">Support <span class="store-caret" aria-hidden="true">▾</span></a>
+                    <div class="store-dropdown" role="menu">
+                        <a href="faq.html">FAQ <small>Help center</small></a>
+                        <a href="contact.html">Contact <small>Get in touch</small></a>
+                        <a href="shipping.html">Shipping <small>Delivery info</small></a>
+                        <a href="returns.html">Returns <small>Return policy</small></a>
+                    </div>
+                </li>
+                <li class="store-nav-item"><a href="about.html" class="store-nav-link">About</a></li>
+                <li class="store-nav-item"><a href="contact.html" class="store-nav-link">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="page-header-3d"><h1 class="page-title-3d">SHIPPING INFO</h1></section>
+    <section class="content-section-3d">
+        <div class="content-card-3d">
+            <h2>Shipping Options</h2>
+            <div class="shipping-options-3d">
+                <div class="shipping-option-3d"><h3>Standard</h3><div class="price">FREE</div><div class="time">5-7 Business Days</div><p style="margin-top:1rem;color:#888;font-size:0.9rem;">On orders over $50</p></div>
+                <div class="shipping-option-3d"><h3>Express</h3><div class="price">$14.99</div><div class="time">2-3 Business Days</div></div>
+                <div class="shipping-option-3d"><h3>Overnight</h3><div class="price">$29.99</div><div class="time">Next Business Day</div></div>
+            </div>
+        </div>
+        <div class="content-card-3d">
+            <h2>Shipping Information</h2>
+            <ul>
+                <li>Free standard shipping on all orders over $50</li>
+                <li>Orders placed before 2 PM EST ship same day</li>
+                <li>All shipments include tracking numbers</li>
+                <li>Signature required for orders over $200</li>
+                <li>We ship to all 50 US states and territories</li>
+                <li>International shipping available to 100+ countries</li>
+            </ul>
+        </div>
+        <div class="content-card-3d">
+            <h2>Track Your Package</h2>
+            <p>Once your order ships, you'll receive an email with tracking information. You can also track your order status on our Track Order page using your order number.</p>
+        </div>
+        
+        <!-- Shipping Calculator -->
+        <div class="content-card-3d">
+            <h2>Shipping Calculator</h2>
+            <form id="shipping-calculator" style="display:grid;gap:1.5rem;">
+                <div class="form-row" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+                    <div>
+                        <label style="display:block;margin-bottom:0.5rem;color:#ccc;">Country</label>
+                        <select id="country" style="width:100%;padding:0.8rem;border-radius:8px;background:var(--glass);border:1px solid var(--glass-border);color:#fff;">
+                            <option value="US">United States</option>
+                            <option value="CA">Canada</option>
+                            <option value="UK">United Kingdom</option>
+                            <option value="AU">Australia</option>
+                            <option value="DE">Germany</option>
+                            <option value="FR">France</option>
+                            <option value="IT">Italy</option>
+                            <option value="ES">Spain</option>
+                            <option value="JP">Japan</option>
+                            <option value="OTHER">Other</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="display:block;margin-bottom:0.5rem;color:#ccc;">Order Value ($)</label>
+                        <input type="number" id="order-value" placeholder="0.00" min="0" step="0.01" style="width:100%;padding:0.8rem;border-radius:8px;background:var(--glass);border:1px solid var(--glass-border);color:#fff;">
+                    </div>
+                </div>
+                <div>
+                    <label style="display:block;margin-bottom:0.5rem;color:#ccc;">Shipping Method</label>
+                    <div style="display:grid;gap:0.8rem;">
+                        <label style="display:flex;align-items:center;padding:1rem;background:rgba(0,0,0,0.3);border-radius:8px;cursor:pointer;">
+                            <input type="radio" name="shipping-method" value="standard" checked style="margin-right:1rem;">
+                            <div style="flex:1;">
+                                <div style="font-weight:600;">Standard Shipping</div>
+                                <div style="font-size:0.9rem;color:#888;">5-7 Business Days</div>
+                            </div>
+                            <div class="method-price" style="font-weight:700;color:var(--accent);">FREE</div>
+                        </label>
+                        <label style="display:flex;align-items:center;padding:1rem;background:rgba(0,0,0,0.3);border-radius:8px;cursor:pointer;">
+                            <input type="radio" name="shipping-method" value="express" style="margin-right:1rem;">
+                            <div style="flex:1;">
+                                <div style="font-weight:600;">Express Shipping</div>
+                                <div style="font-size:0.9rem;color:#888;">2-3 Business Days</div>
+                            </div>
+                            <div class="method-price" style="font-weight:700;color:var(--accent);">$14.99</div>
+                        </label>
+                        <label style="display:flex;align-items:center;padding:1rem;background:rgba(0,0,0,0.3);border-radius:8px;cursor:pointer;">
+                            <input type="radio" name="shipping-method" value="overnight" style="margin-right:1rem;">
+                            <div style="flex:1;">
+                                <div style="font-weight:600;">Overnight Shipping</div>
+                                <div style="font-size:0.9rem;color:#888;">Next Business Day</div>
+                            </div>
+                            <div class="method-price" style="font-weight:700;color:var(--accent);">$29.99</div>
+                        </label>
+                    </div>
+                </div>
+                <button type="submit" style="padding:1rem 2rem;background:linear-gradient(135deg,var(--accent),var(--accent-2));border:none;border-radius:10px;font-weight:700;color:#000;cursor:pointer;transition:all 0.2s;">Calculate Shipping</button>
+            </form>
+            <div id="shipping-result" style="margin-top:1.5rem;padding:1.5rem;background:rgba(0,240,255,0.1);border:1px solid var(--accent);border-radius:10px;display:none;">
+                <h3 style="margin-bottom:1rem;color:var(--accent);">Shipping Estimate</h3>
+                <div id="result-content"></div>
+            </div>
+        </div>
+        
+        <!-- Real-Time Tracking -->
+        <div class="content-card-3d">
+            <h2>Track Your Order</h2>
+            <form id="tracking-form" style="display:grid;gap:1.5rem;">
+                <div>
+                    <label style="display:block;margin-bottom:0.5rem;color:#ccc;">Order Number</label>
+                    <input type="text" id="tracking-number" placeholder="e.g., TRD-123456" style="width:100%;padding:0.8rem;border-radius:8px;background:var(--glass);border:1px solid var(--glass-border);color:#fff;">
+                </div>
+                <div>
+                    <label style="display:block;margin-bottom:0.5rem;color:#ccc;">Email Address</label>
+                    <input type="email" id="tracking-email" placeholder="your@email.com" style="width:100%;padding:0.8rem;border-radius:8px;background:var(--glass);border:1px solid var(--glass-border);color:#fff;">
+                </div>
+                <button type="submit" style="padding:1rem 2rem;background:linear-gradient(135deg,var(--accent),var(--accent-2));border:none;border-radius:10px;font-weight:700;color:#000;cursor:pointer;transition:all 0.2s;">Track Order</button>
+            </form>
+            <div id="tracking-result" style="margin-top:1.5rem;padding:1.5rem;background:rgba(0,240,255,0.1);border:1px solid var(--accent);border-radius:10px;display:none;">
+                <h3 style="margin-bottom:1rem;color:var(--accent);">Order Status</h3>
+                <div id="tracking-content"></div>
+            </div>
+        </div>
+    </section>
+
+        <script>
+        const storeHeader = document.getElementById('store-header');
+        const mobileToggle = document.getElementById('store-mobile-toggle');
+        const dropdownItems = Array.from(document.querySelectorAll('.store-nav-item[data-dropdown]'));
+
+        const storeNav = document.querySelector('.store-nav');
+
+        if (mobileToggle && storeNav) {
+            mobileToggle.addEventListener('click', () => {
+                const isOpen = storeNav.classList.toggle('mobile-open');
+                mobileToggle.setAttribute('aria-expanded', String(isOpen));
+                mobileToggle.textContent = isOpen ? '✕' : '☰';
+                if (!isOpen) dropdownItems.forEach(i => i.classList.remove('is-open'));
+            });
+        }
+
+        dropdownItems.forEach(item => {
+            const link = item.querySelector('.store-nav-link');
+            if (!link) return;
+            link.addEventListener('click', (e) => {
+                if (!window.matchMedia('(max-width: 900px)').matches) return;
+                const isOpen = item.classList.contains('is-open');
+                if (!isOpen) {
+                    e.preventDefault();
+                    dropdownItems.forEach(i => i.classList.remove('is-open'));
+                    item.classList.add('is-open');
+                }
+            });
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!storeHeader) return;
+            if (storeHeader.contains(e.target)) return;
+            dropdownItems.forEach(i => i.classList.remove('is-open'));
+            if (storeNav) { storeNav.classList.remove('mobile-open'); }
+            if (mobileToggle) { mobileToggle.setAttribute('aria-expanded', 'false'); mobileToggle.textContent = '☰'; }
+        });
+    </script>
+        <script>
+        (function() {
+            var themes = [
+                'linear-gradient(180deg, #0a0a2a 0%, #1a1a40 100%)',
+                'linear-gradient(180deg, #2a003f 0%, #3b0066 100%)',
+                'linear-gradient(180deg, #002b36 0%, #004f66 100%)',
+                'linear-gradient(180deg, #2a003f 0%, #1a1a40 100%)'
+            ];
+            var STORAGE_KEY = 'themeIndex';
+
+            // Use the bg div created by bg.js (window.__themeBgDiv = div#__theme-bg)
+            // bg.js sets body to transparent automatically
+            var bgDiv = window.__themeBgDiv || document.body;
+
+            var currentTheme = parseInt(localStorage.getItem(STORAGE_KEY) || '0', 10);
+            if (isNaN(currentTheme) || currentTheme < 0 || currentTheme >= themes.length) currentTheme = 0;
+
+            function applyTheme(idx) {
+                bgDiv.style.background = themes[idx];
+                if (idx === 3) {
+                    document.querySelectorAll('h1,h2,h3,.page-title-3d').forEach(function(el){ el.style.color = '#FFD700'; });
+                    document.querySelectorAll('button,.btn-3d').forEach(function(btn){ btn.style.background = '#6a0dad'; btn.style.color = '#FFD700'; });
+                } else {
+                    document.querySelectorAll('h1,h2,h3,.page-title-3d').forEach(function(el){ el.style.color = ''; });
+                    document.querySelectorAll('button,.btn-3d').forEach(function(btn){ btn.style.background = ''; btn.style.color = ''; });
+                }
+                
+                // Update 3D particle colors if unified background is available
+                if (window.unifiedBackground && window.unifiedBackground.updateThemeColors) {
+                    const themeColors = [
+                        {accent: '#00f0ff', accent2: '#ff00aa', accent3: '#00ff88'},
+                        {accent: '#bf00ff', accent2: '#ff00ff', accent3: '#00ffff'},
+                        {accent: '#00ff41', accent2: '#39ff14', accent3: '#00ff88'},
+                        {accent: '#ffd700', accent2: '#ffaa00', accent3: '#ff8c00'}
+                    ];
+                    window.unifiedBackground.updateThemeColors(themeColors[idx] || themeColors[0]);
+                }
+                
+                // Update original bg.js particles if available
+                if (typeof updateParticlesTheme === 'function') {
+                    const themeColors = [
+                        {accent: '#00f0ff', accent2: '#ff00aa', accent3: '#00ff88'},
+                        {accent: '#bf00ff', accent2: '#ff00ff', accent3: '#00ffff'},
+                        {accent: '#00ff41', accent2: '#39ff14', accent3: '#00ff88'},
+                        {accent: '#ffd700', accent2: '#ffaa00', accent3: '#ff8c00'}
+                    ];
+                    updateParticlesTheme(themeColors[idx] || themeColors[0]);
+                }
+                
+                // Force refresh of any 3D background systems
+                if (window.unifiedBackground && window.unifiedBackground.refresh) {
+                    window.unifiedBackground.refresh();
+                }
+            }
+
+            applyTheme(currentTheme);
+
+            var themeToggle = document.getElementById('theme-toggle');
+            if (themeToggle) {
+                themeToggle.addEventListener('click', function() {
+                    currentTheme = (currentTheme + 1) % themes.length;
+                    localStorage.setItem(STORAGE_KEY, currentTheme);
+                    applyTheme(currentTheme);
+                });
+            }
+        })();
+    </script>
+    <script>
+        function hidePreloader() { var p = document.getElementById('preloader'); if (p) p.classList.add('hidden'); }
+        if (document.readyState === 'complete') { setTimeout(hidePreloader, 800); }
+        else { window.addEventListener('load', function () { setTimeout(hidePreloader, 800); }); }
+        setTimeout(hidePreloader, 2000);
+    </script>
+    <script>
+        // Shipping Calculator
+        document.addEventListener('DOMContentLoaded', function() {
+        var calcForm = document.getElementById('shipping-calculator');
+        if (calcForm) calcForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const country = document.getElementById('country').value;
+            const orderValue = parseFloat(document.getElementById('order-value').value) || 0;
+            const method = document.querySelector('input[name="shipping-method"]:checked').value;
+            
+            let shippingCost = 0;
+            let deliveryDays = '';
+            let deliveryDate = new Date();
+            
+            // Calculate shipping based on country and method
+            if (method === 'standard') {
+                if (country === 'US' && orderValue >= 50) {
+                    shippingCost = 0;
+                } else if (country === 'US') {
+                    shippingCost = 4.99;
+                } else if (['CA', 'UK'].includes(country)) {
+                    shippingCost = 9.99;
+                } else if (['AU', 'DE', 'FR', 'IT', 'ES'].includes(country)) {
+                    shippingCost = 14.99;
+                } else {
+                    shippingCost = 19.99;
+                }
+                deliveryDays = '5-7 Business Days';
+                deliveryDate.setDate(deliveryDate.getDate() + 7);
+            } else if (method === 'express') {
+                if (country === 'US') {
+                    shippingCost = 14.99;
+                } else if (['CA', 'UK'].includes(country)) {
+                    shippingCost = 24.99;
+                } else {
+                    shippingCost = 34.99;
+                }
+                deliveryDays = '2-3 Business Days';
+                deliveryDate.setDate(deliveryDate.getDate() + 3);
+            } else if (method === 'overnight') {
+                if (country === 'US') {
+                    shippingCost = 29.99;
+                } else {
+                    shippingCost = 49.99;
+                }
+                deliveryDays = 'Next Business Day';
+                deliveryDate.setDate(deliveryDate.getDate() + 1);
+            }
+            
+            const resultDiv = document.getElementById('shipping-result');
+            const resultContent = document.getElementById('result-content');
+            
+            resultContent.innerHTML = `
+                <div style="display:grid;gap:1rem;">
+                    <div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid var(--glass-border);">
+                        <span>Country:</span>
+                        <span>${document.querySelector('#country option:checked').text}</span>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid var(--glass-border);">
+                        <span>Order Value:</span>
+                        <span>$${orderValue.toFixed(2)}</span>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid var(--glass-border);">
+                        <span>Shipping Method:</span>
+                        <span>${method.charAt(0).toUpperCase() + method.slice(1)}</span>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid var(--glass-border);">
+                        <span>Shipping Cost:</span>
+                        <span style="color:var(--accent);font-weight:700;">${shippingCost === 0 ? 'FREE' : '$' + shippingCost.toFixed(2)}</span>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid var(--glass-border);">
+                        <span>Delivery Time:</span>
+                        <span>${deliveryDays}</span>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;padding:0.5rem 0;">
+                        <span>Estimated Delivery:</span>
+                        <span>${deliveryDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}</span>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;padding:0.5rem 0;background:rgba(0,255,136,0.1);border-radius:8px;margin-top:0.5rem;">
+                        <span style="font-weight:700;">Total:</span>
+                        <span style="font-weight:700;color:var(--accent-3);">$${(orderValue + shippingCost).toFixed(2)}</span>
+                    </div>
+                </div>
+            `;
+            
+            resultDiv.style.display = 'block';
+        });
+        
+        // Order Tracking
+        var trackForm = document.getElementById('tracking-form');
+        if (trackForm) trackForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const orderNumber = document.getElementById('tracking-number').value;
+            const email = document.getElementById('tracking-email').value;
+            
+            // Simulate tracking lookup
+            const trackingData = {
+                'TRD-123456': {
+                    status: 'In Transit',
+                    location: 'Chicago, IL',
+                    estimatedDelivery: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
+                    progress: 60,
+                    updates: [
+                        { date: '2024-03-10', time: '14:30', status: 'Order Placed', location: 'Online' },
+                        { date: '2024-03-11', time: '09:15', status: 'Order Processed', location: 'Warehouse' },
+                        { date: '2024-03-11', time: '16:45', status: 'Shipped', location: 'Chicago, IL' },
+                        { date: '2024-03-12', time: '11:20', status: 'In Transit', location: 'Chicago, IL' }
+                    ]
+                }
+            };
+            
+            const resultDiv = document.getElementById('tracking-result');
+            const resultContent = document.getElementById('tracking-content');
+            
+            // Check if order exists
+            const orderData = trackingData[orderNumber] || {
+                status: 'Processing',
+                location: 'Warehouse',
+                estimatedDelivery: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000),
+                progress: 30,
+                updates: [
+                    { date: new Date().toISOString().split('T')[0], time: '12:00', status: 'Order Placed', location: 'Online' }
+                ]
+            };
+            
+            resultContent.innerHTML = `
+                <div style="display:grid;gap:1.5rem;">
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+                        <div style="padding:1rem;background:rgba(0,0,0,0.3);border-radius:8px;">
+                            <div style="font-size:0.9rem;color:#888;margin-bottom:0.5rem;">Status</div>
+                            <div style="font-weight:700;color:var(--accent);">${orderData.status}</div>
+                        </div>
+                        <div style="padding:1rem;background:rgba(0,0,0,0.3);border-radius:8px;">
+                            <div style="font-size:0.9rem;color:#888;margin-bottom:0.5rem;">Current Location</div>
+                            <div style="font-weight:700;">${orderData.location}</div>
+                        </div>
+                    </div>
+                    
+                    <div style="padding:1rem;background:rgba(0,0,0,0.3);border-radius:8px;">
+                        <div style="font-size:0.9rem;color:#888;margin-bottom:0.5rem;">Estimated Delivery</div>
+                        <div style="font-weight:700;color:var(--accent-3);font-size:1.1rem;">
+                            ${orderData.estimatedDelivery.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div style="font-size:0.9rem;color:#888;margin-bottom:1rem;">Progress</div>
+                        <div style="background:rgba(255,255,255,0.1);border-radius:20px;height:8px;overflow:hidden;">
+                            <div style="background:linear-gradient(90deg,var(--accent),var(--accent-2));height:100%;width:${orderData.progress}%;transition:width 0.3s ease;"></div>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;margin-top:0.5rem;font-size:0.8rem;color:#888;">
+                            <span>Order Placed</span>
+                            <span>${orderData.progress}%</span>
+                            <span>Delivered</span>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h4 style="margin-bottom:1rem;color:#ccc;">Tracking History</h4>
+                        <div style="display:grid;gap:0.5rem;">
+                            ${orderData.updates.map(update => `
+                                <div style="display:flex;gap:1rem;padding:0.8rem;background:rgba(0,0,0,0.3);border-radius:8px;">
+                                    <div style="min-width:80px;">
+                                        <div style="font-size:0.8rem;color:#888;">${update.date}</div>
+                                        <div style="font-size:0.8rem;color:#888;">${update.time}</div>
+                                    </div>
+                                    <div style="flex:1;">
+                                        <div style="font-weight:600;">${update.status}</div>
+                                        <div style="font-size:0.9rem;color:#888;">${update.location}</div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            resultDiv.style.display = 'block';
+        });
+        }); // end DOMContentLoaded
+    </script>
+    <div id="footer-container"></div>
+    <script src="components.js"></script>
+    <script src="bg.js"></script>
+    
+    <!-- Live Chat Widget -->
+    <div id="chat-widget" style="position:fixed;bottom:20px;right:20px;z-index:99999;">
+        <button id="chat-toggle" style="width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-2));border:none;color:#fff;font-size:1.5rem;cursor:pointer;box-shadow:0 4px 20px rgba(0,240,255,0.4);transition:all 0.3s ease;display:flex;align-items:center;justify-content:center;">
+            💬
+        </button>
+        <div id="chat-window" style="position:absolute;bottom:80px;right:0;width:350px;height:450px;background:linear-gradient(135deg,#0a0a2a,#1a1a40);border:2px solid var(--accent);border-radius:15px;display:none;flex-direction:column;overflow:hidden;box-shadow:0 10px 40px rgba(0,0,0,0.5);">
+            <div style="padding:1rem;background:var(--glass);border-bottom:1px solid var(--glass-border);display:flex;align-items:center;justify-content:space-between;">
+                <div style="display:flex;align-items:center;gap:0.5rem;">
+                    <div style="width:8px;height:8px;background:#00ff88;border-radius:50%;animation:pulse 2s infinite;"></div>
+                    <span style="font-weight:600;color:#fff;">Support Team</span>
+                </div>
+                <button id="chat-close" style="background:none;border:none;color:#aaa;cursor:pointer;font-size:1.2rem;">×</button>
+            </div>
+            <div id="chat-messages" style="flex:1;padding:1rem;overflow-y:auto;display:flex;flex-direction:column;gap:0.8rem;">
+                <div style="background:rgba(0,240,255,0.1);padding:0.8rem;border-radius:10px;max-width:80%;">
+                    <p style="color:#ccc;font-size:0.9rem;">Hello! 👋 How can I help you with shipping or returns today?</p>
+                </div>
+            </div>
+            <div style="padding:1rem;background:var(--glass);border-top:1px solid var(--glass-border);">
+                <div style="display:flex;gap:0.5rem;">
+                    <input type="text" id="chat-input" placeholder="Type your message..." style="flex:1;padding:0.6rem;border-radius:20px;background:rgba(255,255,255,0.1);border:1px solid var(--glass-border);color:#fff;outline:none;">
+                    <button id="chat-send" style="padding:0.6rem 1rem;border-radius:20px;background:linear-gradient(135deg,var(--accent),var(--accent-2));border:none;color:#000;cursor:pointer;font-weight:600;">Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <style>
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+    </style>
+    
+    <script>
+        // Live Chat Functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatToggle = document.getElementById('chat-toggle');
+            const chatWindow = document.getElementById('chat-window');
+            const chatClose = document.getElementById('chat-close');
+            const chatInput = document.getElementById('chat-input');
+            const chatSend = document.getElementById('chat-send');
+            const chatMessages = document.getElementById('chat-messages');
+            
+            let isOpen = false;
+            
+            chatToggle.addEventListener('click', function() {
+                isOpen = !isOpen;
+                chatWindow.style.display = isOpen ? 'flex' : 'none';
+                chatToggle.innerHTML = isOpen ? '×' : '💬';
+                if (isOpen) chatInput.focus();
+            });
+            
+            chatClose.addEventListener('click', function() {
+                isOpen = false;
+                chatWindow.style.display = 'none';
+                chatToggle.innerHTML = '💬';
+            });
+            
+            function sendMessage() {
+                const message = chatInput.value.trim();
+                if (!message) return;
+                
+                // Add user message
+                const userMsg = document.createElement('div');
+                userMsg.style.cssText = 'background:linear-gradient(135deg,var(--accent),var(--accent-2));padding:0.8rem;border-radius:10px;max-width:80%;align-self:flex-end;';
+                userMsg.innerHTML = `<p style="color:#000;font-size:0.9rem;font-weight:500;">${message}</p>`;
+                chatMessages.appendChild(userMsg);
+                
+                chatInput.value = '';
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                
+                // Simulate bot response
+                setTimeout(() => {
+                    const botResponse = getBotResponse(message);
+                    const botMsg = document.createElement('div');
+                    botMsg.style.cssText = 'background:rgba(0,240,255,0.1);padding:0.8rem;border-radius:10px;max-width:80%;align-self:flex-start;';
+                    botMsg.innerHTML = `<p style="color:#ccc;font-size:0.9rem;">${botResponse}</p>`;
+                    chatMessages.appendChild(botMsg);
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }, 1000);
+            }
+            
+            chatSend.addEventListener('click', sendMessage);
+            chatInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') sendMessage();
+            });
+            
+            function getBotResponse(message) {
+                const lowerMessage = message.toLowerCase();
+                
+                if (lowerMessage.includes('shipping') && lowerMessage.includes('cost')) {
+                    return "Shipping costs vary by location and method. Use our shipping calculator above to get an exact quote for your order!";
+                } else if (lowerMessage.includes('track') || lowerMessage.includes('tracking')) {
+                    return "You can track your order using the tracking form above. Just enter your order number and email address.";
+                } else if (lowerMessage.includes('return') && lowerMessage.includes('label')) {
+                    return "You can generate a return label using our return form. It will create a prepaid shipping label for you instantly!";
+                } else if (lowerMessage.includes('exchange')) {
+                    return "Exchanges are processed faster than refunds! Use the return form and select 'exchange' to get your new item quickly.";
+                } else if (lowerMessage.includes('refund')) {
+                    return "Refunds are processed within 5-7 business days after we receive your return. The money goes back to your original payment method.";
+                } else if (lowerMessage.includes('hello') || lowerMessage.includes('hi')) {
+                    return "Hello! I'm here to help with any shipping or return questions. What can I assist you with?";
+                } else {
+                    return "I can help you with shipping costs, tracking, returns, exchanges, and refunds. What would you like to know?";
+                }
+            }
+        });
+    </script>
+    <!-- Self-Healing System -->
+<script>
+window.onerror = function(msg, url, lineNo, columnNo, error) {
+  console.log('Error caught:', msg);
+  const errorDiv = document.createElement('div');
+  errorDiv.style.cssText = 'position:fixed; bottom:20px; right:20px; background:#f3f4f6; padding:10px; border-radius:5px; z-index:9999; border:1px solid #ccc;';
+  errorDiv.innerHTML = '⚠️ Something went wrong. Retrying...';
+  document.body.appendChild(errorDiv);
+  setTimeout(() => errorDiv.remove(), 3000);
+  return false;
+};
+</script>
+</body>
+</html>

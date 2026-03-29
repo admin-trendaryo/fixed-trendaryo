@@ -1,0 +1,1065 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Shop premium products at Trendaryo in 3D">
+    <title>Shop - Trendaryo | 3D Shopping Experience</title>
+    <link rel="stylesheet" href="responsive.css">
+    <script src="performance.js"></script>
+    <link rel="canonical" href="https://trendaryo.com/shop.html">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        :root {
+            --primary: #0a0a0a;
+            --accent: #00f0ff;
+            --accent-2: #ff00aa;
+            --accent-3: #00ff88;
+            --text: #ffffff;
+            --text-light: #888888;
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: linear-gradient(180deg, #0a0a2a 0%, #1a1a40 100%);
+            color: #fff;
+            overflow-x: hidden;
+            transition: background 1s ease-in-out;
+        }
+
+        #three-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .store-header { position: fixed; top: 0; left: 0; right: 0; z-index: 10000; 
+        param($m)
+        $m.Value -replace 'rgba\(0,0,0,0\.(65|72|8|85|9|92)\)', 'rgba(0,0,0,0.08)'
+    : blur(18px); border-bottom: 1px solid var(--glass-border); }
+        .store-header-inner { max-width: 1200px; margin: 0 auto; padding: 0.8rem 1.25rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+        .store-brand { display: flex; align-items: center; gap: 0.75rem; min-width: 180px; }
+        .store-logo { font-family: 'Orbitron', sans-serif; font-size: 1.6rem; font-weight: 900; background: linear-gradient(135deg, var(--accent), var(--accent-2)); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-decoration: none; white-space: nowrap; }
+        .store-search { flex: 1; display: flex; align-items: center; gap: 0.5rem; padding: 0.55rem 0.9rem; border-radius: 999px; background: var(--glass); border: 1px solid var(--glass-border); min-width: 220px; }
+        .store-search input { width: 100%; border: none; outline: none; background: transparent; color: rgba(255,255,255,0.9); font-family: inherit; font-size: 1rem; }
+        .store-search input::placeholder { color: rgba(255,255,255,0.55); }
+        .store-actions { display: flex; align-items: center; gap: 0.6rem; position: relative; }
+        .store-icon-btn { width: 42px; height: 42px; border-radius: 999px; background: var(--glass); border: 1px solid var(--glass-border); display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.9); text-decoration: none; transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease; cursor: pointer; }
+        .store-icon-btn:hover { transform: translateY(-1px); border-color: rgba(0,240,255,0.6); background: rgba(0,240,255,0.12); }
+        .store-mobile-toggle { display: none; width: 42px; height: 42px; border-radius: 999px; background: var(--glass); border: 1px solid var(--glass-border); color: rgba(255,255,255,0.9); cursor: pointer; }
+
+        .store-nav { max-width: 1200px; margin: 0 auto; padding: 0 1.25rem 0.85rem; }
+        .store-nav-list { display: flex; align-items: center; justify-content: center; gap: 0.25rem; list-style: none; }
+        .store-nav-item { position: relative; }
+        .store-nav-link { font-family: 'Orbitron', sans-serif; font-size: 0.82rem; font-weight: 700; letter-spacing: 1.6px; text-transform: uppercase; color: rgba(255,255,255,0.85); text-decoration: none; padding: 0.65rem 0.9rem; border-radius: 999px; display: inline-flex; align-items: center; gap: 0.5rem; transition: background 0.2s ease, color 0.2s ease; }
+        .store-nav-link:hover { background: rgba(255,255,255,0.08); color: rgba(255,255,255,1); }
+        .store-nav-link[aria-current="page"] { background: rgba(0,240,255,0.14); color: rgba(255,255,255,1); border: 1px solid rgba(0,240,255,0.25); }
+        .store-caret { font-size: 0.8rem; opacity: 0.85; }
+        .store-dropdown { position: absolute; left: 0; top: calc(100% + 10px); min-width: 240px; background: rgba(10,10,42,0.92); border: 1px solid var(--glass-border); border-radius: 14px; padding: 0.5rem; box-shadow: 0 18px 48px rgba(0,0,0,0.45); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); opacity: 0; visibility: hidden; transform: translateY(-6px); transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s ease; }
+        .store-dropdown a { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; padding: 0.7rem 0.8rem; border-radius: 10px; color: rgba(255,255,255,0.88); text-decoration: none; transition: background 0.18s ease, color 0.18s ease; }
+        .store-dropdown a:hover { background: rgba(0,240,255,0.12); color: #fff; }
+        .store-dropdown small { color: rgba(255,255,255,0.55); font-size: 0.85rem; }
+        .store-nav-item:hover .store-dropdown { opacity: 1; visibility: visible; transform: translateY(0); }
+        .store-nav-item.is-open .store-dropdown { opacity: 1; visibility: visible; transform: translateY(0); }
+
+        .page-offset { padding-top: 150px; }
+
+        @media(max-width:900px){
+            .store-search { display: none; }
+            .store-mobile-toggle { display: inline-flex; align-items: center; justify-content: center; }
+            .store-nav { display: none; }
+            .store-header.is-open .store-nav { display: block; padding-bottom: 1rem; }
+            .store-nav-list { flex-direction: column; align-items: stretch; justify-content: flex-start; gap: 0.5rem; }
+            .store-nav-link { width: 100%; justify-content: space-between; }
+            .store-dropdown { position: static; opacity: 1; visibility: visible; transform: none; box-shadow: none; background: rgba(255,255,255,0.04); }
+            .store-nav-item:hover .store-dropdown { opacity: 1; visibility: visible; transform: none; }
+            .page-offset { padding-top: 120px; }
+        }
+
+        /* Page Header */
+        .page-header-3d {
+            padding: 10rem 2rem 4rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .page-title-3d {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 900;
+            background: linear-gradient(135deg, #fff, var(--accent));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        .page-subtitle-3d {
+            color: var(--text-light);
+            font-size: 1.2rem;
+        }
+
+        /* Shop Layout */
+        .shop-section-3d {
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        .shop-container-3d {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Sidebar */
+        .shop-sidebar-3d {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+            backdrop-filter: blur(10px);
+        }
+
+        .sidebar-title-3d {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .search-box-3d {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .search-box-3d input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 2.5rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            color: #fff;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .search-box-3d input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.2);
+        }
+
+        .search-box-3d svg {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+        }
+
+        .filter-group-3d {
+            margin-bottom: 1.5rem;
+        }
+
+        .filter-label-3d {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0.75rem;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .filter-label-3d:hover {
+            background: rgba(0, 240, 255, 0.1);
+        }
+
+        .filter-label-3d input {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--accent);
+        }
+
+        .sort-select-3d {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            color: #fff;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1rem;
+            cursor: pointer;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .sort-select-3d:focus {
+            border-color: var(--accent);
+        }
+
+        .sort-select-3d option {
+            background: #0a0a0a;
+        }
+
+        /* Products Grid */
+        .products-grid-3d {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .product-card-3d {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.4s;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+        }
+
+        .product-card-3d::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .product-card-3d:hover::before {
+            left: 100%;
+        }
+
+        .product-card-3d:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: var(--accent);
+            box-shadow: 0 20px 60px rgba(0, 240, 255, 0.2);
+        }
+
+        .product-image-3d {
+            position: relative;
+            height: 250px;
+            overflow: hidden;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .product-image-3d img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .product-card-3d:hover .product-image-3d img {
+            transform: scale(1.1);
+        }
+
+        /* Brand Section Styles */
+        .brand-section-3d {
+            padding: 2rem 0;
+        }
+
+        .brand-container-3d {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .brand-title-3d {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #fff;
+            text-align: center;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            padding: 1rem;
+            border-radius: 12px;
+        }
+
+        .brand-grid-3d {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .brand-card-3d {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .brand-card-3d::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            transition: left 0.5s ease;
+            z-index: 0;
+        }
+
+        .brand-card-3d:hover::before {
+            left: 100%;
+        }
+
+        .brand-card-3d:hover {
+            transform: translateY(-5px) scale(1.02);
+            border-color: var(--accent);
+            box-shadow: 0 20px 40px rgba(0, 240, 255, 0.2);
+        }
+
+        .brand-logo-3d {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+            transition: transform 0.3s ease;
+        }
+
+        .brand-card-3d:hover .brand-logo-3d {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .brand-name-3d {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .brand-description-3d {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            line-height: 1.4;
+            position: relative;
+            z-index: 1;
+        }
+
+        @media (max-width: 768px) {
+            .brand-grid-3d {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 1rem;
+            }
+            
+            .brand-card-3d {
+                padding: 1.5rem;
+            }
+            
+            .brand-logo-3d {
+                font-size: 2.5rem;
+            }
+            
+            .brand-name-3d {
+                font-size: 1.1rem;
+            }
+            
+            .brand-description-3d {
+                font-size: 0.8rem;
+            }
+        }
+
+        .product-badge-3d {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            padding: 0.4rem 1rem;
+            background: var(--accent-2);
+            color: #fff;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 700;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+
+        .product-badge-3d.sale {
+            background: #ff4444;
+        }
+
+        .product-wishlist-3d {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.5);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .product-wishlist-3d:hover {
+            background: var(--accent-2);
+            transform: scale(1.1);
+        }
+
+        .product-info-3d {
+            padding: 1.5rem;
+        }
+
+        .product-name-3d {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-rating-3d {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .product-rating-3d .stars {
+            color: #ffd700;
+            letter-spacing: 2px;
+        }
+
+        .product-rating-3d .reviews {
+            color: var(--text-light);
+            font-size: 0.85rem;
+        }
+
+        .product-price-3d {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .price-3d {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--accent);
+        }
+
+        .old-price-3d {
+            color: var(--text-light);
+            text-decoration: line-through;
+        }
+
+        .save-badge-3d {
+            background: rgba(0, 255, 136, 0.2);
+            color: var(--accent-3);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .btn-add-cart-3d {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--accent), var(--accent-3));
+            border: none;
+            border-radius: 8px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #000;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.3s;
+        }
+
+        .btn-add-cart-3d:hover {
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.5);
+            transform: translateY(-2px);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 900px) {
+            .shop-container-3d {
+                grid-template-columns: 1fr;
+            }
+            .shop-sidebar-3d {
+                position: static;
+            }
+            .cyber-nav-links {
+                display: none;
+            }
+        }
+
+        /* Preloader */
+        .preloader-3d {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 99999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .preloader-3d.hidden {
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s;
+        }
+
+        .preloader-logo-3d {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        .preloader-spinner-3d {
+            width: 50px;
+            height: 50px;
+            border: 3px solid var(--glass-border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* HF Theme styles */
+        html[data-hf-theme="darkgray"] .store-logo {
+          background: linear-gradient(135deg, #e8e8ea, #9aa3ad) !important;
+          background-clip: text !important;
+          -webkit-background-clip: text !important;
+          -webkit-text-fill-color: transparent !important;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, var(--accent), var(--accent-2));
+            border-radius: 4px;
+        }
+
+        /* Welcome Banner Styles */
+    </style>
+</head>
+<body>
+    <!-- Preloader -->
+    <div class="preloader-3d" id="preloader">
+        <div class="preloader-logo-3d">TRENDARYO</div>
+        <div class="preloader-spinner-3d"></div>
+    </div>
+
+    <!-- Three.js Canvas -->
+    <canvas id="three-canvas" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;pointer-events:none;"></canvas>
+
+    <header class="store-header" id="store-header">
+        <div class="store-header-inner">
+            <div class="store-brand">
+                <a href="index.html" class="store-logo">TRENDARYO</a>
+            </div>
+
+            <div class="store-search" role="search">
+                <span aria-hidden="true">🔎</span>
+                <input type="search" placeholder="Search products..." />
+            </div>
+
+            <div class="store-actions">
+                <a href="wishlist.html" class="store-icon-btn" aria-label="Wishlist">❤</a>
+                <a href="compare.html" class="store-icon-btn" aria-label="Compare" style="position:relative;">
+                    ⇄
+                    <span id="compare-count" style="position:absolute;top:-6px;right:-6px;min-width:18px;height:18px;padding:0 5px;border-radius:999px;background:var(--accent);color:#fff;font-size:0.7rem;font-weight:800;display:flex;align-items:center;justify-content:center;">0</span>
+                </a>
+                <a href="cart.html" class="store-icon-btn" aria-label="Cart" style="position:relative;">
+                    🛒
+                    <span id="cart-count" style="position:absolute;top:-6px;right:-6px;min-width:18px;height:18px;padding:0 5px;border-radius:999px;background:var(--accent-2);color:#fff;font-size:0.7rem;font-weight:800;display:flex;align-items:center;justify-content:center;">0</span>
+                </a>
+                <a href="account.html" class="store-icon-btn" aria-label="Account">👤</a>
+                <button class="store-mobile-toggle" id="store-mobile-toggle" aria-label="Menu" aria-expanded="false">☰</button>
+                <button id="theme-toggle" class="store-icon-btn" aria-label="Theme">☼</button>
+                <button id="hf-theme-toggle" class="store-icon-btn" aria-label="Header/Footer Theme">HF</button>
+            </div>
+        </div>
+
+        <nav class="store-nav" aria-label="Primary">
+            <ul class="store-nav-list">
+                <li class="store-nav-item">
+                    <a href="index.html" class="store-nav-link">Home</a>
+                </li>
+
+                <li class="store-nav-item" data-dropdown>
+                    <a href="shop.html" class="store-nav-link" aria-current="page">Shop <span class="store-caret" aria-hidden="true">▾</span></a>
+                    <div class="store-dropdown" role="menu">
+                        <a href="shop.html">Shop All <small>Browse everything</small></a>
+                        <a href="product.html">Product Page <small>Example product</small></a>
+                        <a href="wishlist.html">Wishlist <small>Saved items</small></a>
+                        <a href="compare.html">Compare <small>Compare products</small></a>
+                    </div>
+                </li>
+
+                <li class="store-nav-item" data-dropdown>
+                    <a href="cart.html" class="store-nav-link">Cart <span class="store-caret" aria-hidden="true">▾</span></a>
+                    <div class="store-dropdown" role="menu">
+                        <a href="cart.html">View Cart <small>Items & totals</small></a>
+                        <a href="checkout.html">Checkout <small>Complete purchase</small></a>
+                        <a href="track-order.html">Track Order <small>Shipping status</small></a>
+                    </div>
+                </li>
+
+                <li class="store-nav-item" data-dropdown>
+                    <a href="account.html" class="store-nav-link">Account <span class="store-caret" aria-hidden="true">▾</span></a>
+                    <div class="store-dropdown" role="menu">
+                        <a href="account.html">My Account <small>Profile</small></a>
+                        <a href="login.html">Login <small>Access account</small></a>
+                        <a href="register.html">Register <small>Create account</small></a>
+                    </div>
+                </li>
+
+                <li class="store-nav-item" data-dropdown>
+                    <a href="#" class="store-nav-link">Support <span class="store-caret" aria-hidden="true">▾</span></a>
+                    <div class="store-dropdown" role="menu">
+                        <a href="faq.html">FAQ <small>Help center</small></a>
+                        <a href="contact.html">Contact <small>Get in touch</small></a>
+                        <a href="shipping.html">Shipping <small>Delivery info</small></a>
+                        <a href="returns.html">Returns <small>Return policy</small></a>
+                    </div>
+                </li>
+
+                <li class="store-nav-item">
+                    <a href="about.html" class="store-nav-link">About</a>
+                </li>
+                <li class="store-nav-item">
+                    <a href="contact.html" class="store-nav-link">Contact</a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="page-offset">
+
+    <!-- Page Header -->
+    <section class="page-header-3d">
+        <h1 class="page-title-3d">SHOP ALL PRODUCTS</h1>
+        <p class="page-subtitle-3d">Explore our revolutionary 3D shopping experience</p>
+    </section>
+
+    <!-- Shop Section -->
+    <section class="shop-section-3d">
+        <div class="shop-container-3d">
+            <!-- Sidebar -->
+            <aside class="shop-sidebar-3d">
+                <div class="search-box-3d">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                    <input type="text" id="search-input" placeholder="Search products...">
+                </div>
+                
+                <h3 class="sidebar-title-3d">Sort By</h3>
+                <select class="sort-select-3d" id="sort-select">
+                    <option value="default">Default</option>
+                    <option value="price-low">Price: Low to High</option>
+                    <option value="price-high">Price: High to Low</option>
+                    <option value="name">Name: A to Z</option>
+                    <option value="rating">Highest Rated</option>
+                </select>
+
+                <h3 class="sidebar-title-3d" style="margin-top:1.5rem;">Categories</h3>
+                <div class="filter-group-3d">
+                    <label class="filter-label-3d">
+                        <input type="checkbox" checked> All Products
+                    </label>
+                    <label class="filter-label-3d">
+                        <input type="checkbox"> Electronics
+                    </label>
+                    <label class="filter-label-3d">
+                        <input type="checkbox"> Fashion
+                    </label>
+                    <label class="filter-label-3d">
+                        <input type="checkbox"> Accessories
+                    </label>
+                    <label class="filter-label-3d">
+                        <input type="checkbox"> Watches
+                    </label>
+                </div>
+
+                <h3 class="sidebar-title-3d">Price Range</h3>
+                <div class="filter-group-3d">
+                    <label class="filter-label-3d">
+                        <input type="checkbox" checked> All Prices
+                    </label>
+                    <label class="filter-label-3d">
+                        <input type="checkbox"> Under $100
+                    </label>
+                    <label class="filter-label-3d">
+                        <input type="checkbox"> $100 - $200
+                    </label>
+                    <label class="filter-label-3d">
+                        <input type="checkbox"> $200 - $500
+                    </label>
+                </div>
+            </aside>
+
+            <!-- Products Grid -->
+            <div id="products-grid">
+                <!-- PRODUCTS DATA FROM API -->
+                <script>
+                    const API_URL = 'https://your-backend.vercel.app';
+                    
+                    // Fallback products (will show immediately)
+                    let products = [
+                        { id: 1, name: "Premium Watch", price: 299, oldPrice: 399, category: "Electronics", image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&h=500&fit=crop", rating: 5, reviews: 128, badge: "New", stock: 3 },
+                        { id: 2, name: "Designer Sunglasses", price: 149, oldPrice: 249, category: "Fashion", image: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=500&h=500&fit=crop", rating: 5, reviews: 95, badge: "Sale", badgeClass: "sale", stock: 5 },
+                        { id: 3, name: "Leather Sneakers", price: 189, category: "Fashion", image: "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=500&h=500&fit=crop", rating: 5, reviews: 203, stock: 12 },
+                        { id: 4, name: "Minimalist Backpack", price: 129, category: "Accessories", image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=500&h=500&fit=crop", rating: 5, reviews: 167, badge: "Hot", stock: 8 },
+                        { id: 5, name: "Wireless Headphones", price: 249, category: "Electronics", image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&h=500&fit=crop", rating: 5, reviews: 342, stock: 15 },
+                        { id: 6, name: "Smart Fitness Band", price: 99, category: "Electronics", image: "https://images.unsplash.com/photo-1585386959984-a4155224a1ad?w=500&h=500&fit=crop", rating: 5, reviews: 89, badge: "New", stock: 20 },
+                        { id: 7, name: "Classic Wallet", price: 79, category: "Accessories", image: "https://images.unsplash.com/photo-1627123424574-724758594e93?w=500&h=500&fit=crop", rating: 4, reviews: 56, stock: 25 },
+                        { id: 8, name: "Leather Belt", price: 59, category: "Accessories", image: "https://images.unsplash.com/photo-1624222247344-550fb60583dc?w=500&h=500&fit=crop", rating: 5, reviews: 78, stock: 30 },
+                        { id: 9, name: "Gaming Mouse RGB", price: 59.99, oldPrice: 89.99, category: "Electronics", image: "https://images.unsplash.com/photo-1527814050087-3793815479db?w=500&h=500&fit=crop", rating: 5, reviews: 178, badge: "Hot", stock: 28 },
+                        { id: 10, name: "Yoga Mat Premium", price: 39.99, category: "Fashion", image: "https://images.unsplash.com/photo-1601925260368-ae2f83cf8b7f?w=500&h=500&fit=crop", rating: 4, reviews: 92, stock: 35 },
+                        { id: 11, name: "Stainless Steel Water Bottle", price: 24.99, category: "Accessories", image: "https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=500&h=500&fit=crop", rating: 5, reviews: 234, badge: "Hot", stock: 60 },
+                        { id: 12, name: "Noise Cancelling Earbuds", price: 129.99, oldPrice: 179.99, category: "Electronics", image: "https://images.unsplash.com/photo-1606841837239-c5a1a4a07af7?w=500&h=500&fit=crop", rating: 4, reviews: 156, badge: "Sale", badgeClass: "sale", stock: 22 },
+                        { id: 13, name: "Leather Laptop Sleeve", price: 49.99, category: "Accessories", image: "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=500&h=500&fit=crop", rating: 4, reviews: 67, stock: 30 },
+                        { id: 14, name: "Smart LED Light Bulb", price: 19.99, category: "Electronics", image: "https://images.unsplash.com/photo-1550985616-10810253b84d?w=500&h=500&fit=crop", rating: 4, reviews: 189, badge: "New", stock: 75 },
+                        { id: 15, name: "Running Shorts Athletic", price: 29.99, category: "Fashion", image: "https://images.unsplash.com/photo-1591195853828-11db59a44f6b?w=500&h=500&fit=crop", rating: 4, reviews: 112, stock: 45 },
+                        { id: 16, name: "Ceramic Coffee Mug Set", price: 34.99, oldPrice: 49.99, category: "Accessories", image: "https://images.unsplash.com/photo-1514228742587-6b1558fcca3d?w=500&h=500&fit=crop", rating: 5, reviews: 78, badge: "Sale", badgeClass: "sale", stock: 40 },
+                        { id: 17, name: "Webcam HD 1080p", price: 69.99, category: "Electronics", image: "https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04?w=500&h=500&fit=crop", rating: 4, reviews: 145, stock: 32 },
+                        { id: 18, name: "Hoodie Pullover", price: 54.99, category: "Fashion", image: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=500&h=500&fit=crop", rating: 5, reviews: 201, badge: "Hot", stock: 38 },
+                        { id: 19, name: "Phone Stand Adjustable", price: 14.99, category: "Accessories", image: "https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=500&h=500&fit=crop", rating: 4, reviews: 267, stock: 85 },
+                        { id: 20, name: "Resistance Bands Set", price: 19.99, category: "Fashion", image: "https://images.unsplash.com/photo-1598289431512-b97b0917affc?w=500&h=500&fit=crop", rating: 5, reviews: 189, badge: "New", stock: 55 }
+                    ];
+                    
+                    async function fetchProducts() {
+                        renderProducts(); // Show fallback products immediately
+                        try {
+                            const response = await fetch(`${API_URL}/api/products`);
+                            const data = await response.json();
+                            products = data.products || data;
+                            renderProducts(); // Update with API products
+                        } catch (error) {
+                            console.log('Using fallback products');
+                        }
+                    }
+                    
+                    function renderProducts() {
+            { id: 9, name: "Gaming Mouse RGB", price: 59.99, oldPrice: 89.99, category: "Electronics", image: "https://images.unsplash.com/photo-1527814050087-3793815479db?w=500&h=500&fit=crop", rating: 5, reviews: 178, badge: "Hot", stock: 28 },
+            { id: 10, name: "Yoga Mat Premium", price: 39.99, category: "Fashion", image: "https://images.unsplash.com/photo-1601925260368-ae2f83cf8b7f?w=500&h=500&fit=crop", rating: 4, reviews: 92, stock: 35 },
+            { id: 11, name: "Stainless Steel Water Bottle", price: 24.99, category: "Accessories", image: "https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=500&h=500&fit=crop", rating: 5, reviews: 234, badge: "Hot", stock: 60 },
+            { id: 12, name: "Noise Cancelling Earbuds", price: 129.99, oldPrice: 179.99, category: "Electronics", image: "https://images.unsplash.com/photo-1606841837239-c5a1a4a07af7?w=500&h=500&fit=crop", rating: 4, reviews: 156, badge: "Sale", badgeClass: "sale", stock: 22 },
+            { id: 13, name: "Leather Laptop Sleeve", price: 49.99, category: "Accessories", image: "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=500&h=500&fit=crop", rating: 4, reviews: 67, stock: 30 },
+            { id: 14, name: "Smart LED Light Bulb", price: 19.99, category: "Electronics", image: "https://images.unsplash.com/photo-1550985616-10810253b84d?w=500&h=500&fit=crop", rating: 4, reviews: 189, badge: "New", stock: 75 },
+            { id: 15, name: "Running Shorts Athletic", price: 29.99, category: "Fashion", image: "https://images.unsplash.com/photo-1591195853828-11db59a44f6b?w=500&h=500&fit=crop", rating: 4, reviews: 112, stock: 45 },
+            { id: 16, name: "Ceramic Coffee Mug Set", price: 34.99, oldPrice: 49.99, category: "Accessories", image: "https://images.unsplash.com/photo-1514228742587-6b1558fcca3d?w=500&h=500&fit=crop", rating: 5, reviews: 78, badge: "Sale", badgeClass: "sale", stock: 40 },
+            { id: 17, name: "Webcam HD 1080p", price: 69.99, category: "Electronics", image: "https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04?w=500&h=500&fit=crop", rating: 4, reviews: 145, stock: 32 },
+            { id: 18, name: "Hoodie Pullover", price: 54.99, category: "Fashion", image: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=500&h=500&fit=crop", rating: 5, reviews: 201, badge: "Hot", stock: 38 },
+            { id: 19, name: "Phone Stand Adjustable", price: 14.99, category: "Accessories", image: "https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=500&h=500&fit=crop", rating: 4, reviews: 267, stock: 85 },
+            { id: 20, name: "Resistance Bands Set", price: 19.99, category: "Fashion", image: "https://images.unsplash.com/photo-1598289431512-b97b0917affc?w=500&h=500&fit=crop", rating: 5, reviews: 189, badge: "New", stock: 55 }
+        ];
+        
+        async function fetchProducts() {
+            renderProducts(); // Show fallback products immediately
+            try {
+                const response = await fetch(`${API_URL}/api/products`);
+                const data = await response.json();
+                products = data.products || data;
+                renderProducts(); // Update with API products
+            } catch (error) {
+                console.log('Using fallback products');
+            }
+        }
+
+        // ============================================
+        // RENDER PRODUCTS
+        // ============================================
+        function renderProducts() {
+            const grid = document.getElementById('products-grid');
+            grid.innerHTML = products.map(product => {
+                const saveAmount = product.oldPrice ? Math.round((1 - product.price / product.oldPrice) * 100) : 0;
+                return `
+                <div class="product-card-3d" data-product-id="${product.id}">
+                    <div class="product-image-3d">
+                        <img src="${product.image}" alt="${product.name}">
+                        ${product.badge ? `<span class="product-badge-3d ${product.badgeClass || ''}">${product.badge}</span>` : ''}
+                        <button class="product-wishlist-3d" onclick="toggleWishlist(this)">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="product-info-3d">
+                        <h3 class="product-name-3d">${product.name}</h3>
+                        <div class="product-rating-3d">
+                            <span class="stars">${'★'.repeat(product.rating)}${'☆'.repeat(5 - product.rating)}</span>
+                            <span class="reviews">(${product.reviews})</span>
+                        </div>
+                        <div class="product-price-3d">
+                            <span class="price-3d">$${product.price}</span>
+                            ${product.oldPrice ? `<span class="old-price-3d">$${product.oldPrice}</span>` : ''}
+                            ${saveAmount > 0 ? `<span class="save-badge-3d">Save ${saveAmount}%</span>` : ''}
+                        </div>
+                        <button class="btn-add-cart-3d" onclick="addToCart3d(${product.id})">Add to Cart</button>
+                    </div>
+                </div>
+                `;
+            }).join('');
+        }
+
+        // ============================================
+        // CART FUNCTIONALITY
+        // ============================================
+        let cart3d = JSON.parse(localStorage.getItem('trendaryo_cart')) || [];
+        
+        // Convert old format (array of IDs) to new format (array of objects) if needed
+        if (cart3d.length > 0 && typeof cart3d[0] === 'number') {
+            cart3d = cart3d.map(id => ({ id: id, quantity: 1 }));
+            localStorage.setItem('trendaryo_cart', JSON.stringify(cart3d));
+        }
+
+        function addToCart3d(productId) {
+            // Check if item already exists
+            const existingIndex = cart3d.findIndex(item => (typeof item === 'number' ? item : item.id) === productId);
+            if (existingIndex >= 0) {
+                const item = cart3d[existingIndex];
+                if (typeof item === 'number') {
+                    cart3d[existingIndex] = { id: productId, quantity: 2 };
+                } else {
+                    cart3d[existingIndex].quantity += 1;
+                }
+            } else {
+                cart3d.push({ id: productId, quantity: 1 });
+            }
+            localStorage.setItem('trendaryo_cart', JSON.stringify(cart3d));
+            updateCartCount3d();
+            showNotification('Added to cart!', 'success');
+            
+            const btn = event.target;
+            btn.textContent = 'Added!';
+            btn.style.background = 'linear-gradient(135deg, #00ff88, #00f0ff)';
+            setTimeout(() => {
+                btn.textContent = 'Add to Cart';
+                btn.style.background = '';
+            }, 1500);
+        }
+
+        function updateCartCount3d() {
+            const countEl = document.getElementById('cart-count');
+            if (countEl) {
+                const count = cart3d.reduce((sum, item) => {
+                    return sum + (typeof item === 'number' ? 1 : (item.quantity || 1));
+                }, 0);
+                countEl.textContent = count;
+            }
+        }
+
+        function toggleWishlist(btn) {
+            btn.classList.toggle('active');
+            if (btn.classList.contains('active')) {
+                btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="#ff00aa" stroke="#ff00aa" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>';
+                showNotification('Added to wishlist!', 'success');
+            } else {
+                btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>';
+            }
+        }
+
+        function showNotification(message, type) {
+            const notif = document.createElement('div');
+            notif.style.cssText = `
+                position: fixed;
+                top: 100px;
+                right: 20px;
+                
+        param($m)
+        $m.Value -replace 'rgba\(0,0,0,0\.(65|72|8|85|9|92)\)', 'rgba(0,0,0,0.08)'
+    : blur(20px);
+                animation: slideIn 0.3s ease;
+            `;
+            notif.textContent = message;
+            document.body.appendChild(notif);
+            setTimeout(() => notif.remove(), 3000);
+        }
+
+        // ============================================
+        // INITIALIZE
+        // ============================================
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                document.getElementById('preloader').classList.add('hidden');
+            }, 1000);
+            
+            initThreeJS();
+            fetchProducts();
+            updateCartCount3d();
+        });
+    </script>
+    
+
+    <script>
+        const storeHeader = document.getElementById('store-header');
+        const mobileToggle = document.getElementById('store-mobile-toggle');
+        const dropdownItems = Array.from(document.querySelectorAll('.store-nav-item[data-dropdown]'));
+
+        if (mobileToggle && storeHeader) {
+            mobileToggle.addEventListener('click', () => {
+                const isOpen = storeHeader.classList.toggle('is-open');
+                mobileToggle.setAttribute('aria-expanded', String(isOpen));
+                if (!isOpen) dropdownItems.forEach(i => i.classList.remove('is-open'));
+            });
+        }
+
+        dropdownItems.forEach(item => {
+            const link = item.querySelector('.store-nav-link');
+            if (!link) return;
+
+            link.addEventListener('click', (e) => {
+                const isMobile = window.matchMedia('(max-width: 900px)').matches;
+                if (!isMobile) return;
+
+                const isOpen = item.classList.contains('is-open');
+                if (!isOpen) {
+                    e.preventDefault();
+                    dropdownItems.forEach(i => i.classList.remove('is-open'));
+                    item.classList.add('is-open');
+                }
+            });
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!storeHeader) return;
+            if (storeHeader.contains(e.target)) return;
+            dropdownItems.forEach(i => i.classList.remove('is-open'));
+            storeHeader.classList.remove('is-open');
+            if (mobileToggle) mobileToggle.setAttribute('aria-expanded', 'false');
+        });
+
+        // Theme toggle logic
+        const themes = [
+            "linear-gradient(180deg, #0a0a2a 0%, #1a1a40 100%)", // Deep Navy
+            "linear-gradient(180deg, #2a003f 0%, #3b0066 100%)", // Cosmic Purple
+            "linear-gradient(180deg, #002b36 0%, #004f66 100%)", // Dark Teal
+            "linear-gradient(180deg, #2a003f 0%, #1a1a40 100%)"  // Purple + Golden Accent
+        ];
+
+        let currentTheme = 0;
+        const themeToggle = document.getElementById("theme-toggle");
+        if (themeToggle) {
+            themeToggle.addEventListener("click", () => {
+                currentTheme = (currentTheme + 1) % themes.length;
+                (window.__themeBgDiv || document.body).style.background = themes[currentTheme];
+
+                // Apply golden accents when Purple + Golden theme is active
+                if (currentTheme === 3) {
+                    document.querySelectorAll("h1, h2, h3, .product-title, .hero-title-3d, .page-title-3d").forEach(el => {
+                        el.style.color = "#FFD700";
+                    });
+                    document.querySelectorAll("button, .btn-3d").forEach(btn => {
+                        btn.style.background = "#6a0dad";
+                        btn.style.color = "#FFD700";
+                    });
+                } else {
+                    // Reset to default white text for other themes
+                    document.querySelectorAll("h1, h2, h3, .product-title, .hero-title-3d, .page-title-3d").forEach(el => {
+                        el.style.color = "";
+                    });
+                    document.querySelectorAll("button, .btn-3d").forEach(btn => {
+                        btn.style.background = "";
+                        btn.style.color = "";
+                    });
+                }
+            });
+        }
+
+        // HF Theme logic
+        const hfThemeStorageKey = 'trendaryo_hf_theme';
+        const hfThemes = ['neon', 'darkgray'];
+        const applyHFTheme = (theme) => {
+            localStorage.setItem(hfThemeStorageKey, theme);
+            document.documentElement.setAttribute('data-hf-theme', theme);
+        };
+        const hfThemeToggle = document.getElementById("hf-theme-toggle");
+        if (hfThemeToggle) {
+            hfThemeToggle.addEventListener("click", () => {
+                const current = localStorage.getItem(hfThemeStorageKey) || 'neon';
+                const idx = hfThemes.indexOf(current);
+                const next = hfThemes[(idx + 1 + hfThemes.length) % hfThemes.length];
+                applyHFTheme(next);
+            });
+        }
+        // Apply initial HF theme
+        applyHFTheme(localStorage.getItem(hfThemeStorageKey) || 'neon');
+
+        // Set store-actions position relative
+        document.querySelector('.store-actions').style.position = 'relative';
+    </script></main>
+
+    <!-- Self-Healing System -->
+<script>
+window.onerror = function(msg, url, lineNo, columnNo, error) {
+  console.log('Error caught:', msg);
+  const errorDiv = document.createElement('div');
+  errorDiv.style.cssText = 'position:fixed; bottom:20px; right:20px; background:#f3f4f6; padding:10px; border-radius:5px; z-index:9999; border:1px solid #ccc;';
+  errorDiv.innerHTML = '⚠️ Something went wrong. Retrying...';
+  document.body.appendChild(errorDiv);
+  setTimeout(() => errorDiv.remove(), 3000);
+  return false;
+};
+</script>
+</body>
+</html>
+
+
+

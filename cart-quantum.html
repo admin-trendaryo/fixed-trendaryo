@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Particle Cart - Trendaryo</title>
+    <link rel="stylesheet" href="responsive.css">
+    <link rel="stylesheet" href="shared.css">
+    <script src="performance.js"></script>
+    <script src="bg.js"></script>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --accent: #00f0ff;
+            --accent-2: #ff00aa;
+            --accent-3: #00ff88;
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Rajdhani', sans-serif; background: #0a0a2a; color: #fff; overflow-x: hidden; }
+
+        #three-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+
+        .store-header { 
+            position: fixed; top: 0; left: 0; right: 0; z-index: 10000; 
+            background: transparent; border-bottom: 1px solid rgba(255,255,255,0.07); 
+        }
+        .store-header-inner { 
+            max-width: 1200px; margin: 0 auto; padding: 0.8rem 1.25rem; 
+            display: flex; align-items: center; justify-content: space-between; gap: 1rem; 
+        }
+        .store-brand { display: flex; align-items: center; gap: 0.75rem; min-width: 180px; }
+        .store-logo { 
+            font-family: 'Orbitron', sans-serif; font-size: 1.6rem; font-weight: 900; 
+            background: linear-gradient(135deg, var(--accent), var(--accent-2)); 
+            background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
+            text-decoration: none; white-space: nowrap; 
+        }
+        .store-search { 
+            flex: 1; display: flex; align-items: center; gap: 0.5rem; 
+            padding: 0.55rem 0.9rem; border-radius: 999px; 
+            background: var(--glass); border: 1px solid var(--glass-border); min-width: 220px; 
+        }
+        .store-search input { 
+            width: 100%; border: none; outline: none; background: #0a0a2a; 
+            color: rgba(255,255,255,0.9); font-family: inherit; font-size: 1rem; 
+        }
+        .store-search input::placeholder { color: rgba(255,255,255,0.55); }
+        .store-actions { display: flex; align-items: center; gap: 0.6rem; position: relative; }
+        .store-icon-btn { 
+            width: 42px; height: 42px; border-radius: 999px; background: var(--glass); 
+            border: 1px solid var(--glass-border); display: flex; align-items: center; 
+            justify-content: center; color: rgba(255,255,255,0.9); text-decoration: none; 
+            transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease; cursor: pointer; 
+        }
+        .store-icon-btn:hover { 
+            transform: translateY(-1px); border-color: rgba(0,240,255,0.6); 
+            background: rgba(0,240,255,0.12); 
+        }
+        .store-nav { max-width: 1200px; margin: 0 auto; padding: 0 1.25rem 0.85rem; }
+        .store-nav-list { 
+            display: flex; align-items: center; justify-content: center; gap: 0.25rem; list-style: none; 
+        }
+        .store-nav-item { position: relative; }
+        .store-nav-link { 
+            font-family: 'Orbitron', sans-serif; font-size: 0.82rem; font-weight: 700; 
+            letter-spacing: 1.6px; text-transform: uppercase; color: rgba(255,255,255,0.85); 
+            text-decoration: none; padding: 0.65rem 0.9rem; border-radius: 999px; 
+            display: inline-flex; align-items: center; gap: 0.5rem; 
+            transition: background 0.2s ease, color 0.2s ease; 
+        }
+        .store-nav-link:hover { background: rgba(255,255,255,0.08); color: rgba(255,255,255,1); }
+        .store-nav-link[aria-current="page"] { 
+            background: rgba(0,240,255,0.14); color: rgba(255,255,255,1); 
+            border: 1px solid rgba(0,240,255,0.25); 
+        }
+        .store-caret { font-size: 0.8rem; opacity: 0.85; }
+        .store-dropdown { 
+            position: absolute; left: 0; top: calc(100% + 10px); min-width: 240px; 
+            background: rgba(10,10,42,0.92); border: 1px solid var(--glass-border); 
+            border-radius: 14px; padding: 0.5rem; box-shadow: 0 18px 48px rgba(0,0,0,0.45); 
+            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); 
+            opacity: 0; visibility: hidden; transform: translateY(-6px); 
+            transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s ease; 
+        }
+        .store-dropdown a { 
+            display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; 
+            padding: 0.7rem 0.8rem; border-radius: 10px; color: rgba(255,255,255,0.88); 
+            text-decoration: none; transition: background 0.18s ease, color 0.18s ease; 
+        }
+        .store-dropdown a:hover { background: rgba(0,240,255,0.12); color: #fff; }
+        .store-dropdown small { color: rgba(255,255,255,0.55); font-size: 0.85rem; }
+        .store-nav-item:hover .store-dropdown { opacity: 1; visibility: visible; transform: translateY(0); }
+        .store-nav-item.is-open .store-dropdown { opacity: 1; visibility: visible; transform: translateY(0); }
+        .store-mobile-toggle { 
+            display: none; width: 42px; height: 42px; border-radius: 999px; 
+            background: var(--glass); border: 1px solid var(--glass-border); 
+            color: rgba(255,255,255,0.9); cursor: pointer; 
+        }
+
+        .page-offset { padding-top: 120px; }
+
+        /* ═══ QUANTUM PARTICLE CART STYLES ═══ */
+        .quantum-cart-hero {
+            padding: 3rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quantum-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 900;
+            background: linear-gradient(135deg, #fff, var(--accent), var(--accent-2));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+            animation: titleGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes titleGlow {
+            from { filter: drop-shadow(0 0 20px rgba(0,240,255,0.4)); }
+            to { filter: drop-shadow(0 0 40px rgba(255,0,170,0.6)); }
+        }
+
+        .quantum-subtitle {
+            color: rgba(255,255,255,0.7);
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+
+        .quantum-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem 4rem;
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 2rem;
+        }
+
+        /* Particle Canvas Container */
+        #quantum-particle-container {
+            background: linear-gradient(135deg, rgba(0,240,255,0.08), rgba(255,0,170,0.08));
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            overflow: hidden;
+            min-height: 500px;
+            position: relative;
+            box-shadow: 0 0 40px rgba(0,240,255,0.2), inset 0 0 40px rgba(0,240,255,0.05);
+        }
+
+        /* Control Panel */
+        .quantum-controls {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2rem;
+            height: fit-content;
+            position: sticky;
+            top: 140px;
+            backdrop-filter: blur(10px);
+        }
+
+        .control-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .control-section {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .control-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .control-label {
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.6);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.8rem;
+            display: block;
+        }
+
+        .control-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .control-stat {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.8rem;
+            font-size: 0.95rem;
+        }
+
+        .control-stat-label {
+            color: rgba(255,255,255,0.6);
+        }
+
+        .control-stat-value {
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .quantum-btn {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 12px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 0.8rem;
+        }
+
+        .quantum-btn-primary {
+            background: linear-gradient(135deg, var(--accent), var(--accent-3));
+            color: #000;
+        }
+
+        .quantum-btn-primary:hover {
+            box-shadow: 0 0 40px rgba(0,240,255,0.6), 0 10px 30px rgba(0,0,0,0.4);
+            transform: translateY(-3px);
+        }
+
+        .quantum-btn-secondary {
+            background: #0a0a2a;
+            border: 2px solid var(--glass-border);
+            color: #fff;
+        }
+
+        .quantum-btn-secondary:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .quantum-info {
+            background: rgba(0,240,255,0.1);
+            border: 1px solid rgba(0,240,255,0.2);
+            border-radius: 12px;
+            padding: 1rem;
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.8);
+            line-height: 1.6;
+            margin-top: 1rem;
+        }
+
+        .quantum-info strong {
+            color: var(--accent);
+        }
+
+        .empty-cart-message {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: rgba(255,255,255,0.6);
+        }
+
+        .empty-cart-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .empty-cart-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 900px) {
+            .quantum-container {
+                grid-template-columns: 1fr;
+            }
+
+            .quantum-controls {
+                position: static;
+                top: auto;
+            }
+
+            #quantum-particle-container {
+                min-height: 400px;
+            }
+
+            .store-search { display: none; }
+            .store-mobile-toggle { display: inline-flex; align-items: center; justify-content: center; }
+            .store-nav { display: none; }
+            .store-header.is-open .store-nav { display: block; padding-bottom: 1rem; }
+            .store-nav-list { flex-direction: column; align-items: stretch; justify-content: flex-start; gap: 0.5rem; }
+            .store-nav-link { width: 100%; justify-content: space-between; }
+            .store-dropdown { position: static; opacity: 1; visibility: visible; transform: none; box-shadow: none; background: rgba(255,255,255,0.04); }
+            .store-nav-item:hover .store-dropdown { opacity: 1; visibility: visible; transform: none; }
+        }
+
+        @keyframes particleTrail {
+            0% { opacity: 1; transform: translate(var(--tx), var(--ty)) scale(1); }
+            100% { opacity: 0; transform: translate(calc(var(--tx) * 2), calc(var(--ty) * 2)) scale(0); }
+        }
+    </style>
+</head>
+<body>
+    <script src="components.js"></script>
+    
+    <canvas id="three-canvas"></canvas>
+
+    <header class="store-header" id="store-header">
+        <div class="store-header-inner">
+            <div class="store-brand">
+                <a href="index.html" class="store-logo">TRENDARYO</a>
+            </div>
+
+            <div class="store-search" role="search">
+                <span aria-hidden="true">🔎</span>
+                <input type="search" placeholder="Search products..." />
+            </div>
+
+            <div class="store-actions">
+                <a href="wishlist.html" class="store-icon-btn" aria-label="Wishlist">❤</a>
+                <a href="compare.html" class="store-icon-btn" aria-label="Compare">⇄</a>
+                <a href="cart-quantum.html" class="store-icon-btn" aria-label="Cart" style="position:relative;">
+                    🛒
+                    <span id="cart-count" style="position:absolute;top:-6px;right:-6px;min-width:18px;height:18px;padding:0 5px;border-radius:999px;background:var(--accent-2);color:#fff;font-size:0.7rem;font-weight:800;display:flex;align-items:center;justify-content:center;">0</span>
+                </a>
+                <a href="account.html" class="store-icon-btn" aria-label="Account">👤</a>
+                <button class="store-mobile-toggle" id="store-mobile-toggle" aria-label="Menu" aria-expanded="false">☰</button>
+                <button id="theme-toggle" class="store-icon-btn" aria-label="Theme">☼</button>
+            </div>
+        </div>
+
+        <nav class="store-nav" aria-label="Primary">
+            <ul class="store-nav-list">
+                <li class="store-nav-item">
+                    <a href="index.html" class="store-nav-link">Home</a>
+                </li>
+
+                <li class="store-nav-item" data-dropdown>
+                    <a href="shop.html" class="store-nav-link">Shop <span class="store-caret" aria-hidden="true">▾</span></a>
+                    <div class="store-dropdown" role="menu">
+                        <a href="shop.html">Shop All <small>Browse everything</small></a>
+                        <a href="product.html">Product Page <small>Example product</small></a>
+                        <a href="wishlist.html">Wishlist <small>Saved items</small></a>
+                        <a href="compare.html">Compare <small>Compare products</small></a>
+                    </div>
+                </li>
+
+                <li class="store-nav-item" data-dropdown>
+                    <a href="cart-quantum.html" class="store-nav-link" aria-current="page">Cart <span class="store-caret" aria-hidden="true">▾</span></a>
+                    <div class="store-dropdown" role="menu">
+                        <a href="cart-quantum.html">Quantum Cart <small>Interactive 3D</small></a>
+                        <a href="cart.html">Classic Cart <small>Traditional view</small></a>
+                        <a href="checkout.html">Checkout <small>Complete purchase</small></a>
+                        <a href="track-order.html">Track Order <small>Shipping status</small></a>
+                    </div>
+                </li>
+
+                <li class="store-nav-item" data-dropdown>
+                    <a href="account.html" class="store-nav-link">Account <span class="store-caret" aria-hidden="true">▾</span></a>
+                    <div class="store-dropdown" role="menu">
+                        <a href="account.html">My Account <small>Profile</small></a>
+                        <a href="login.html">Login <small>Access account</small></a>
+                        <a href="register.html">Register <small>Create account</small></a>
+                    </div>
+                </li>
+
+                <li class="store-nav-item" data-dropdown>
+                    <a href="faq.html" class="store-nav-link">Support <span class="store-caret" aria-hidden="true">▾</span></a>
+                    <div class="store-dropdown" role="menu">
+                        <a href="faq.html">FAQ <small>Help center</small></a>
+                        <a href="contact.html">Contact <small>Get in touch</small></a>
+                        <a href="shipping.html">Shipping <small>Delivery info</small></a>
+                        <a href="returns.html">Returns <small>Return policy</small></a>
+                    </div>
+                </li>
+
+                <li class="store-nav-item">
+                    <a href="about.html" class="store-nav-link">About</a>
+                </li>
+                <li class="store-nav-item">
+                    <a href="contact.html" class="store-nav-link">Contact</a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="page-offset">
+        <section class="quantum-cart-hero">
+            <h1 class="quantum-title">⚛️ QUANTUM PARTICLE CART</h1>
+            <p class="quantum-subtitle">Interact with your items in a revolutionary 3D particle field</p>
+        </section>
+
+        <section class="quantum-container">
+            <!-- Particle Canvas -->
+            <div id="quantum-particle-container">
+                <div class="empty-cart-message" id="empty-message" style="display: none;">
+                    <div class="empty-cart-icon">🛒</div>
+                    <div class="empty-cart-title">Your Cart is Empty</div>
+                    <p>Add items from the shop to see them float in the quantum field</p>
+                    <button class="quantum-btn quantum-btn-secondary" onclick="window.location.href='shop.html'" style="margin-top: 1.5rem;">
+                        Continue Shopping
+                    </button>
+                </div>
+            </div>
+
+            <!-- Control Panel -->
+            <div class="quantum-controls">
+                <div class="control-title">⚙️ Cart Summary</div>
+
+                <div class="control-section">
+                    <span class="control-label">Total Items</span>
+                    <div class="control-stat">
+                        <span class="control-stat-label">Quantity</span>
+                        <span class="control-stat-value" id="quantum-item-count">0</span>
+                    </div>
+                </div>
+
+                <div class="control-section">
+                    <span class="control-label">Total Price</span>
+                    <div class="control-value" id="quantum-total">$0.00</div>
+                </div>
+
+                <div class="control-section">
+                    <span class="control-label">Estimated Costs</span>
+                    <div class="control-stat">
+                        <span class="control-stat-label">Subtotal</span>
+                        <span class="control-stat-value" id="quantum-subtotal">$0.00</span>
+                    </div>
+                    <div class="control-stat">
+                        <span class="control-stat-label">Shipping</span>
+                        <span class="control-stat-value" id="quantum-shipping">FREE</span>
+                    </div>
+                    <div class="control-stat">
+                        <span class="control-stat-label">Tax (8%)</span>
+                        <span class="control-stat-value" id="quantum-tax">$0.00</span>
+                    </div>
+                </div>
+
+                <button class="quantum-btn quantum-btn-primary" onclick="window.location.href='checkout.html'">
+                    Proceed to Checkout
+                </button>
+                <button class="quantum-btn quantum-btn-secondary" onclick="window.location.href='shop.html'">
+                    Continue Shopping
+                </button>
+                <button class="quantum-btn quantum-btn-secondary" onclick="window.location.href='cart.html'">
+                    Classic Cart View
+                </button>
+
+                <div class="quantum-info">
+                    <strong>💡 Tip:</strong> Drag particles to move them, double-click to remove items. Watch them interact with physics!
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Update cart count
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('trendaryo_cart') || '[]');
+            const count = cart.reduce((sum, item) => {
+                return sum + (typeof item === 'number' ? 1 : (item.quantity || 1));
+            }, 0);
+            const badge = document.getElementById('cart-count');
+            if (badge) badge.textContent = count;
+        }
+
+        // Update summary stats
+        function updateSummary() {
+            const particles = window.QuantumParticleCart?.getParticles?.() || [];
+            const total = window.QuantumParticleCart?.getTotal?.() || 0;
+            
+            const itemCount = particles.reduce((sum, p) => sum + p.quantity, 0);
+            const shipping = total >= 50 ? 0 : 9.99;
+            const tax = total * 0.08;
+            const finalTotal = total + shipping + tax;
+
+            document.getElementById('quantum-item-count').textContent = itemCount;
+            document.getElementById('quantum-subtotal').textContent = `$${total.toFixed(2)}`;
+            document.getElementById('quantum-shipping').textContent = shipping === 0 ? 'FREE' : `$${shipping.toFixed(2)}`;
+            document.getElementById('quantum-tax').textContent = `$${tax.toFixed(2)}`;
+            document.getElementById('quantum-total').textContent = `$${finalTotal.toFixed(2)}`;
+
+            // Show/hide empty message
+            const emptyMsg = document.getElementById('empty-message');
+            const container = document.getElementById('quantum-particle-container');
+            if (particles.length === 0) {
+                emptyMsg.style.display = 'block';
+                container.style.minHeight = 'auto';
+            } else {
+                emptyMsg.style.display = 'none';
+                container.style.minHeight = '500px';
+            }
+        }
+
+        // Header navigation
+        const storeHeader = document.getElementById('store-header');
+        const mobileToggle = document.getElementById('store-mobile-toggle');
+        const dropdownItems = Array.from(document.querySelectorAll('.store-nav-item[data-dropdown]'));
+
+        if (mobileToggle && storeHeader) {
+            mobileToggle.addEventListener('click', () => {
+                const isOpen = storeHeader.classList.toggle('is-open');
+                mobileToggle.setAttribute('aria-expanded', String(isOpen));
+                if (!isOpen) dropdownItems.forEach(i => i.classList.remove('is-open'));
+            });
+        }
+
+        dropdownItems.forEach(item => {
+            const link = item.querySelector('.store-nav-link');
+            if (!link) return;
+
+            link.addEventListener('click', (e) => {
+                const isMobile = window.matchMedia('(max-width: 900px)').matches;
+                if (!isMobile) return;
+
+                const isOpen = item.classList.contains('is-open');
+                if (!isOpen) {
+                    e.preventDefault();
+                    dropdownItems.forEach(i => i.classList.remove('is-open'));
+                    item.classList.add('is-open');
+                }
+            });
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!storeHeader) return;
+            if (storeHeader.contains(e.target)) return;
+            dropdownItems.forEach(i => i.classList.remove('is-open'));
+            storeHeader.classList.remove('is-open');
+            if (mobileToggle) mobileToggle.setAttribute('aria-expanded', 'false');
+        });
+
+        // Theme toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        if (themeToggle) {
+            const themes = [
+                "linear-gradient(180deg, #0a0a2a 0%, #1a1a40 100%)",
+                "linear-gradient(180deg, #2a003f 0%, #3b0066 100%)",
+                "linear-gradient(180deg, #002b36 0%, #004f66 100%)",
+                "linear-gradient(180deg, #2a003f 0%, #1a1a40 100%)"
+            ];
+            let currentTheme = 0;
+            
+            themeToggle.addEventListener('click', () => {
+                currentTheme = (currentTheme + 1) % themes.length;
+                document.body.style.background = themes[currentTheme];
+            });
+        }
+
+        // Initialize
+        window.addEventListener('load', () => {
+            updateCartCount();
+            setTimeout(updateSummary, 500);
+        });
+
+        // Update summary periodically
+        setInterval(updateSummary, 1000);
+    </script>
+
+    <script src="bg.js"></script>
+    <script src="quantum-particle-cart.js"></script>
+</body>
+</html>

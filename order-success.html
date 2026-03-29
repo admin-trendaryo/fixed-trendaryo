@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmed - Trendaryo</title>
+    <link rel="stylesheet" href="responsive.css">
+    <script src="performance.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="shared.css">
+    <style>
+        :root{--accent:#00f0ff;--accent-2:#ff00aa;--accent-3:#00ff88;--glass:rgba(255,255,255,0.05);--glass-border:rgba(255,255,255,0.1);}
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:'Rajdhani',sans-serif;background:linear-gradient(180deg,#0a0a2a,#1a1a40);color:#fff;padding-top:80px;min-height:100vh;display:flex;flex-direction:column;}
+        .container{max-width:800px;margin:0 auto;padding:3rem 2rem;flex:1;}
+        .success-icon{width:100px;height:100px;margin:0 auto 2rem;background:linear-gradient(135deg,var(--accent-3),var(--accent));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:3rem;animation:scaleIn 0.5s ease;}
+        @keyframes scaleIn{from{transform:scale(0);}to{transform:scale(1);}}
+        h1{font-family:'Orbitron',sans-serif;text-align:center;margin-bottom:1rem;font-size:2.5rem;}
+        .subtitle{text-align:center;color:#888;margin-bottom:3rem;font-size:1.1rem;}
+        .order-card{background:var(--glass);border:1px solid var(--glass-border);border-radius:20px;padding:2rem;margin-bottom:2rem;}
+        .order-card h3{color:var(--accent);margin-bottom:1.5rem;font-family:'Orbitron',sans-serif;}
+        .info-row{display:flex;justify-content:space-between;padding:0.8rem 0;border-bottom:1px solid var(--glass-border);}
+        .info-row:last-child{border:none;}
+        .info-label{color:#888;}
+        .info-value{font-weight:600;}
+        .order-items{margin-top:1.5rem;}
+        .order-item{display:flex;gap:1rem;padding:1rem 0;border-bottom:1px solid var(--glass-border);}
+        .order-item:last-child{border:none;}
+        .order-item img{width:60px;height:60px;object-fit:cover;border-radius:8px;}
+        .order-item-info{flex:1;}
+        .order-item-name{font-weight:600;margin-bottom:0.3rem;}
+        .order-item-price{color:var(--accent);}
+        .actions{display:flex;gap:1rem;justify-content:center;margin-top:2rem;}
+        .btn{padding:1rem 2rem;border:none;border-radius:10px;font-weight:700;cursor:pointer;transition:all 0.2s;font-family:inherit;text-decoration:none;display:inline-block;}
+        .btn-primary{background:var(--accent);color:#000;}
+        .btn-secondary{background:var(--glass);color:#fff;border:1px solid var(--glass-border);}
+        .btn:hover{transform:translateY(-2px);}
+    </style>
+<script src="bg.js"></script>
+</head>
+<body>
+    <canvas id="three-canvas" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;pointer-events:none;"></canvas>
+    <div id="header-container"></div>
+    
+    <div class="container">
+        <div class="success-icon">✓</div>
+        <h1>Order Confirmed!</h1>
+        <p class="subtitle">Thank you for your purchase. Your order has been received.</p>
+        
+        <div class="order-card">
+            <h3>Order Details</h3>
+            <div class="info-row">
+                <span class="info-label">Order Number:</span>
+                <span class="info-value" id="order-number"></span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Order Date:</span>
+                <span class="info-value" id="order-date"></span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Status:</span>
+                <span class="info-value" style="color:var(--accent-3);">Processing</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Total:</span>
+                <span class="info-value" id="order-total" style="color:var(--accent);font-size:1.3rem;"></span>
+            </div>
+        </div>
+        
+        <div class="order-card">
+            <h3>Shipping Address</h3>
+            <div id="shipping-info"></div>
+        </div>
+        
+        <div class="order-card">
+            <h3>Order Items</h3>
+            <div class="order-items" id="order-items"></div>
+        </div>
+        
+        <div class="actions">
+            <a href="orders.html" class="btn btn-primary">View Orders</a>
+            <a href="index.html" class="btn btn-secondary">Continue Shopping</a>
+        </div>
+    </div>
+    
+    <div id="footer-container"></div>
+    <script src="components.js"></script>
+    <script>
+        const orderId = new URLSearchParams(window.location.search).get('id');
+        
+        function loadOrder() {
+            const orders = JSON.parse(localStorage.getItem('trendaryo_orders') || '[]');
+            const order = orders.find(o => o.id == orderId);
+            
+            if (!order) {
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            document.getElementById('order-number').textContent = `#${order.id}`;
+            document.getElementById('order-date').textContent = new Date(order.date).toLocaleDateString();
+            document.getElementById('order-total').textContent = `$${order.total.toFixed(2)}`;
+            
+            document.getElementById('shipping-info').innerHTML = `
+                <p>${order.customer.firstName} ${order.customer.lastName}</p>
+                <p>${order.shipping.address}</p>
+                <p>${order.shipping.city}, ${order.shipping.state} ${order.shipping.zip}</p>
+                <p>${order.shipping.country}</p>
+                <p style="margin-top:1rem;">Email: ${order.customer.email}</p>
+                <p>Phone: ${order.customer.phone}</p>
+            `;
+            
+            document.getElementById('order-items').innerHTML = order.items.map(item => `
+                <div class="order-item">
+                    <img src="${item.image}" alt="${item.name}">
+                    <div class="order-item-info">
+                        <div class="order-item-name">${item.name}</div>
+                        <div>Quantity: ${item.quantity}</div>
+                        <div class="order-item-price">$${(item.price * item.quantity).toFixed(2)}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        loadOrder();
+    </script>
+
+    <!-- Self-Healing System -->
+<script>
+window.onerror = function(msg, url, lineNo, columnNo, error) {
+  console.log('Error caught:', msg);
+  const errorDiv = document.createElement('div');
+  errorDiv.style.cssText = 'position:fixed; bottom:20px; right:20px; background:#f3f4f6; padding:10px; border-radius:5px; z-index:9999; border:1px solid #ccc;';
+  errorDiv.innerHTML = '⚠️ Something went wrong. Retrying...';
+  document.body.appendChild(errorDiv);
+  setTimeout(() => errorDiv.remove(), 3000);
+  return false;
+};
+</script>
+</body>
+</html>

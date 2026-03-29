@@ -1,0 +1,692 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Compare products side-by-side to find the perfect match. Compare prices, features, and specifications.">
+    <meta name="keywords" content="compare products, product comparison">
+    <meta name="robots" content="noindex, follow">
+    <meta name="author" content="Trendaryo">
+    <link rel="canonical" href="https://trendaryo.com/compare.html">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://trendaryo.com/compare.html">
+    <meta property="og:title" content="Compare Products - Trendaryo">
+    <meta property="og:description" content="Compare products side-by-side to find the perfect match. Compare prices, features, and specifications.">
+    <meta property="og:image" content="https://trendaryo.com/assets/trendaryo-crown-star-logo.svg">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://trendaryo.com/compare.html">
+    <meta property="twitter:title" content="Compare Products - Trendaryo">
+    <meta property="twitter:description" content="Compare products side-by-side to find the perfect match. Compare prices, features, and specifications.">
+    <meta property="twitter:image" content="https://trendaryo.com/assets/trendaryo-crown-star-logo.svg">
+    <title>Compare Products - Trendaryo</title>
+    <link rel="stylesheet" href="responsive.css">
+    <link rel="stylesheet" href="shared.css">
+    <script src="performance.js"></script>
+    <script src="script.js"></script>
+    <link rel="stylesheet" href="styles.css?v=2024022401">
+    <script src="bg.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="assets/favicon-crown-star.svg">
+    <style>
+        :root {
+            --accent: #00f0ff;
+            --accent-2: #ff00aa;
+            --accent-3: #00ff88;
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: #0a0a2a;
+            color: #fff;
+            overflow-x: hidden;
+            transition: background 1s ease-in-out;
+        }
+
+        #three-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; pointer-events: none;}
+
+        .store-header { position: fixed; top: 0; left: 0; right: 0; z-index: 10000; 
+        param($m)
+        $m.Value -replace 'rgba\(0,0,0,0\.(65|72|8|85|9|92)\)', 'rgba(0,0,0,0.08)'
+    : blur(18px); border-bottom: 1px solid var(--glass-border); }
+        .store-header-inner { max-width: 1200px; margin: 0 auto; padding: 0.8rem 1.25rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+        .store-brand { display: flex; align-items: center; gap: 0.75rem; min-width: 180px; }
+        .store-logo { font-family: 'Orbitron', sans-serif; font-size: 1.6rem; font-weight: 900; background: linear-gradient(135deg, var(--accent), var(--accent-2)); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-decoration: none; white-space: nowrap; }
+        .store-search { flex: 1; display: flex; align-items: center; gap: 0.5rem; padding: 0.55rem 0.9rem; border-radius: 999px; background: var(--glass); border: 1px solid var(--glass-border); min-width: 220px; }
+        .store-search input { width: 100%; border: none; outline: none; background: #0a0a2a; color: rgba(255,255,255,0.9); font-family: inherit; font-size: 1rem; }
+        .store-search input::placeholder { color: rgba(255,255,255,0.55); }
+        .store-actions { display: flex; align-items: center; gap: 0.6rem; }
+        .store-icon-btn { width: 42px; height: 42px; border-radius: 999px; background: var(--glass); border: 1px solid var(--glass-border); display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.9); text-decoration: none; transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease; cursor: pointer; }
+        .store-icon-btn:hover { transform: translateY(-1px); border-color: rgba(0,240,255,0.6); background: rgba(0,240,255,0.12); }
+        .store-mobile-toggle { display: none; width: 42px; height: 42px; border-radius: 999px; background: var(--glass); border: 1px solid var(--glass-border); color: rgba(255,255,255,0.9); cursor: pointer; }
+
+        .store-nav { max-width: 1200px; margin: 0 auto; padding: 0 1.25rem 0.85rem; }
+        .store-nav-list { display: flex; align-items: center; justify-content: center; gap: 0.25rem; list-style: none; }
+        .store-nav-item { position: relative; }
+        .store-nav-link { font-family: 'Orbitron', sans-serif; font-size: 0.82rem; font-weight: 700; letter-spacing: 1.6px; text-transform: uppercase; color: rgba(255,255,255,0.85); text-decoration: none; padding: 0.65rem 0.9rem; border-radius: 999px; display: inline-flex; align-items: center; gap: 0.5rem; transition: background 0.2s ease, color 0.2s ease; }
+        .store-nav-link:hover { background: rgba(255,255,255,0.08); color: rgba(255,255,255,1); }
+        .store-nav-link[aria-current="page"] { background: rgba(0,240,255,0.14); color: rgba(255,255,255,1); border: 1px solid rgba(0,240,255,0.25); }
+        .store-caret { font-size: 0.8rem; opacity: 0.85; }
+        .store-dropdown { position: absolute; left: 0; top: calc(100% + 10px); min-width: 240px; background: rgba(10,10,42,0.92); border: 1px solid var(--glass-border); border-radius: 14px; padding: 0.5rem; box-shadow: 0 18px 48px rgba(0,0,0,0.45); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); opacity: 0; visibility: hidden; transform: translateY(-6px); transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s ease; }
+        .store-dropdown a { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; padding: 0.7rem 0.8rem; border-radius: 10px; color: rgba(255,255,255,0.88); text-decoration: none; transition: background 0.18s ease, color 0.18s ease; }
+        .store-dropdown a:hover { background: rgba(0,240,255,0.12); color: #fff; }
+        .store-dropdown small { color: rgba(255,255,255,0.55); font-size: 0.85rem; }
+        .store-nav-item:hover .store-dropdown { opacity: 1; visibility: visible; transform: translateY(0); }
+        .store-nav-item.is-open .store-dropdown { opacity: 1; visibility: visible; transform: translateY(0); }
+
+        .page-offset { padding-top: 150px; }
+
+        @media(max-width:900px){
+            .store-search { display: none; }
+            .store-mobile-toggle { display: inline-flex; align-items: center; justify-content: center; }
+            .store-nav { display: none; }
+            .store-header.is-open .store-nav { display: block; padding-bottom: 1rem; }
+            .store-nav-list { flex-direction: column; align-items: stretch; justify-content: flex-start; gap: 0.5rem; }
+            .store-nav-link { width: 100%; justify-content: space-between; }
+            .store-dropdown { position: static; opacity: 1; visibility: visible; transform: none; box-shadow: none; background: rgba(255,255,255,0.04); }
+            .store-nav-item:hover .store-dropdown { opacity: 1; visibility: visible; transform: none; }
+            .page-offset { padding-top: 120px; }
+        }
+
+        .compare-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .compare-header h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(2.2rem, 5vw, 3.4rem);
+            font-weight: 900;
+            background: linear-gradient(135deg, #fff, var(--accent));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.6rem;
+        }
+
+        .compare-header p {
+            color: rgba(255,255,255,0.7);
+            font-size: 1.15rem;
+        }
+        
+        .compare-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .compare-card {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            position: relative;
+            backdrop-filter: blur(10px);
+        }
+        
+        .compare-card.selected {
+            border-color: rgba(0, 240, 255, 0.45);
+            box-shadow: 0 0 35px rgba(0, 240, 255, 0.12);
+        }
+        
+        .compare-card .remove-compare {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.10);
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1rem;
+            color: rgba(255,255,255,0.85);
+        }
+        
+        .compare-card .remove-compare:hover {
+            background: #ef4444;
+            color: white;
+        }
+        
+        .compare-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: contain;
+            margin-bottom: 1rem;
+        }
+        
+        .compare-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .compare-card .price {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+        
+        .compare-card .old-price {
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.55);
+            text-decoration: line-through;
+            margin-left: 0.5rem;
+        }
+        
+        .compare-empty {
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+        
+        .compare-empty svg {
+            width: 100px;
+            height: 100px;
+            color: rgba(255,255,255,0.25);
+            margin-bottom: 1rem;
+        }
+
+        .compare-empty p {
+            color: rgba(255,255,255,0.65);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.95rem 1.25rem;
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+            background: rgba(255,255,255,0.06);
+            color: rgba(255,255,255,0.92);
+            text-decoration: none;
+            cursor: pointer;
+            font-weight: 700;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 0.8px;
+            transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            border-color: rgba(0,240,255,0.55);
+            background: rgba(0,240,255,0.10);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, rgba(0,240,255,0.30), rgba(0,255,136,0.20));
+            border-color: rgba(0,240,255,0.35);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, rgba(0,240,255,0.40), rgba(0,255,136,0.26));
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.06);
+            border-color: rgba(255,255,255,0.14);
+            color: rgba(255,255,255,0.92);
+        }
+
+        .btn-secondary:hover {
+            border-color: rgba(0,240,255,0.55);
+            background: rgba(0,240,255,0.10);
+        }
+        
+        .add-more-btn {
+            text-align: center;
+            margin: 2rem 0;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 2rem;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 18px 45px rgba(0,0,0,0.22);
+            backdrop-filter: blur(10px);
+        }
+        
+        .comparison-table th,
+        .comparison-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+        
+        .comparison-table th {
+            background: rgba(255,255,255,0.06);
+            font-weight: 600;
+            width: 20%;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 0.6px;
+        }
+        
+        .comparison-table td {
+            text-align: center;
+        }
+        
+        .comparison-table .product-col {
+            width: 25%;
+        }
+        
+        .comparison-table img {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+        }
+        
+        .spec-row:nth-child(even) {
+            background: rgba(255,255,255,0.03);
+        }
+        
+        .check-icon {
+            color: #10b981;
+            font-size: 1.2rem;
+        }
+        
+        .cross-icon {
+            color: #ef4444;
+            font-size: 1.2rem;
+        }
+
+        footer.footer {
+            background: rgba(0,0,0,0.45);
+            border-top: 1px solid rgba(255,255,255,0.08);
+        }
+
+        footer.footer a {
+            color: rgba(255,255,255,0.75);
+            text-decoration: none;
+        }
+
+        footer.footer a:hover {
+            color: rgba(0,240,255,0.95);
+        }
+    </style>
+<script src="bg.js"></script>
+</head>
+<body>
+    <script src="components.js"></script>
+    <canvas id="three-canvas" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;pointer-events:none;"></canvas>
+
+    <header class="store-header" id="store-header">
+        <div class="store-header-inner">
+            <div class="store-brand">
+                <a href="index.html" class="store-logo">TRENDARYO</a>
+            </div>
+
+            <div class="store-search" role="search">
+                <span aria-hidden="true">🔎</span>
+                <input type="search" placeholder="Search products..." />
+            </div>
+
+            <div class="store-actions">
+                <a href="wishlist.html" class="store-icon-btn" aria-label="Wishlist">❤</a>
+                <a href="compare.html" class="store-icon-btn" aria-label="Compare" aria-current="page">⇄</a>
+                <a href="cart.html" class="store-icon-btn" aria-label="Cart">🛒</a>
+                <a href="account.html" class="store-icon-btn" aria-label="Account">👤</a>
+                <button class="store-mobile-toggle" id="store-mobile-toggle" aria-label="Menu" aria-expanded="false">☰</button>
+                <button id="theme-toggle" class="store-icon-btn" aria-label="Theme">☼</button>
+            </div>
+        </div>
+
+        <nav class="store-nav" aria-label="Primary">
+            <ul class="store-nav-list">
+                <li class="store-nav-item">
+                    <a href="index.html" class="store-nav-link">Home</a>
+                </li>
+
+                <li class="store-nav-item" data-dropdown>
+                    <a href="shop.html" class="store-nav-link">Shop <span class="store-caret" aria-hidden="true">▾</span></a>
+                    <div class="store-dropdown" role="menu">
+                        <a href="shop.html">Shop All <small>Browse everything</small></a>
+                        <a href="product.html">Product Page <small>Example product</small></a>
+                        <a href="wishlist.html">Wishlist <small>Saved items</small></a>
+                        <a href="compare.html">Compare <small>Compare products</small></a>
+                    </div>
+                </li>
+
+                <li class="store-nav-item" data-dropdown>
+                    <a href="cart.html" class="store-nav-link">Cart <span class="store-caret" aria-hidden="true">▾</span></a>
+                    <div class="store-dropdown" role="menu">
+                        <a href="cart.html">View Cart <small>Items & totals</small></a>
+                        <a href="checkout.html">Checkout <small>Complete purchase</small></a>
+                        <a href="track-order.html">Track Order <small>Shipping status</small></a>
+                    </div>
+                </li>
+
+                <li class="store-nav-item" data-dropdown>
+                    <a href="account.html" class="store-nav-link">Account <span class="store-caret" aria-hidden="true">▾</span></a>
+                    <div class="store-dropdown" role="menu">
+                        <a href="account.html">My Account <small>Profile</small></a>
+                        <a href="login.html">Login <small>Access account</small></a>
+                        <a href="register.html">Register <small>Create account</small></a>
+                    </div>
+                </li>
+
+                <li class="store-nav-item" data-dropdown>
+                    <a href="#" class="store-nav-link">Support <span class="store-caret" aria-hidden="true">▾</span></a>
+                    <div class="store-dropdown" role="menu">
+                        <a href="faq.html">FAQ <small>Help center</small></a>
+                        <a href="contact.html">Contact <small>Get in touch</small></a>
+                        <a href="shipping.html">Shipping <small>Delivery info</small></a>
+                        <a href="returns.html">Returns <small>Return policy</small></a>
+                    </div>
+                </li>
+
+                <li class="store-nav-item">
+                    <a href="about.html" class="store-nav-link">About</a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="page-offset" style="padding-bottom: 4rem;">
+        <div class="container" style="max-width: 1200px;">
+            <div class="compare-header">
+                <h1>Compare Products</h1>
+                <p>Compare up to 4 products side by side</p>
+            </div>
+
+            <div id="compare-products" class="compare-grid">
+                <!-- Compare products will be shown here -->
+            </div>
+
+            <div class="add-more-btn">
+                <a href="shop.html" class="btn btn-secondary">+ Add More Products</a>
+            </div>
+
+            <div id="comparison-table-container" style="display: none;">
+                <table class="comparison-table">
+                    <thead>
+                        <tr id="comparison-header">
+                            <!-- Headers will be dynamically added -->
+                        </tr>
+                    </thead>
+                    <tbody id="comparison-body">
+                        <!-- Comparison rows will be dynamically added -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3 class="footer-logo">Trendaryo</h3>
+                    <p>Your premium destination for electronics, fashion, and accessories with cutting-edge 3D shopping experience.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="shop.html">Shop</a></li>
+                        <li><a href="about.html">About</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                        <li><a href="faq.html">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Customer Service</h4>
+                    <ul>
+                        <li><a href="shipping.html">Shipping Info</a></li>
+                        <li><a href="returns.html">Returns</a></li>
+                        <li><a href="privacy.html">Privacy Policy</a></li>
+                        <li><a href="terms.html">Terms of Service</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Connect</h4>
+                    <ul>
+                        <li><a href="#">Facebook</a></li>
+                        <li><a href="#">Twitter</a></li>
+                        <li><a href="#">Instagram</a></li>
+                        <li><a href="#">LinkedIn</a></li>
+                    </ul>
+                </div>
+            </div>                <div class="footer-col">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="blog.html">Blog</a></li>
+                        <li><a href="help-center.html">Help Center</a></li>
+                        <li><a href="gift-cards.html">Gift Cards</a></li>
+                        <li><a href="affiliate.html">Affiliate Program</a></li>
+                        <li><a href="size-guide.html">Size Guide</a></li>
+                        <li><a href="cookie-policy.html">Cookie Policy</a></li>
+                    </ul>
+                </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2024 Trendaryo. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js?v=2024022401"></script>
+    <script>
+        // Force cache refresh
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                for(let registration of registrations) {
+                    registration.unregister();
+                }
+            });
+        }
+    </script>
+    <script>
+        // Wait for script.js to load before initializing compare functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize compare products storage
+            let compareList = JSON.parse(localStorage.getItem('compare_list')) || [];
+            
+            function saveCompareList() {
+                localStorage.setItem('compare_list', JSON.stringify(compareList));
+            }
+            
+            function renderCompareProducts() {
+                const container = document.getElementById('compare-products');
+                
+                if (compareList.length === 0) {
+                    container.innerHTML = `
+                        <div class="compare-empty" style="grid-column: 1 / -1;">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                                <line x1="18" y1="20" x2="18" y2="10"></line>
+                                <line x1="12" y1="20" x2="12" y2="4"></line>
+                                <line x1="6" y1="20" x2="6" y2="14"></line>
+                            </svg>
+                            <h2>No Products to Compare</h2>
+                            <p>Add products to compare from the shop page!</p>
+                            <a href="shop.html" class="btn btn-primary">Browse Products</a>
+                        </div>
+                    `;
+                    const tableContainer = document.getElementById('comparison-table-container');
+                    if (tableContainer) tableContainer.style.display = 'none';
+                    return;
+                }
+                
+                container.innerHTML = compareList.map((product, index) => `
+                    <div class="compare-card selected">
+                        <button class="remove-compare" onclick="removeFromCompare(${index})">✕</button>
+                        <a href="product.html?id=${product.id}">
+                            <img src="${product.image}" alt="${product.name}">
+                        </a>
+                        <h3>${product.name}</h3>
+                        <div>
+                            <span class="price">$${(product.price || 0).toFixed(2)}</span>
+                            ${product.oldPrice ? `<span class="old-price">$${product.oldPrice.toFixed(2)}</span>` : ''}
+                        </div>
+                        <button onclick="addToCartQuickById(${product.id})" class="btn btn-primary" style="margin-top: 1rem; width: 100%;">Add to Cart</button>
+                    </div>
+                `).join('');
+                
+                // Add "add product" card if less than 4
+                if (compareList.length < 4) {
+                    container.innerHTML += `
+                        <div class="compare-card" style="display: flex; align-items: center; justify-content: center; min-height: 300px;">
+                            <a href="shop.html" style="text-decoration: none; color: #666;">
+                                <div style="text-align: center;">
+                                    <div style="font-size: 3rem;">+</div>
+                                    <p>Add Product</p>
+                                </div>
+                            </a>
+                        </div>
+                    `;
+                }
+                
+                renderComparisonTable();
+            }
+            
+            function renderComparisonTable() {
+                if (compareList.length < 2) {
+                    const tableContainer = document.getElementById('comparison-table-container');
+                    if (tableContainer) tableContainer.style.display = 'none';
+                    return;
+                }
+                
+                const tableContainer = document.getElementById('comparison-table-container');
+                if (tableContainer) tableContainer.style.display = 'block';
+                
+                // Render header
+                const headerRow = document.getElementById('comparison-header');
+                if (headerRow) {
+                    headerRow.innerHTML = `
+                        <th class="product-col">Feature</th>
+                        ${compareList.map(p => `
+                            <th class="product-col">
+                                <img src="${p.image}" alt="${p.name}">
+                                <p>${p.name}</p>
+                            </th>
+                        `).join('')}
+                    `;
+                }
+                
+                // Render comparison rows
+                const tbody = document.getElementById('comparison-body');
+                if (tbody) {
+                    tbody.innerHTML = `
+                        <tr class="spec-row">
+                            <th>Price</th>
+                            ${compareList.map(p => `<td>$${(p.price || 0).toFixed(2)}</td>`).join('')}
+                        </tr>
+                        <tr>
+                            <th>Category</th>
+                            ${compareList.map(p => `<td>${p.category || 'N/A'}</td>`).join('')}
+                        </tr>
+                        <tr class="spec-row">
+                            <th>Rating</th>
+                            ${compareList.map(p => `<td>⭐ ${(p.rating || 0).toFixed(1)} (${p.reviews || 0} reviews)</td>`).join('')}
+                        </tr>
+                        <tr>
+                            <th>Stock</th>
+                            ${compareList.map(p => `<td>${(p.stock || 0) > 0 ? '✅ In Stock' : '❌ Out of Stock'}</td>`).join('')}
+                        </tr>
+                        <tr class="spec-row">
+                            <th>Description</th>
+                            ${compareList.map(p => `<td>${p.description ? p.description.substring(0, 100) + '...' : 'N/A'}</td>`).join('')}
+                        </tr>
+                        <tr>
+                            <th>Features</th>
+                            ${compareList.map(p => `
+                                <td>
+                                    ${p.features ? p.features.slice(0, 3).map(f => `• ${f}`).join('<br>') : 'N/A'}
+                                </td>
+                            `).join('')}
+                        </tr>
+                        <tr class="spec-row">
+                            <th>Action</th>
+                            ${compareList.map(p => `
+                                <td><button onclick="addToCartQuickById(${p.id})" class="btn btn-primary">Add to Cart</button></td>
+                            `).join('')}
+                        </tr>
+                    `;
+                }
+            }
+            
+            function removeFromCompare(index) {
+                compareList.splice(index, 1);
+                saveCompareList();
+                renderCompareProducts();
+            }
+            
+            function addToCartQuickById(productId) {
+                // Check if addToCart function is available from script.js
+                if (typeof window.addToCart === 'function') {
+                    window.addToCart(productId, 1);
+                } else {
+                    console.error('addToCart function not available');
+                    // Fallback notification
+                    if (typeof window.showNotification === 'function') {
+                        window.showNotification('Adding to cart...', 'info');
+                    }
+                }
+            }
+            
+            // Add to compare from anywhere
+            window.addToCompare = function(product) {
+                if (compareList.length >= 4) {
+                    if (typeof window.showNotification === 'function') {
+                        window.showNotification('Maximum 4 products can be compared', 'error');
+                    }
+                    return;
+                }
+                
+                if (compareList.find(p => p.id === product.id)) {
+                    if (typeof window.showNotification === 'function') {
+                        window.showNotification('Product already in compare list', 'info');
+                    }
+                    return;
+                }
+                
+                compareList.push(product);
+                saveCompareList();
+                if (typeof window.showNotification === 'function') {
+                    window.showNotification('Added to compare list', 'success');
+                }
+                renderCompareProducts();
+            };
+            
+            // Make functions globally available
+            window.removeFromCompare = removeFromCompare;
+            window.addToCartQuickById = addToCartQuickById;
+            
+            // Initialize the compare page
+            renderCompareProducts();
+        });
+    </script>
+    <!-- Self-Healing System -->
+<script>
+window.onerror = function(msg, url, lineNo, columnNo, error) {
+  console.log('Error caught:', msg);
+  const errorDiv = document.createElement('div');
+  errorDiv.style.cssText = 'position:fixed; bottom:20px; right:20px; background:#f3f4f6; padding:10px; border-radius:5px; z-index:9999; border:1px solid #ccc;';
+  errorDiv.innerHTML = '⚠️ Something went wrong. Retrying...';
+  document.body.appendChild(errorDiv);
+  setTimeout(() => errorDiv.remove(), 3000);
+  return false;
+};
+</script>
+</body>
+</html>

@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="shared.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex">
+    <title>Admin Ops - Trendaryo</title>
+    <link rel="stylesheet" href="responsive.css">
+    <script src="performance.js"></script>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">`n    <link rel="stylesheet" href="shared.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #f8fafc; color: #0f172a; }
+        .layout { display: grid; grid-template-columns: 280px 1fr; min-height: 100vh; }
+        .sidebar { background: #0b1220; color: #fff; padding: 18px; position: fixed; width: 280px; height: 100vh; overflow-y: auto; }
+        .brand { font-weight: 900; letter-spacing: 1px; text-align: center; padding: 18px 12px; border-bottom: 1px solid rgba(255,255,255,0.08); color: #d4af37; }
+        .nav { display: grid; gap: 8px; margin-top: 16px; }
+        .nav a { display: flex; align-items: center; justify-content: space-between; text-decoration: none; color: rgba(255,255,255,0.85); padding: 12px 14px; border-radius: 10px; transition: background 0.15s ease; font-weight: 600; }
+        .nav a:hover, .nav a.active { background: rgba(212,175,55,0.18); color: #fff; }
+        .main { margin-left: 280px; padding: 26px; }
+        .header { display:flex; align-items:center; justify-content: space-between; gap: 12px; margin-bottom: 18px; }
+        .header h1 { font-size: 1.6rem; }
+        .pill { display:inline-flex; align-items:center; gap:8px; padding: 8px 10px; border: 1px solid #e2e8f0; border-radius: 999px; background: #fff; color: #334155; font-size: 0.9rem; }
+        .btn { border: 1px solid #e2e8f0; background: #fff; padding: 10px 12px; border-radius: 10px; cursor: pointer; font-weight: 700; }
+        .btn-primary { background: #d4af37; border-color: #d4af37; color: #0b1220; }
+        .btn-danger { background: #ef4444; border-color: #ef4444; color: #fff; }
+        .grid { display: grid; gap: 14px; }
+        .card { background: #fff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 16px; box-shadow: 0 2px 10px rgba(2,6,23,0.05); }
+        .card h2 { font-size: 1rem; margin-bottom: 10px; }
+        .row { display:flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+        .muted { color: #64748b; font-size: 0.92rem; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px 10px; border-bottom: 1px solid #eef2f7; text-align: left; vertical-align: top; }
+        th { font-size: 0.85rem; color: #64748b; font-weight: 800; background: #f8fafc; }
+        .badge { display:inline-flex; padding: 4px 10px; border-radius: 999px; font-size: 0.8rem; font-weight: 800; border: 1px solid #e2e8f0; background: #fff; }
+        .badge.ok { border-color: rgba(16,185,129,0.25); background: rgba(16,185,129,0.08); color: #065f46; }
+        .badge.warn { border-color: rgba(245,158,11,0.25); background: rgba(245,158,11,0.08); color: #92400e; }
+        .badge.bad { border-color: rgba(239,68,68,0.25); background: rgba(239,68,68,0.08); color: #991b1b; }
+        input, select, textarea { width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid #e2e8f0; font-family: inherit; }
+        textarea { min-height: 90px; resize: vertical; }
+        .section { display:none; }
+        .section.active { display:block; }
+        @media(max-width: 980px){ .layout{grid-template-columns:1fr;} .sidebar{position:static;width:auto;height:auto;} .main{margin-left:0;} }
+    </style>
+<script src="bg.js"></script>
+</head>
+<body>
+    <canvas id="three-canvas" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;pointer-events:none;"></canvas>
+    <div id="header-container" data-type="admin"></div>
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="brand">TRENDARYO ADMIN OPS</div>
+            <div class="nav">
+                <a href="#" class="active" data-section="returns" onclick="showSection(event,'returns')"><span>Returns</span><span>↩</span></a>
+                <a href="#" data-section="qa" onclick="showSection(event,'qa')"><span>Q&amp;A</span><span>❓</span></a>
+                <a href="#" data-section="rewards" onclick="showSection(event,'rewards')"><span>Rewards Events</span><span>🎁</span></a>
+                <a href="#" onclick="logout()"><span>Logout</span><span>🚪</span></a>
+            </div>
+            <div style="margin-top: 14px;" class="card">
+                <div class="muted" style="margin-bottom:8px;">Admin JWT (stored in <code>localStorage.token</code>)</div>
+                <button class="btn btn-primary" onclick="checkAuth()">Check Auth</button>
+                <div id="authStatus" class="muted" style="margin-top:10px;">Not checked</div>
+            </div>
+        </aside>
+
+        <main class="main">
+            <div class="header">
+                <h1 id="title">Returns</h1>
+                <div class="row">
+                    <span class="pill" id="apiPill">API: ${API_BASE || 'Relative (/api)'}</span>
+                    <button class="btn" onclick="refreshActive()">Refresh</button>
+                </div>
+            </div>
+
+            <section id="returns" class="section active">
+                <div class="grid">
+                    <div class="card">
+                        <div class="row" style="justify-content: space-between;">
+                            <div>
+                                <h2>Returns / Exchanges</h2>
+                                <div class="muted">Uses <code>GET /api/admin/returns</code> and <code>POST /api/admin/returns/:rma/status</code></div>
+                            </div>
+                        </div>
+                        <div id="returnsNotice" class="muted" style="margin-top:10px;"></div>
+                        <div style="overflow:auto;margin-top:12px;">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>RMA</th>
+                                        <th>Order</th>
+                                        <th>Email</th>
+                                        <th>Type</th>
+                                        <th>Reason</th>
+                                        <th>Status</th>
+                                        <th>Update</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="returnsBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="qa" class="section">
+                <div class="grid">
+                    <div class="card">
+                        <h2>Product Questions</h2>
+                        <div class="muted">Uses <code>GET /api/admin/questions</code> and <code>POST /api/admin/questions/:id/answer</code></div>
+                        <div id="qaNotice" class="muted" style="margin-top:10px;"></div>
+                        <div style="overflow:auto;margin-top:12px;">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Product</th>
+                                        <th>Question</th>
+                                        <th>Answer</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="qaBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="rewards" class="section">
+                <div class="grid">
+                    <div class="card">
+                        <h2>Rewards Events (Audit Log)</h2>
+                        <div class="muted">Uses <code>GET /api/admin/rewards/events</code></div>
+                        <div id="rewardsNotice" class="muted" style="margin-top:10px;"></div>
+                        <div style="overflow:auto;margin-top:12px;">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>User ID</th>
+                                        <th>Type</th>
+                                        <th>Points</th>
+                                        <th>Meta</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="rewardsBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        const API_BASE = window.location.hostname === 'localhost' ? 'http://localhost:3000' : '';
+
+        function token() { return localStorage.getItem('token') || ''; }
+
+        function showSection(e, id) {
+            e.preventDefault();
+            document.querySelectorAll('.nav a[data-section]').forEach(a => a.classList.remove('active'));
+            const link = document.querySelector(`.nav a[data-section="${id}"]`);
+            if (link) link.classList.add('active');
+
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            const sec = document.getElementById(id);
+            if (sec) sec.classList.add('active');
+
+            const titles = { returns: 'Returns', qa: 'Q&A', rewards: 'Rewards Events' };
+            document.getElementById('title').textContent = titles[id] || 'Admin Ops';
+
+            refreshActive();
+        }
+
+        async function apiFetch(path, options = {}) {
+            const headers = Object.assign({}, options.headers || {});
+            const t = token();
+            if (t) headers['Authorization'] = `Bearer ${t}`;
+            return fetch(`${API_BASE}${path}`, { ...options, headers });
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            location.href = 'admin-login.html';
+        }
+
+        async function checkAuth() {
+            const el = document.getElementById('authStatus');
+            el.textContent = 'Checking...';
+            try {
+                const res = await apiFetch('/api/auth/me');
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || 'Not authorized');
+                el.textContent = `OK: ${data.email} (admin=${data.isAdmin})`;
+            } catch (e) {
+                el.textContent = `Auth failed: ${e.message}`;
+            }
+        }
+
+        function activeSectionId() {
+            const active = document.querySelector('.section.active');
+            return active ? active.id : 'returns';
+        }
+
+        async function refreshActive() {
+            const id = activeSectionId();
+            if (id === 'returns') return loadReturns();
+            if (id === 'qa') return loadQuestions();
+            if (id === 'rewards') return loadRewards();
+        }
+
+        function badgeForStatus(status) {
+            const s = String(status || '').toLowerCase();
+            if (['approved', 'received', 'refunded', 'exchanged', 'closed'].includes(s)) return 'ok';
+            if (['requested'].includes(s)) return 'warn';
+            if (['rejected'].includes(s)) return 'bad';
+            return '';
+        }
+
+        async function loadReturns() {
+            const notice = document.getElementById('returnsNotice');
+            notice.textContent = 'Loading...';
+            const body = document.getElementById('returnsBody');
+            body.innerHTML = '';
+
+            try {
+                const res = await apiFetch('/api/admin/returns');
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || 'Failed to load returns');
+
+                const items = Array.isArray(data) ? data : [];
+                notice.textContent = `${items.length} return(s)`;
+
+                if (!items.length) {
+                    body.innerHTML = '<tr><td colspan="7" class="muted">No returns yet</td></tr>';
+                    return;
+                }
+
+                body.innerHTML = items.map(r => {
+                    const badge = badgeForStatus(r.status);
+                    return `
+                        <tr>
+                            <td><code>${r.rma}</code></td>
+                            <td>${r.orderNumber || '-'}</td>
+                            <td>${r.email || '-'}</td>
+                            <td>${r.type || '-'}</td>
+                            <td>${r.reason || '-'}</td>
+                            <td><span class="badge ${badge}">${r.status || '-'}</span></td>
+                            <td style="min-width:240px;">
+                                <div class="row">
+                                    <select data-rma="${r.rma}">
+                                        <option value="requested" ${r.status==='requested'?'selected':''}>requested</option>
+                                        <option value="approved" ${r.status==='approved'?'selected':''}>approved</option>
+                                        <option value="rejected" ${r.status==='rejected'?'selected':''}>rejected</option>
+                                        <option value="received" ${r.status==='received'?'selected':''}>received</option>
+                                        <option value="refunded" ${r.status==='refunded'?'selected':''}>refunded</option>
+                                        <option value="exchanged" ${r.status==='exchanged'?'selected':''}>exchanged</option>
+                                        <option value="closed" ${r.status==='closed'?'selected':''}>closed</option>
+                                    </select>
+                                    <button class="btn btn-primary" data-btn-rma="${r.rma}">Save</button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+
+                body.querySelectorAll('[data-btn-rma]').forEach(btn => {
+                    btn.addEventListener('click', async () => {
+                        const rma = btn.getAttribute('data-btn-rma');
+                        const sel = body.querySelector(`select[data-rma="${rma}"]`);
+                        const status = sel ? sel.value : '';
+                        await updateReturnStatus(rma, status);
+                    });
+                });
+            } catch (e) {
+                notice.textContent = e.message;
+            }
+        }
+
+        async function updateReturnStatus(rma, status) {
+            const notice = document.getElementById('returnsNotice');
+            notice.textContent = 'Saving...';
+            try {
+                const res = await apiFetch(`/api/admin/returns/${encodeURIComponent(rma)}/status`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status })
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || 'Failed to update status');
+                notice.textContent = 'Saved.';
+                await loadReturns();
+            } catch (e) {
+                notice.textContent = e.message;
+            }
+        }
+
+        async function loadQuestions() {
+            const notice = document.getElementById('qaNotice');
+            notice.textContent = 'Loading...';
+            const body = document.getElementById('qaBody');
+            body.innerHTML = '';
+
+            try {
+                const res = await apiFetch('/api/admin/questions');
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || 'Failed to load questions');
+
+                const items = Array.isArray(data) ? data : [];
+                notice.textContent = `${items.length} question(s)`;
+
+                if (!items.length) {
+                    body.innerHTML = '<tr><td colspan="5" class="muted">No questions yet</td></tr>';
+                    return;
+                }
+
+                body.innerHTML = items.map(q => {
+                    const hasAnswer = Boolean(q.answer);
+                    return `
+                        <tr>
+                            <td>${q.id}</td>
+                            <td>${q.productId}</td>
+                            <td style="min-width:320px;">${q.question}</td>
+                            <td style="min-width:320px;">
+                                ${hasAnswer ? `<div class="muted">${q.answer}</div>` : `<textarea data-answer="${q.id}" placeholder="Write an answer..."></textarea>`}
+                            </td>
+                            <td style="min-width:140px;">
+                                ${hasAnswer ? `<span class="badge ok">answered</span>` : `<button class="btn btn-primary" data-btn-answer="${q.id}">Post</button>`}
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+
+                body.querySelectorAll('[data-btn-answer]').forEach(btn => {
+                    btn.addEventListener('click', async () => {
+                        const id = parseInt(btn.getAttribute('data-btn-answer'), 10);
+                        const ta = body.querySelector(`[data-answer="${id}"]`);
+                        const answer = ta ? ta.value.trim() : '';
+                        if (!answer) {
+                            notice.textContent = 'Answer cannot be empty.';
+                            return;
+                        }
+                        await postAnswer(id, answer);
+                    });
+                });
+            } catch (e) {
+                notice.textContent = e.message;
+            }
+        }
+
+        async function postAnswer(id, answer) {
+            const notice = document.getElementById('qaNotice');
+            notice.textContent = 'Posting...';
+            try {
+                const res = await apiFetch(`/api/admin/questions/${id}/answer`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ answer })
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || 'Failed to post answer');
+                notice.textContent = 'Answer posted.';
+                await loadQuestions();
+            } catch (e) {
+                notice.textContent = e.message;
+            }
+        }
+
+        async function loadRewards() {
+            const notice = document.getElementById('rewardsNotice');
+            notice.textContent = 'Loading...';
+            const body = document.getElementById('rewardsBody');
+            body.innerHTML = '';
+
+            try {
+                const res = await apiFetch('/api/admin/rewards/events');
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || 'Failed to load rewards events');
+
+                const items = Array.isArray(data) ? data : [];
+                notice.textContent = `${items.length} event(s)`;
+
+                if (!items.length) {
+                    body.innerHTML = '<tr><td colspan="6" class="muted">No reward events yet</td></tr>';
+                    return;
+                }
+
+                body.innerHTML = items.slice().reverse().map(e => {
+                    const pts = Number(e.points || 0);
+                    const cls = pts > 0 ? 'ok' : pts < 0 ? 'bad' : 'warn';
+                    return `
+                        <tr>
+                            <td>${e.id}</td>
+                            <td>${e.userId}</td>
+                            <td><code>${e.type}</code></td>
+                            <td><span class="badge ${cls}">${pts > 0 ? '+' : ''}${pts}</span></td>
+                            <td class="muted" style="max-width:420px;word-break:break-word;">${JSON.stringify(e.meta || {})}</td>
+                            <td>${new Date(e.createdAt).toLocaleString()}</td>
+                        </tr>
+                    `;
+                }).join('');
+            } catch (e) {
+                notice.textContent = e.message;
+            }
+        }
+
+        // Initial load
+        refreshActive();
+    </script>
+    <div id="footer-container"></div>`n    <script src="components.js"></script>`n    <div id="footer-container"></div>`n    <script src="components.js"></script>`n
+    <!-- Self-Healing System -->
+<script>
+window.onerror = function(msg, url, lineNo, columnNo, error) {
+  console.log('Error caught:', msg);
+  const errorDiv = document.createElement('div');
+  errorDiv.style.cssText = 'position:fixed; bottom:20px; right:20px; background:#f3f4f6; padding:10px; border-radius:5px; z-index:9999; border:1px solid #ccc;';
+  errorDiv.innerHTML = '⚠️ Something went wrong. Retrying...';
+  document.body.appendChild(errorDiv);
+  setTimeout(() => errorDiv.remove(), 3000);
+  return false;
+};
+</script>
+</body>
+</html>

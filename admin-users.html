@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management - Admin | Trendaryo</title>
+    <link rel="stylesheet" href="responsive.css">
+    <script src="performance.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="shared.css">
+    <style>
+        body{padding-top:80px;background:#0a0a2a;color:#fff;font-family:'Rajdhani',sans-serif;}
+        .container{max-width:1400px;margin:0 auto;padding:2rem;}
+        .page-header{margin-bottom:2rem;}
+        .page-title{font-family:'Orbitron',sans-serif;font-size:2rem;margin-bottom:0.5rem;}
+        .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem;}
+        .stat-card{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:1.5rem;}
+        .stat-value{font-size:2rem;font-weight:900;color:#00f0ff;}
+        .stat-label{color:#aaa;font-size:0.9rem;}
+        .filters{display:flex;gap:1rem;margin-bottom:2rem;flex-wrap:wrap;}
+        .filter-input{padding:0.75rem;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:#fff;font-family:inherit;}
+        .btn{padding:0.75rem 1.5rem;border-radius:8px;border:none;cursor:pointer;font-weight:700;font-family:inherit;transition:all 0.3s;}
+        .btn-primary{background:#00f0ff;color:#000;}
+        .btn-danger{background:#ff0055;color:#fff;}
+        .btn-success{background:#00ff88;color:#000;}
+        .table-container{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:12px;overflow:hidden;}
+        table{width:100%;border-collapse:collapse;}
+        th{background:rgba(0,240,255,0.1);padding:1rem;text-align:left;font-family:'Orbitron',sans-serif;border-bottom:1px solid rgba(255,255,255,0.1);}
+        td{padding:1rem;border-bottom:1px solid rgba(255,255,255,0.05);}
+        .badge{padding:0.25rem 0.75rem;border-radius:999px;font-size:0.85rem;font-weight:700;}
+        .badge-admin{background:rgba(255,0,170,0.2);color:#ff00aa;}
+        .badge-user{background:rgba(0,240,255,0.2);color:#00f0ff;}
+        .badge-active{background:rgba(0,255,136,0.2);color:#00ff88;}
+        .badge-suspended{background:rgba(255,0,85,0.2);color:#ff0055;}
+        .action-btns{display:flex;gap:0.5rem;}
+        .btn-sm{padding:0.5rem 1rem;font-size:0.85rem;}
+        @media(max-width:768px){.stats-grid{grid-template-columns:1fr 1fr;}}
+    </style>
+<script src="bg.js"></script>
+</head>
+<body>
+    <canvas id="three-canvas" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;pointer-events:none;"></canvas>
+    <div id="header-container" data-type="admin"></div>
+    
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">User Management</h1>
+            <p style="color:#aaa;">Manage all registered users and their permissions</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value" id="total-users">0</div>
+                <div class="stat-label">Total Users</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="admin-count">0</div>
+                <div class="stat-label">Admins</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="active-users">0</div>
+                <div class="stat-label">Active Users</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="new-today">0</div>
+                <div class="stat-label">New Today</div>
+            </div>
+        </div>
+
+        <div class="filters">
+            <input type="search" class="filter-input" placeholder="Search users..." id="search-users" style="flex:1;min-width:250px;">
+            <select class="filter-input" id="filter-role">
+                <option value="">All Roles</option>
+                <option value="admin">Admin</option>
+                <option value="user">User</option>
+            </select>
+            <select class="filter-input" id="filter-status">
+                <option value="">All Status</option>
+                <option value="active">Active</option>
+                <option value="suspended">Suspended</option>
+            </select>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Status</th>
+                        <th>Joined</th>
+                        <th>Orders</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="users-table"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="components.js"></script>
+    <script src="script.js"></script>
+    <script>
+        if(!auth.isAdmin()){window.location.href='index.html';}
+
+        async function loadUsers(){
+            try{
+                const users=await api.get('/admin/users');
+                document.getElementById('total-users').textContent=users.length;
+                document.getElementById('admin-count').textContent=users.filter(u=>u.isAdmin).length;
+                document.getElementById('active-users').textContent=users.filter(u=>!u.suspended).length;
+                const today=new Date().toDateString();
+                document.getElementById('new-today').textContent=users.filter(u=>new Date(u.createdAt).toDateString()===today).length;
+                renderUsers(users);
+            }catch(err){
+                console.error(err);
+                showNotification('Failed to load users','error');
+            }
+        }
+
+        function renderUsers(users){
+            const tbody=document.getElementById('users-table');
+            tbody.innerHTML=users.map(u=>`
+                <tr>
+                    <td><strong>${u.firstName} ${u.lastName}</strong></td>
+                    <td>${u.email}</td>
+                    <td><span class="badge ${u.isAdmin?'badge-admin':'badge-user'}">${u.isAdmin?'Admin':'User'}</span></td>
+                    <td><span class="badge ${u.suspended?'badge-suspended':'badge-active'}">${u.suspended?'Suspended':'Active'}</span></td>
+                    <td>${new Date(u.createdAt).toLocaleDateString()}</td>
+                    <td>${u.orderCount||0}</td>
+                    <td>
+                        <div class="action-btns">
+                            ${!u.isAdmin?`<button class="btn btn-sm btn-primary" onclick="toggleRole('${u._id}',${!u.isAdmin})">Make Admin</button>`:''}
+                            <button class="btn btn-sm ${u.suspended?'btn-success':'btn-danger'}" onclick="toggleStatus('${u._id}',${!u.suspended})">${u.suspended?'Activate':'Suspend'}</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        async function toggleRole(userId,makeAdmin){
+            try{
+                await api.put(`/admin/users/${userId}/role`,{isAdmin:makeAdmin});
+                showNotification('User role updated','success');
+                loadUsers();
+            }catch(err){
+                showNotification('Failed to update role','error');
+            }
+        }
+
+        async function toggleStatus(userId,suspend){
+            try{
+                await api.put(`/admin/users/${userId}/status`,{suspended:suspend});
+                showNotification('User status updated','success');
+                loadUsers();
+            }catch(err){
+                showNotification('Failed to update status','error');
+            }
+        }
+
+        document.getElementById('search-users').addEventListener('input',filterUsers);
+        document.getElementById('filter-role').addEventListener('change',filterUsers);
+        document.getElementById('filter-status').addEventListener('change',filterUsers);
+
+        async function filterUsers(){
+            const search=document.getElementById('search-users').value.toLowerCase();
+            const role=document.getElementById('filter-role').value;
+            const status=document.getElementById('filter-status').value;
+            const users=await api.get('/admin/users');
+            const filtered=users.filter(u=>{
+                const matchSearch=!search||u.firstName.toLowerCase().includes(search)||u.lastName.toLowerCase().includes(search)||u.email.toLowerCase().includes(search);
+                const matchRole=!role||(role==='admin'&&u.isAdmin)||(role==='user'&&!u.isAdmin);
+                const matchStatus=!status||(status==='active'&&!u.suspended)||(status==='suspended'&&u.suspended);
+                return matchSearch&&matchRole&&matchStatus;
+            });
+            renderUsers(filtered);
+        }
+
+        loadUsers();
+    </script>
+
+    <!-- Self-Healing System -->
+<script>
+window.onerror = function(msg, url, lineNo, columnNo, error) {
+  console.log('Error caught:', msg);
+  const errorDiv = document.createElement('div');
+  errorDiv.style.cssText = 'position:fixed; bottom:20px; right:20px; background:#f3f4f6; padding:10px; border-radius:5px; z-index:9999; border:1px solid #ccc;';
+  errorDiv.innerHTML = '⚠️ Something went wrong. Retrying...';
+  document.body.appendChild(errorDiv);
+  setTimeout(() => errorDiv.remove(), 3000);
+  return false;
+};
+</script>
+</body>
+</html>

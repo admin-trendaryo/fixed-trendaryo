@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Subscribe to Trendaryo on YouTube for product reviews, tutorials, and exclusive video content.">
+    <title>Trendaryo on YouTube - Videos & Tutorials</title>
+    <link rel="stylesheet" href="responsive.css">
+    <link rel="stylesheet" href="responsive-complete.css">
+    <link rel="stylesheet" href="shared.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --accent: #00f0ff; --accent-2: #ff00aa; --accent-3: #00ff88; --glass: rgba(255,255,255,0.05); --glass-border: rgba(255,255,255,0.1); }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Rajdhani', sans-serif; color: #fff; background: #0a0a2a; overflow-x: hidden; }
+        html { background: #0a0a2a; }
+        #three-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+
+        .page-offset { padding-top: 210px; }
+        .section-wrap { max-width: 1200px; margin: 0 auto; }
+        .section-pad { padding: 3.5rem 1.25rem; }
+        .section-title { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: clamp(1.6rem, 3.5vw, 2.4rem); margin-bottom: 0.65rem; }
+        .section-subtitle { color: rgba(255,255,255,0.75); font-size: 1.05rem; max-width: 720px; }
+
+        .youtube-hero { padding: 4rem 1.25rem; text-align: center; }
+        .youtube-hero-content { max-width: 900px; margin: 0 auto; }
+        .youtube-icon { font-size: 5rem; margin-bottom: 1.5rem; animation: float 3s ease-in-out infinite; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+
+        .youtube-title { font-family: 'Orbitron', sans-serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 900; background: linear-gradient(135deg, #FF0000, #ff00aa); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1rem; }
+        .youtube-subtitle { color: rgba(255,255,255,0.8); font-size: 1.2rem; margin-bottom: 2rem; line-height: 1.7; }
+
+        .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 3rem; }
+        .btn-primary { display: inline-block; padding: 1rem 2.5rem; border-radius: 999px; background: linear-gradient(135deg, #FF0000, #ff00aa); color: #fff; font-family: 'Orbitron', sans-serif; font-weight: 900; text-decoration: none; transition: all 0.3s; box-shadow: 0 0 30px rgba(255, 0, 0, 0.4); }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 0 50px rgba(255, 0, 0, 0.7); }
+        .btn-secondary { display: inline-block; padding: 1rem 2.5rem; border-radius: 999px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2); color: #fff; font-family: 'Orbitron', sans-serif; font-weight: 900; text-decoration: none; transition: all 0.3s; }
+        .btn-secondary:hover { background: rgba(255,255,255,0.12); border-color: #FF0000; }
+
+        .videos-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
+        .video-card { background: var(--glass); border: 1px solid var(--glass-border); border-radius: 18px; overflow: hidden; transition: all 0.3s; }
+        .video-card:hover { transform: translateY(-8px); border-color: #FF0000; }
+        .video-thumbnail { position: relative; aspect-ratio: 16/9; background: linear-gradient(135deg, rgba(255, 0, 0, 0.3), rgba(255, 0, 170, 0.2)); display: flex; align-items: center; justify-content: center; font-size: 3rem; overflow: hidden; }
+        .video-play { position: absolute; width: 60px; height: 60px; border-radius: 50%; background: rgba(255, 0, 0, 0.9); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; transition: all 0.3s; }
+        .video-card:hover .video-play { transform: scale(1.2); }
+        .video-duration { position: absolute; bottom: 10px; right: 10px; background: rgba(0, 0, 0, 0.8); padding: 0.3rem 0.6rem; border-radius: 4px; font-size: 0.8rem; font-weight: 700; }
+        .video-info { padding: 1.5rem; }
+        .video-title { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 1rem; margin-bottom: 0.5rem; color: #fff; }
+        .video-meta { color: rgba(255,255,255,0.6); font-size: 0.9rem; margin-bottom: 0.75rem; }
+        .video-stats { display: flex; gap: 1rem; color: rgba(255,255,255,0.6); font-size: 0.85rem; }
+
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; margin-top: 2rem; }
+        .feature-card { background: var(--glass); border: 1px solid var(--glass-border); border-radius: 18px; padding: 2.5rem; text-align: center; transition: all 0.3s; }
+        .feature-card:hover { transform: translateY(-8px); border-color: #FF0000; }
+        .feature-icon { font-size: 3rem; margin-bottom: 1rem; }
+        .feature-title { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 1.2rem; margin-bottom: 0.75rem; color: #FF0000; }
+        .feature-desc { color: rgba(255,255,255,0.7); line-height: 1.6; }
+
+        .stats-section { background: linear-gradient(135deg, rgba(255, 0, 0, 0.1), rgba(255, 0, 170, 0.1)); border: 1px solid rgba(255, 0, 0, 0.2); border-radius: 20px; padding: 3rem; text-align: center; margin-top: 3rem; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 2rem; margin-top: 2rem; }
+        .stat-item { }
+        .stat-number { font-family: 'Orbitron', sans-serif; font-size: 2.5rem; font-weight: 900; color: #FF0000; margin-bottom: 0.5rem; }
+        .stat-label { color: rgba(255,255,255,0.7); font-size: 0.95rem; }
+
+        @media (max-width: 900px) {
+            .page-offset { padding-top: 180px; }
+            .cta-buttons { flex-direction: column; align-items: center; }
+            .btn-primary, .btn-secondary { width: 100%; max-width: 300px; }
+            .videos-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="three-canvas"></canvas>
+    
+    <main class="page-offset">
+        <section class="youtube-hero">
+            <div class="youtube-hero-content">
+                <div class="youtube-icon">▶️</div>
+                <h1 class="youtube-title">Subscribe to Trendaryo on YouTube</h1>
+                <p class="youtube-subtitle">Watch product reviews, styling tutorials, unboxings, and exclusive behind-the-scenes content from the Trendaryo team.</p>
+                
+                <div class="cta-buttons">
+                    <a href="https://www.youtube.com/@trendaryo" target="_blank" rel="noopener noreferrer" class="btn-primary">Subscribe Now</a>
+                    <a href="index.html" class="btn-secondary">Back to Shop</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="section-pad">
+            <div class="section-wrap">
+                <h2 class="section-title" style="text-align: center;">Latest Videos</h2>
+                <p class="section-subtitle" style="text-align: center; margin: 0 auto 2rem;">Check out our newest content</p>
+                
+                <div class="videos-grid">
+                    <div class="video-card">
+                        <div class="video-thumbnail">
+                            <div class="video-play">▶</div>
+                            <div class="video-duration">12:45</div>
+                            🎧
+                        </div>
+                        <div class="video-info">
+                            <div class="video-title">Premium Headphones Review</div>
+                            <div class="video-meta">2 weeks ago</div>
+                            <div class="video-stats">
+                                <span>👁️ 45K views</span>
+                                <span>👍 2.3K likes</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="video-card">
+                        <div class="video-thumbnail">
+                            <div class="video-play">▶</div>
+                            <div class="video-duration">8:30</div>
+                            👗
+                        </div>
+                        <div class="video-info">
+                            <div class="video-title">5 Styling Tips for Summer</div>
+                            <div class="video-meta">1 week ago</div>
+                            <div class="video-stats">
+                                <span>👁️ 32K views</span>
+                                <span>👍 1.8K likes</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="video-card">
+                        <div class="video-thumbnail">
+                            <div class="video-play">▶</div>
+                            <div class="video-duration">15:20</div>
+                            ⌚
+                        </div>
+                        <div class="video-info">
+                            <div class="video-title">Smartwatch Unboxing & Setup</div>
+                            <div class="video-meta">3 days ago</div>
+                            <div class="video-stats">
+                                <span>👁️ 28K views</span>
+                                <span>👍 1.5K likes</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="video-card">
+                        <div class="video-thumbnail">
+                            <div class="video-play">▶</div>
+                            <div class="video-duration">10:15</div>
+                            👟
+                        </div>
+                        <div class="video-info">
+                            <div class="video-title">Sneaker Collection Showcase</div>
+                            <div class="video-meta">5 days ago</div>
+                            <div class="video-stats">
+                                <span>👁️ 56K views</span>
+                                <span>👍 3.2K likes</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="video-card">
+                        <div class="video-thumbnail">
+                            <div class="video-play">▶</div>
+                            <div class="video-duration">7:45</div>
+                            🎁
+                        </div>
+                        <div class="video-info">
+                            <div class="video-title">Giveaway Announcement</div>
+                            <div class="video-meta">1 day ago</div>
+                            <div class="video-stats">
+                                <span>👁️ 18K views</span>
+                                <span>👍 1.2K likes</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="video-card">
+                        <div class="video-thumbnail">
+                            <div class="video-play">▶</div>
+                            <div class="video-duration">20:00</div>
+                            🚀
+                        </div>
+                        <div class="video-info">
+                            <div class="video-title">Behind the Scenes: New Collection</div>
+                            <div class="video-meta">4 days ago</div>
+                            <div class="video-stats">
+                                <span>👁️ 38K views</span>
+                                <span>👍 2.1K likes</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section-pad">
+            <div class="section-wrap">
+                <h2 class="section-title" style="text-align: center;">Video Categories</h2>
+                <p class="section-subtitle" style="text-align: center; margin: 0 auto 2rem;">Explore our content by topic</p>
+                
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">📦</div>
+                        <div class="feature-title">Unboxings</div>
+                        <div class="feature-desc">Watch us unbox and review the latest products from our collection.</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">⭐</div>
+                        <div class="feature-title">Reviews</div>
+                        <div class="feature-desc">In-depth reviews of products, quality checks, and honest opinions.</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">👗</div>
+                        <div class="feature-title">Styling Guides</div>
+                        <div class="feature-desc">Fashion tips, outfit combinations, and styling tutorials.</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🎓</div>
+                        <div class="feature-title">Tutorials</div>
+                        <div class="feature-desc">How-to videos and guides for using our products effectively.</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🎬</div>
+                        <div class="feature-title">Behind the Scenes</div>
+                        <div class="feature-desc">Exclusive looks at our team, office, and product creation process.</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🎁</div>
+                        <div class="feature-title">Giveaways</div>
+                        <div class="feature-desc">Exclusive YouTube subscriber giveaways and contests.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section-pad">
+            <div class="section-wrap">
+                <div class="stats-section">
+                    <h2 class="section-title" style="text-align: center; margin-bottom: 0;">Join Our YouTube Community</h2>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-number">120K+</div>
+                            <div class="stat-label">Subscribers</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">450+</div>
+                            <div class="stat-label">Videos</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">8.5M+</div>
+                            <div class="stat-label">Total Views</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">Weekly</div>
+                            <div class="stat-label">New Content</div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 2.5rem;">
+                        <a href="https://www.youtube.com/@trendaryo" target="_blank" rel="noopener noreferrer" class="btn-primary">Subscribe Now</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="components.js"></script>
+    <script src="bg.js"></script>
+</body>
+</html>

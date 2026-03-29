@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory - Admin Dashboard</title>
+    <link rel="stylesheet" href="responsive.css">
+    <script src="performance.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root{--accent:#00f0ff;--accent-2:#ff00aa;--accent-3:#00ff88;--glass:rgba(255,255,255,0.05);--glass-border:rgba(255,255,255,0.1);}
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:'Rajdhani',sans-serif;background:linear-gradient(180deg,#0a0a2a,#1a1a40);color:#fff;display:flex;min-height:100vh;}
+        .sidebar{width:260px;background:rgba(0,0,0,0.4);border-right:1px solid var(--glass-border);padding:2rem 1rem;position:fixed;height:100vh;overflow-y:auto;}
+        .logo{font-family:'Orbitron',sans-serif;font-size:1.5rem;font-weight:900;background:linear-gradient(135deg,var(--accent),var(--accent-2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:2rem;text-align:center;}
+        .nav-link{display:block;padding:0.8rem 1rem;margin:0.5rem 0;border-radius:10px;color:rgba(255,255,255,0.8);text-decoration:none;transition:all 0.2s;}
+        .nav-link:hover,.nav-link.active{background:rgba(0,240,255,0.1);color:#fff;}
+        .main-content{margin-left:260px;flex:1;padding:2rem;}
+        .page-header{margin-bottom:2rem;}
+        .page-title{font-family:'Orbitron',sans-serif;font-size:2rem;margin-bottom:0.5rem;}
+        .alerts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:2rem;}
+        .alert-card{background:var(--glass);border:1px solid var(--glass-border);border-radius:15px;padding:1.5rem;backdrop-filter:blur(10px);}
+        .alert-card.warning{border-color:#ff9800;}
+        .alert-card.danger{border-color:#f44336;}
+        .alert-label{color:#888;font-size:0.9rem;margin-bottom:0.5rem;}
+        .alert-value{font-size:1.8rem;font-weight:700;color:var(--accent);}
+        .filters{display:flex;gap:1rem;margin-bottom:2rem;flex-wrap:wrap;}
+        .filter-input{padding:0.6rem 1rem;border-radius:8px;background:var(--glass);border:1px solid var(--glass-border);color:#fff;font-family:inherit;}
+        .btn{padding:0.6rem 1.2rem;border-radius:8px;border:none;cursor:pointer;font-weight:600;transition:all 0.2s;}
+        .btn-primary{background:var(--accent);color:#000;}
+        .btn-primary:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,240,255,0.3);}
+        .inventory-table{background:var(--glass);border:1px solid var(--glass-border);border-radius:15px;overflow:hidden;backdrop-filter:blur(10px);}
+        .inventory-table table{width:100%;border-collapse:collapse;}
+        .inventory-table th,.inventory-table td{padding:1rem;text-align:left;border-bottom:1px solid var(--glass-border);}
+        .inventory-table th{background:rgba(0,0,0,0.3);color:var(--accent);font-weight:700;}
+        .inventory-table tr:last-child td{border-bottom:none;}
+        .stock-badge{padding:0.3rem 0.8rem;border-radius:20px;font-size:0.85rem;font-weight:600;}
+        .stock-badge.high{background:rgba(0,255,136,0.2);color:var(--accent-3);}
+        .stock-badge.medium{background:rgba(255,170,0,0.2);color:#ffaa00;}
+        .stock-badge.low{background:rgba(255,0,0,0.2);color:#ff4444;}
+        .stock-badge.out{background:rgba(255,0,0,0.3);color:#ff0000;}
+        .action-btn{padding:0.4rem 0.8rem;border-radius:6px;border:1px solid var(--glass-border);background:var(--glass);color:#fff;cursor:pointer;font-size:0.85rem;transition:all 0.2s;}
+        .action-btn:hover{background:rgba(0,240,255,0.2);border-color:var(--accent);}
+        .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:1000;align-items:center;justify-content:center;}
+        .modal.active{display:flex;}
+        .modal-content{background:linear-gradient(180deg,#1a1a40,#0a0a2a);border:1px solid var(--glass-border);border-radius:15px;padding:2rem;max-width:500px;width:90%;}
+        .modal-title{font-family:'Orbitron',sans-serif;font-size:1.5rem;margin-bottom:1.5rem;color:var(--accent);}
+        .form-group{margin-bottom:1.5rem;}
+        .form-group label{display:block;margin-bottom:0.5rem;color:#888;}
+        .form-group input{width:100%;padding:0.8rem;border-radius:8px;background:var(--glass);border:1px solid var(--glass-border);color:#fff;font-family:inherit;}
+        .modal-actions{display:flex;gap:1rem;justify-content:flex-end;}
+        @media(max-width:768px){.sidebar{width:100%;height:auto;position:relative;}.main-content{margin-left:0;}}
+    </style>
+<script src="bg.js"></script>
+</head>
+<body>
+    <canvas id="three-canvas" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;pointer-events:none;"></canvas>
+    <aside class="sidebar">
+        <div class="logo">TRENDARYO</div>
+        <nav>
+            <a href="admin-dashboard.html" class="nav-link">📊 Dashboard</a>
+            <a href="admin-analytics.html" class="nav-link">📈 Analytics</a>
+            <a href="admin-users.html" class="nav-link">👥 Users</a>
+            <a href="admin-inventory.html" class="nav-link active">📦 Inventory</a>
+            <a href="admin-content.html" class="nav-link">✏️ Content</a>
+            <a href="admin-support.html" class="nav-link">💬 Support</a>
+            <a href="index.html" class="nav-link">🏠 Store</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <h1 class="page-title">Inventory Management</h1>
+            <p style="color:#888;">Track stock levels and manage inventory</p>
+        </div>
+
+        <div class="alerts">
+            <div class="alert-card">
+                <div class="alert-label">Total Products</div>
+                <div class="alert-value" id="total-products">0</div>
+            </div>
+            <div class="alert-card warning">
+                <div class="alert-label">Low Stock</div>
+                <div class="alert-value" id="low-stock" style="color:#ff9800;">0</div>
+            </div>
+            <div class="alert-card danger">
+                <div class="alert-label">Out of Stock</div>
+                <div class="alert-value" id="out-stock" style="color:#f44336;">0</div>
+            </div>
+            <div class="alert-card">
+                <div class="alert-label">Total Stock Value</div>
+                <div class="alert-value" id="stock-value">$0</div>
+            </div>
+        </div>
+
+        <div class="filters">
+            <input type="text" id="search" class="filter-input" placeholder="Search products...">
+            <select id="category-filter" class="filter-input">
+                <option value="">All Categories</option>
+                <option value="Electronics">Electronics</option>
+                <option value="Fashion">Fashion</option>
+                <option value="Accessories">Accessories</option>
+            </select>
+            <select id="stock-filter" class="filter-input">
+                <option value="">All Stock Levels</option>
+                <option value="high">High Stock (>20)</option>
+                <option value="medium">Medium Stock (10-20)</option>
+                <option value="low">Low Stock (1-9)</option>
+                <option value="out">Out of Stock</option>
+            </select>
+            <button class="btn btn-primary" onclick="bulkRestock()">Bulk Restock</button>
+        </div>
+
+        <div class="inventory-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th>Stock</th>
+                        <th>Status</th>
+                        <th>Value</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="inventory-tbody"></tbody>
+            </table>
+        </div>
+    </main>
+
+    <div id="restock-modal" class="modal">
+        <div class="modal-content">
+            <h2 class="modal-title">Restock Product</h2>
+            <div class="form-group">
+                <label>Product</label>
+                <input type="text" id="restock-product" readonly>
+            </div>
+            <div class="form-group">
+                <label>Current Stock</label>
+                <input type="number" id="current-stock" readonly>
+            </div>
+            <div class="form-group">
+                <label>Add Quantity</label>
+                <input type="number" id="add-quantity" min="1" value="10">
+            </div>
+            <div class="modal-actions">
+                <button class="btn" onclick="closeModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="confirmRestock()">Restock</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let inventory = [];
+        let currentProduct = null;
+
+        async function loadInventory() {
+            try {
+                const token = localStorage.getItem('token');
+                const res = await fetch('http://localhost:3000/api/admin/inventory', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                inventory = await res.json();
+                updateStats();
+                renderInventory();
+            } catch (err) {
+                console.error('Failed to load inventory:', err);
+            }
+        }
+
+        function updateStats() {
+            const total = inventory.length;
+            const lowStock = inventory.filter(p => p.stock > 0 && p.stock < 10).length;
+            const outStock = inventory.filter(p => p.stock === 0).length;
+            const value = inventory.reduce((sum, p) => sum + (p.stock * (p.price || 0)), 0);
+
+            document.getElementById('total-products').textContent = total;
+            document.getElementById('low-stock').textContent = lowStock;
+            document.getElementById('out-stock').textContent = outStock;
+            document.getElementById('stock-value').textContent = `$${value.toFixed(2)}`;
+        }
+
+        function renderInventory() {
+            const search = document.getElementById('search').value.toLowerCase();
+            const category = document.getElementById('category-filter').value;
+            const stockLevel = document.getElementById('stock-filter').value;
+
+            let filtered = inventory.filter(p => {
+                if (search && !p.name.toLowerCase().includes(search)) return false;
+                if (category && p.category !== category) return false;
+                if (stockLevel === 'high' && p.stock <= 20) return false;
+                if (stockLevel === 'medium' && (p.stock < 10 || p.stock > 20)) return false;
+                if (stockLevel === 'low' && (p.stock === 0 || p.stock >= 10)) return false;
+                if (stockLevel === 'out' && p.stock !== 0) return false;
+                return true;
+            });
+
+            const tbody = document.getElementById('inventory-tbody');
+            tbody.innerHTML = filtered.map(p => {
+                const stockClass = p.stock === 0 ? 'out' : p.stock < 10 ? 'low' : p.stock < 20 ? 'medium' : 'high';
+                const stockLabel = p.stock === 0 ? 'Out' : p.stock < 10 ? 'Low' : p.stock < 20 ? 'Medium' : 'High';
+                const value = (p.stock * (p.price || 0)).toFixed(2);
+                
+                return `
+                    <tr>
+                        <td>${p.name}</td>
+                        <td>${p.category || 'N/A'}</td>
+                        <td>$${(p.price || 0).toFixed(2)}</td>
+                        <td>${p.stock}</td>
+                        <td><span class="stock-badge ${stockClass}">${stockLabel}</span></td>
+                        <td>$${value}</td>
+                        <td>
+                            <button class="action-btn" onclick="openRestock(${p.id})">Restock</button>
+                            <button class="action-btn" onclick="adjustStock(${p.id}, -1)">-1</button>
+                            <button class="action-btn" onclick="adjustStock(${p.id}, 1)">+1</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function openRestock(productId) {
+            currentProduct = inventory.find(p => p.id === productId);
+            if (!currentProduct) return;
+            
+            document.getElementById('restock-product').value = currentProduct.name;
+            document.getElementById('current-stock').value = currentProduct.stock;
+            document.getElementById('add-quantity').value = 10;
+            document.getElementById('restock-modal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('restock-modal').classList.remove('active');
+            currentProduct = null;
+        }
+
+        async function confirmRestock() {
+            if (!currentProduct) return;
+            
+            const quantity = parseInt(document.getElementById('add-quantity').value);
+            if (!quantity || quantity < 1) return alert('Invalid quantity');
+            
+            try {
+                const token = localStorage.getItem('token');
+                await fetch(`http://localhost:3000/api/admin/inventory/${currentProduct.id}/restock`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ quantity })
+                });
+                
+                closeModal();
+                loadInventory();
+            } catch (err) {
+                alert('Restock failed');
+            }
+        }
+
+        async function adjustStock(productId, delta) {
+            const product = inventory.find(p => p.id === productId);
+            if (!product) return;
+            
+            const newStock = Math.max(0, product.stock + delta);
+            
+            try {
+                const token = localStorage.getItem('token');
+                await fetch(`http://localhost:3000/api/admin/inventory/${productId}`, {
+                    method: 'PUT',
+                    headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ stock: newStock })
+                });
+                
+                loadInventory();
+            } catch (err) {
+                alert('Update failed');
+            }
+        }
+
+        function bulkRestock() {
+            const lowStockProducts = inventory.filter(p => p.stock < 10);
+            if (lowStockProducts.length === 0) return alert('No low stock products');
+            
+            if (!confirm(`Restock ${lowStockProducts.length} products with +20 units each?`)) return;
+            
+            Promise.all(lowStockProducts.map(p => {
+                const token = localStorage.getItem('token');
+                return fetch(`http://localhost:3000/api/admin/inventory/${p.id}/restock`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ quantity: 20 })
+                });
+            })).then(() => {
+                alert('Bulk restock complete');
+                loadInventory();
+            }).catch(() => alert('Bulk restock failed'));
+        }
+
+        document.getElementById('search').addEventListener('input', renderInventory);
+        document.getElementById('category-filter').addEventListener('change', renderInventory);
+        document.getElementById('stock-filter').addEventListener('change', renderInventory);
+
+        loadInventory();
+    </script>
+
+    <!-- Self-Healing System -->
+<script>
+window.onerror = function(msg, url, lineNo, columnNo, error) {
+  console.log('Error caught:', msg);
+  const errorDiv = document.createElement('div');
+  errorDiv.style.cssText = 'position:fixed; bottom:20px; right:20px; background:#f3f4f6; padding:10px; border-radius:5px; z-index:9999; border:1px solid #ccc;';
+  errorDiv.innerHTML = '⚠️ Something went wrong. Retrying...';
+  document.body.appendChild(errorDiv);
+  setTimeout(() => errorDiv.remove(), 3000);
+  return false;
+};
+</script>
+</body>
+</html>

@@ -1,0 +1,2073 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="description" content="Shop premium electronics, fashion, and accessories with revolutionary 3D shopping experience. Free shipping on orders over $50. 50K+ happy customers worldwide.">
+    <meta name="keywords" content="online shopping, 3D shopping, electronics, fashion, accessories, premium products, watches, headphones">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="Trendaryo">
+    <link rel="canonical" href="https://trendaryo.com/index.html">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://trendaryo.com/index.html">
+    <meta property="og:title" content="Trendaryo - Premium 3D Shopping Experience | Electronics, Fashion & Accessories">
+    <meta property="og:description" content="Shop premium electronics, fashion, and accessories with revolutionary 3D shopping experience. Free shipping on orders over $50. 50K+ happy customers worldwide.">
+    <meta property="og:image" content="https://trendaryo.com/assets/trendaryo-crown-star-logo.svg">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://trendaryo.com/index.html">
+    <meta property="twitter:title" content="Trendaryo - Premium 3D Shopping Experience | Electronics, Fashion & Accessories">
+    <meta property="twitter:description" content="Shop premium electronics, fashion, and accessories with revolutionary 3D shopping experience. Free shipping on orders over $50. 50K+ happy customers worldwide.">
+    <meta property="twitter:image" content="https://trendaryo.com/assets/trendaryo-crown-star-logo.svg">
+    
+    <!-- Mobile optimization -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="format-detection" content="telephone=no">
+    
+    <!-- PWA -->
+    <!-- Removed: manifest.json (not needed for basic functionality) -->
+    <meta name="theme-color" content="#00f0ff">
+    <link rel="apple-touch-icon" href="/assets/favicon-crown-star.svg">
+    
+    <title>Trendaryo - Premium 3D Shopping Experience | Electronics, Fashion & Accessories</title>
+    <link rel="stylesheet" href="shared.css">
+    <link rel="stylesheet" href="responsive-universal.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --accent: #00f0ff; --accent-2: #ff00aa; --accent-3: #00ff88; --glass: rgba(255,255,255,0.05); --glass-border: rgba(255,255,255,0.1); }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Rajdhani', sans-serif; color: #fff; overflow-x: hidden; transition: background 1s ease-in-out; }
+        html { background: #0a0a2a; }
+        #three-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+
+        .store-header { position: fixed; top: 0; left: 0; right: 0; z-index: 10000; background: transparent; border-bottom: 1px solid rgba(255,255,255,0.07); }
+        .store-header-inner { max-width: 1200px; margin: 0 auto; padding: 0.8rem 1.25rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+        .store-brand { display: flex; align-items: center; gap: 0.75rem; min-width: 180px; }
+        .store-logo { font-family: 'Orbitron', sans-serif; font-size: 1.6rem; font-weight: 900; background: linear-gradient(135deg, var(--accent), var(--accent-2)); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-decoration: none; white-space: nowrap; }
+
+        .store-search { flex: 1; display: flex; align-items: center; gap: 0.5rem; padding: 0.55rem 0.9rem; border-radius: 999px; background: var(--glass); border: 1px solid var(--glass-border); min-width: 220px; }
+        .store-search input { width: 100%; border: none; outline: none; background: #0a0a2a; color: rgba(255,255,255,0.9); font-family: inherit; font-size: 1rem; }
+        .store-search input::placeholder { color: rgba(255,255,255,0.55); }
+
+        .store-actions { display: flex; align-items: center; gap: 0.6rem; }
+        .store-icon-btn { width: 42px; height: 42px; border-radius: 999px; background: var(--glass); border: 1px solid var(--glass-border); display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.9); text-decoration: none; transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease; }
+        .store-icon-btn:hover { transform: translateY(-1px); border-color: rgba(0,240,255,0.6); background: rgba(0,240,255,0.12); }
+
+        .store-nav { max-width: 1200px; margin: 0 auto; padding: 0 1.25rem 0.85rem; }
+        .store-nav-list { display: flex; align-items: center; justify-content: center; gap: 0.25rem; list-style: none; }
+
+        .store-nav-item { position: relative; }
+        .store-nav-link { font-family: 'Orbitron', sans-serif; font-size: 0.82rem; font-weight: 700; letter-spacing: 1.6px; text-transform: uppercase; color: rgba(255,255,255,0.85); text-decoration: none; padding: 0.65rem 0.9rem; border-radius: 999px; display: inline-flex; align-items: center; gap: 0.5rem; transition: background 0.2s ease, color 0.2s ease; }
+        .store-nav-link:hover { background: rgba(255,255,255,0.08); color: rgba(255,255,255,1); }
+        .store-nav-link[aria-current="page"] { background: rgba(0,240,255,0.14); color: rgba(255,255,255,1); border: 1px solid rgba(0,240,255,0.25); }
+        .store-caret { font-size: 0.8rem; opacity: 0.85; }
+
+        .store-dropdown { position: absolute; left: 0; top: calc(100% + 10px); min-width: 240px; background: rgba(10,10,42,0.92); border: 1px solid var(--glass-border); border-radius: 14px; padding: 0.5rem; box-shadow: 0 18px 48px rgba(0,0,0,0.45); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); opacity: 0; visibility: hidden; transform: translateY(-6px); transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s ease; }
+        .store-dropdown a { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; padding: 0.7rem 0.8rem; border-radius: 10px; color: rgba(255,255,255,0.88); text-decoration: none; transition: background 0.18s ease, color 0.18s ease; }
+        .store-dropdown a:hover { background: rgba(0,240,255,0.12); color: #fff; }
+        .store-dropdown small { color: rgba(255,255,255,0.55); font-size: 0.85rem; }
+
+        .store-nav-item:hover .store-dropdown { opacity: 1; visibility: visible; transform: translateY(0); }
+        .store-nav-item.is-open .store-dropdown { opacity: 1; visibility: visible; transform: translateY(0); }
+
+        .store-mobile-toggle { display: none; width: 42px; height: 42px; border-radius: 999px; background: var(--glass); border: 1px solid var(--glass-border); color: rgba(255,255,255,0.9); cursor: pointer; }
+
+        .page-offset { padding-top: 140px; }
+
+        .section-wrap { max-width: 1200px; margin: 0 auto; }
+        .section-pad { padding: 3.5rem 1.25rem; }
+        .section-title { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: clamp(1.6rem, 3.5vw, 2.4rem); margin-bottom: 0.65rem; }
+        .section-subtitle { color: rgba(255,255,255,0.75); font-size: 1.05rem; max-width: 720px; }
+
+        .hero-section-3d { padding: 3.75rem 1.25rem 2.75rem; }
+        .hero-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 2.5rem; align-items: center; }
+        .hero-left { text-align: left; }
+        .hero-right { display: flex; justify-content: center; }
+        .hero-badge { display: inline-flex; align-items: center; gap: 0.5rem; border: 1px solid rgba(0,240,255,0.25); background: rgba(0,240,255,0.08); padding: 0.45rem 0.8rem; border-radius: 999px; color: rgba(255,255,255,0.9); font-weight: 700; margin-bottom: 1rem; }
+        .hero-title-3d { font-family: 'Orbitron', sans-serif; font-size: clamp(2.3rem, 5.2vw, 3.6rem); font-weight: 900; background: linear-gradient(135deg, #fff, var(--accent), var(--accent-2)); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1rem; line-height: 1.05; animation: glow 3s ease-in-out infinite alternate; }
+        .hero-subtitle-3d { font-family: 'Rajdhani', sans-serif; font-size: 1.2rem; color: rgba(255,255,255,0.8); margin-bottom: 1.5rem; max-width: 680px; line-height: 1.65; }
+        .hero-cta-3d { display: flex; gap: 1rem; justify-content: flex-start; flex-wrap: wrap; }
+        .hero-card { width: 100%; max-width: 420px; border-radius: 18px; background: rgba(255,255,255,0.04); border: 1px solid var(--glass-border); padding: 1.25rem; box-shadow: 0 22px 50px rgba(0,0,0,0.35); }
+        .hero-card img { width: 100%; height: auto; display: block; }
+        .hero-card-meta { margin-top: 0.9rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+        .hero-stat { border-radius: 14px; background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.08); padding: 0.85rem 0.95rem; }
+        .hero-stat strong { display: block; font-family: 'Orbitron', sans-serif; font-size: 0.95rem; }
+        .hero-stat span { display: block; color: rgba(255,255,255,0.7); font-size: 0.95rem; margin-top: 0.1rem; }
+
+        .cards-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-top: 1.6rem; }
+        .card { background: rgba(255,255,255,0.04); border: 1px solid var(--glass-border); border-radius: 16px; padding: 1.25rem; transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease; text-decoration: none; color: inherit; }
+        .card:hover { transform: translateY(-6px); border-color: rgba(0,240,255,0.35); background: rgba(0,240,255,0.06); }
+        .card-icon { width: 46px; height: 46px; border-radius: 14px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, rgba(0,240,255,0.18), rgba(255,0,170,0.14)); border: 1px solid rgba(255,255,255,0.1); margin-bottom: 0.9rem; font-size: 1.2rem; }
+        .card-title { font-family: 'Orbitron', sans-serif; font-weight: 800; font-size: 1rem; margin-bottom: 0.25rem; }
+        .card-sub { color: rgba(255,255,255,0.72); font-size: 0.98rem; }
+
+        .product-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1.6rem; }
+        .product { background: rgba(255,255,255,0.04); border: 1px solid var(--glass-border); border-radius: 18px; overflow: hidden; transition: transform 0.25s ease, border-color 0.25s ease; text-decoration: none; color: inherit; }
+        .product:hover { transform: translateY(-7px); border-color: rgba(0,240,255,0.35); }
+        .product-media { height: 160px; background: radial-gradient(circle at 30% 30%, rgba(0,240,255,0.35), transparent 55%), radial-gradient(circle at 70% 60%, rgba(255,0,170,0.28), transparent 55%), rgba(0,0,0,0.25); display: flex; align-items: flex-end; justify-content: space-between; padding: 1rem; }
+        .product-badge { font-family: 'Orbitron', sans-serif; font-size: 0.75rem; font-weight: 800; letter-spacing: 1px; padding: 0.35rem 0.6rem; border-radius: 999px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.12); }
+        .product-price { font-family: 'Orbitron', sans-serif; font-weight: 900; }
+        .product-body { padding: 1.2rem; }
+        .product-name { font-family: 'Orbitron', sans-serif; font-weight: 900; margin-bottom: 0.35rem; }
+        .product-desc { color: rgba(255,255,255,0.72); margin-bottom: 0.9rem; }
+        .product-actions { display: flex; gap: 0.75rem; }
+        .product-actions .btn-3d { padding: 0.8rem 1.25rem; font-size: 0.9rem; }
+        
+        .brand-card { background: var(--glass); border: 1px solid var(--glass-border); border-radius: 16px; padding: 2rem; display: flex; align-items: center; justify-content: center; transition: all 0.3s; cursor: pointer; min-height: 120px; text-decoration: none; }
+        .brand-card:hover { transform: translateY(-5px); border-color: rgba(0,240,255,0.4); background: rgba(0,240,255,0.05); }
+        .brand-name { font-family: 'Orbitron', sans-serif; font-size: 1.3rem; font-weight: 900; }
+        
+        .btn-3d { display: inline-block; padding: 0.9rem 1.8rem; border-radius: 999px; background: linear-gradient(135deg, rgba(0,240,255,0.25), rgba(255,0,170,0.25)); border: 1px solid var(--glass-border); color: #fff; font-weight: 700; text-decoration: none; transition: all 0.3s; cursor: pointer; font-family: 'Rajdhani', sans-serif; }
+        .btn-3d:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(0,240,255,0.3); border-color: var(--accent); }
+        .btn-3d-secondary { background: var(--glass); }
+        .btn-3d-secondary:hover { background: rgba(255,255,255,0.1); }
+        
+        .text-center { text-align: center; }
+        
+        .features-section-3d { padding: 4rem 2rem; max-width: 1200px; margin: 0 auto; }
+        .features-grid-3d { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 3rem; }
+        .feature-card-3d { background: var(--glass); border: 1px solid var(--glass-border); border-radius: 20px; padding: 2.5rem; text-align: center; transition: all 0.3s; }
+        .feature-card-3d:hover { transform: translateY(-10px); border-color: var(--accent); box-shadow: 0 20px 40px rgba(0,240,255,0.2); }
+        .feature-icon-3d { width: 80px; height: 80px; margin: 0 auto 2rem; background: linear-gradient(135deg, rgba(0,240,255,0.2), rgba(255,0,170,0.2)); border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid var(--accent); font-size: 2rem; }
+        .feature-title-3d { font-family: 'Orbitron', sans-serif; font-size: 1.5rem; margin-bottom: 1rem; color: var(--accent); }
+        .feature-text-3d { color: rgba(255,255,255,0.7); line-height: 1.7; }
+        
+        .preloader-3d { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 99999; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 2rem; }
+        .preloader-3d.hidden { opacity: 0; pointer-events: none; transition: opacity 0.5s; }
+        .preloader-logo-3d { font-family: 'Orbitron', sans-serif; font-size: 2rem; font-weight: 900; background: linear-gradient(135deg, var(--accent), var(--accent-2)); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .preloader-spinner-3d { width: 50px; height: 50px; border: 3px solid var(--glass-border); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; }
+        
+        .footer { background: transparent; padding: 3rem 2rem 1rem; margin-top: 6rem; border-top: 1px solid var(--glass-border); }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-bottom: 2rem; }
+        .footer-section h3 { font-family: 'Orbitron', sans-serif; color: var(--accent); margin-bottom: 1rem; font-size: 1.2rem; }
+        .footer-section h4 { color: var(--accent-2); margin-bottom: 1rem; font-size: 1rem; }
+        .footer-section p { color: rgba(255,255,255,0.7); line-height: 1.6; margin-bottom: 1rem; }
+        .footer-section a { color: rgba(255,255,255,0.8); text-decoration: none; display: block; margin-bottom: 0.5rem; transition: color 0.3s; }
+        .footer-section a:hover { color: var(--accent); }
+        .footer-bottom { text-align: center; padding-top: 2rem; border-top: 1px solid var(--glass-border); color: rgba(255,255,255,0.5); }
+        
+        @keyframes glow { from { filter: drop-shadow(0 0 20px rgba(0,240,255,0.5)); } to { filter: drop-shadow(0 0 40px rgba(255,0,170,0.8)); } }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ═══════════════════════════════════════════
+           COSMIC HERO — scoped entirely to #hero
+           Does NOT affect any other page
+        ═══════════════════════════════════════════ */
+        #hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: visible;
+            text-align: center;
+            background: transparent; /* let bg.js Three.js canvas show through */
+        }
+
+        /* Starfield canvas — hidden, bg.js provides the live particle field */
+        #hero-starfield {
+            display: none;
+        }
+
+        /* Nebula glow orbs */
+        #hero .hero-nebula {
+            position: absolute !important;
+            border-radius: 50% !important;
+            filter: blur(80px) !important;
+            pointer-events: none !important;
+            z-index: 0 !important;
+            animation: heroNebulaDrift 12s ease-in-out infinite alternate !important;
+            opacity: 0.08 !important;
+        }
+        #hero .hero-nebula--1 {
+            width: 520px !important;
+            height: 520px !important;
+            background: radial-gradient(circle, rgba(0,240,255,0.4) 0%, transparent 70%) !important;
+            top: -120px !important;
+            left: -100px !important;
+            animation-delay: 0s !important;
+        }
+        #hero .hero-nebula--2 {
+            width: 600px !important;
+            height: 600px !important;
+            background: radial-gradient(circle, rgba(0,255,136,0.35) 0%, transparent 70%) !important;
+            bottom: -150px !important;
+            right: -120px !important;
+            animation-delay: -4s !important;
+        }
+        #hero .hero-nebula--3 {
+            width: 380px !important;
+            height: 380px !important;
+            background: radial-gradient(circle, rgba(255,0,170,0.3) 0%, transparent 70%) !important;
+            top: 40% !important;
+            left: 50% !important;
+            transform: translate(-50%, -50%) !important;
+            animation-delay: -8s !important;
+        }
+        @keyframes heroNebulaDrift {
+            from { transform: scale(1) translateY(0); }
+            to   { transform: scale(1.12) translateY(-30px); }
+        }
+        #hero .hero-nebula--3 {
+            animation-name: heroNebulaDrift3;
+        }
+        @keyframes heroNebulaDrift3 {
+            from { transform: translate(-50%, -50%) scale(1); }
+            to   { transform: translate(-50%, -50%) scale(1.15); }
+        }
+
+        /* Orbit ring */
+        #hero .hero-orbit-ring {
+            position: absolute !important;
+            width: 560px !important;
+            height: 560px !important;
+            border-radius: 50% !important;
+            border: 1px solid rgba(0,240,255,0.08) !important;
+            top: 50% !important;
+            left: 50% !important;
+            transform: translate(-50%, -50%) !important;
+            pointer-events: none !important;
+            z-index: 1 !important;
+            animation: heroOrbitSpin 40s linear infinite !important;
+            box-shadow: 0 0 30px rgba(0,240,255,0.05), inset 0 0 30px rgba(0,240,255,0.02) !important;
+        }
+        #hero .hero-orbit-ring::before {
+            content: '' !important;
+            position: absolute !important;
+            inset: 30px !important;
+            border-radius: 50% !important;
+            border: 1px solid rgba(0,240,255,0.04) !important;
+        }
+        @keyframes heroOrbitSpin {
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        /* Content wrapper */
+        #hero .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 900px;
+            padding: 0 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Eyebrow - HIDDEN */
+        #hero .hero-eyebrow {
+            display: none !important;
+            visibility: hidden !important;
+        }
+
+        /* Main tagline */
+        #hero .hero-tagline {
+            font-family: 'Orbitron', sans-serif !important;
+            font-size: clamp(2.4rem, 6vw, 4.2rem) !important;
+            font-weight: 900 !important;
+            line-height: 1.08 !important;
+            background: linear-gradient(135deg, #ffffff 0%, #00f0ff 45%, #00ff88 100%) !important;
+            background-clip: text !important;
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+            margin-bottom: 2rem !important;
+            padding-bottom: 0.5rem !important;
+            filter: drop-shadow(0 0 20px rgba(0,240,255,0.3)) !important;
+            animation: heroTaglineGlow 4s ease-in-out infinite alternate !important;
+            pointer-events: auto !important;
+        }
+        @keyframes heroTaglineGlow {
+            from { filter: drop-shadow(0 0 15px rgba(0,240,255,0.25)) !important; }
+            to   { filter: drop-shadow(0 0 35px rgba(0,240,255,0.5)) !important; }
+        }
+
+        /* Subtitle */
+        #hero .hero-sub {
+            font-family: 'Rajdhani', sans-serif !important;
+            font-size: clamp(1rem, 2vw, 1.2rem) !important;
+            color: rgba(255,255,255,0.75) !important;
+            max-width: 560px !important;
+            line-height: 1.7 !important;
+            margin-top: 1rem !important;
+            margin-bottom: 2.5rem !important;
+            padding-top: 0.5rem !important;
+            pointer-events: auto !important;
+        }
+
+        /* ── Orbiting product pods ── */
+        #hero .orbiting-products {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+            flex-wrap: wrap;
+        }
+
+        #hero .product-pod {
+            position: relative !important;
+            width: 110px !important;
+            height: 110px !important;
+            border-radius: 50% !important;
+            background: transparent !important;
+            backdrop-filter: blur(0px) !important;
+            -webkit-backdrop-filter: blur(0px) !important;
+            border: 1px solid rgba(0,240,255,0.15) !important;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 0.3rem !important;
+            cursor: pointer !important;
+            transition: all 0.3s ease !important;
+            will-change: transform !important;
+            box-shadow: 0 0 20px rgba(0,240,255,0.1), inset 0 0 20px rgba(0,240,255,0.02) !important;
+        }
+
+        #hero .product-pod:hover {
+            border-color: rgba(0,240,255,0.4) !important;
+            background: rgba(0,240,255,0.05) !important;
+            box-shadow: 0 0 40px rgba(0,240,255,0.2), inset 0 0 30px rgba(0,240,255,0.05) !important;
+        }
+
+        #hero .pod-glow {
+            position: absolute !important;
+            inset: -1px !important;
+            border-radius: 50% !important;
+            background: conic-gradient(from 0deg, rgba(0,240,255,0.3), rgba(255,0,170,0.2), rgba(0,240,255,0.3)) !important;
+            opacity: 0 !important;
+            transition: opacity 0.3s ease !important;
+            z-index: -1 !important;
+            filter: blur(8px) !important;
+            animation: heroGlowSpin 4s linear infinite !important;
+        }
+        #hero .product-pod:hover .pod-glow { opacity: 0.4 !important; }
+        @keyframes heroGlowSpin {
+            to { transform: rotate(360deg); }
+        }
+
+        #hero .pod-icon {
+            font-size: 2rem !important;
+            line-height: 1 !important;
+            transition: transform 0.3s ease !important;
+            color: rgba(255,255,255,0.9) !important;
+        }
+        #hero .product-pod:hover .pod-icon { transform: scale(1.25) !important; }
+
+        #hero .pod-label {
+            font-family: 'Orbitron', sans-serif !important;
+            font-size: 0.6rem !important;
+            font-weight: 700 !important;
+            letter-spacing: 1px !important;
+            text-transform: uppercase !important;
+            color: rgba(0,240,255,0.8) !important;
+            transition: color 0.3s ease !important;
+        }
+        #hero .product-pod:hover .pod-label {
+            color: rgba(0,240,255,1) !important;
+        }
+
+        /* Float animation per pod */
+        #hero #pod1 { animation: heroFloat1 5s ease-in-out infinite; }
+        #hero #pod2 { animation: heroFloat2 6s ease-in-out infinite; }
+        #hero #pod3 { animation: heroFloat3 5.5s ease-in-out infinite; }
+        #hero #pod4 { animation: heroFloat4 6.5s ease-in-out infinite; }
+        @keyframes heroFloat1 { 0%,100%{transform:translateY(0)}   50%{transform:translateY(-14px)} }
+        @keyframes heroFloat2 { 0%,100%{transform:translateY(-8px)} 50%{transform:translateY(8px)}  }
+        @keyframes heroFloat3 { 0%,100%{transform:translateY(0)}   50%{transform:translateY(-18px)} }
+        @keyframes heroFloat4 { 0%,100%{transform:translateY(-6px)} 50%{transform:translateY(10px)} }
+
+        /* ── CTA buttons ── */
+        #hero .hero-cta-row {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        #hero .hero-cta {
+            position: relative !important;
+            padding: 0.9rem 2.2rem !important;
+            border-radius: 999px !important;
+            font-family: 'Orbitron', sans-serif !important;
+            font-size: 0.88rem !important;
+            font-weight: 800 !important;
+            letter-spacing: 1.5px !important;
+            text-transform: uppercase !important;
+            text-decoration: none !important;
+            overflow: hidden !important;
+            transition: all 0.3s ease !important;
+            cursor: pointer !important;
+            backdrop-filter: blur(0px) !important;
+            -webkit-backdrop-filter: blur(0px) !important;
+        }
+        #hero .hero-cta:hover { transform: translateY(-3px) !important; }
+
+        #hero .hero-cta--primary {
+            background: transparent !important;
+            border: 2px solid rgba(0,240,255,0.4) !important;
+            color: rgba(0,240,255,0.9) !important;
+            box-shadow: 0 0 20px rgba(0,240,255,0.2), inset 0 0 20px rgba(0,240,255,0.05) !important;
+        }
+        #hero .hero-cta--primary:hover {
+            border-color: rgba(0,240,255,0.8) !important;
+            color: rgba(0,240,255,1) !important;
+            box-shadow: 0 0 40px rgba(0,240,255,0.4), inset 0 0 30px rgba(0,240,255,0.1) !important;
+        }
+
+        #hero .hero-cta--secondary {
+            background: transparent !important;
+            border: 2px solid rgba(255,255,255,0.2) !important;
+            color: rgba(255,255,255,0.8) !important;
+            box-shadow: 0 0 15px rgba(255,255,255,0.1), inset 0 0 15px rgba(255,255,255,0.02) !important;
+        }
+        #hero .hero-cta--secondary:hover {
+            border-color: rgba(255,255,255,0.5) !important;
+            color: rgba(255,255,255,1) !important;
+            box-shadow: 0 0 30px rgba(255,255,255,0.2), inset 0 0 20px rgba(255,255,255,0.05) !important;
+        }
+
+        /* Ripple on click */
+        #hero .hero-cta::after {
+            content: '' !important;
+            position: absolute !important;
+            top: 50% !important;
+            left: 50% !important;
+            width: 0 !important;
+            height: 0 !important;
+            background: rgba(0,240,255,0.2) !important;
+            border-radius: 50% !important;
+            transform: translate(-50%, -50%) !important;
+            transition: width 0.5s ease, height 0.5s ease, opacity 0.5s ease !important;
+            opacity: 1 !important;
+        }
+        #hero .hero-cta:active::after {
+            width: 220px !important;
+            height: 220px !important;
+            opacity: 0 !important;
+        }
+
+        /* ── Trust strip ── */
+        #hero .hero-trust {
+            display: flex !important;
+            align-items: center !important;
+            gap: 0.75rem !important;
+            flex-wrap: wrap !important;
+            justify-content: center !important;
+            font-family: 'Rajdhani', sans-serif !important;
+            font-size: 0.9rem !important;
+            font-weight: 600 !important;
+            color: rgba(255,255,255,0.6) !important;
+            padding: 1.5rem !important;
+            background: transparent !important;
+            border: 1px solid rgba(0,240,255,0.1) !important;
+            border-radius: 16px !important;
+            box-shadow: 0 0 20px rgba(0,240,255,0.08), inset 0 0 20px rgba(0,240,255,0.01) !important;
+        }
+        #hero .hero-trust-sep { opacity: 0.2 !important; }
+
+
+        @media (max-width: 600px) {
+            #hero .orbiting-products { gap: 1rem; }
+            #hero .product-pod { width: 88px; height: 88px; }
+            #hero .pod-icon { font-size: 1.6rem; }
+            #hero .hero-orbit-ring { width: 340px; height: 340px; }
+            #hero .hero-cta-row { flex-direction: column; align-items: center; }
+            #hero .hero-trust { font-size: 0.78rem; gap: 0.5rem; }
+        }
+        
+        @media(max-width:900px){
+            .store-search { display: none; }
+            .store-mobile-toggle { display: inline-flex; align-items: center; justify-content: center; }
+            .store-nav { display: none; }
+            .store-header.is-open .store-nav { display: block; padding-bottom: 1rem; }
+            .store-nav-list { flex-direction: column; align-items: stretch; justify-content: flex-start; gap: 0.5rem; }
+            .store-nav-link { width: 100%; justify-content: space-between; }
+            .store-dropdown { position: static; opacity: 1; visibility: visible; transform: none; box-shadow: none; background: rgba(255,255,255,0.04); }
+            .store-nav-item:hover .store-dropdown { opacity: 1; visibility: visible; transform: none; }
+            .hero-grid { grid-template-columns: 1fr; }
+            .hero-left { text-align: center; }
+            .hero-cta-3d { justify-content: center; }
+            .cards-grid { grid-template-columns: 1fr 1fr; }
+            .product-grid { grid-template-columns: 1fr; }
+            .hero-cta-3d{flex-direction:column;align-items:center;}
+            .features-grid-3d{grid-template-columns:1fr;}
+            .page-offset { padding-top: 120px; }
+            .testimonials-grid { grid-template-columns: 1fr !important; }
+            .section-pad > div > div[style*="grid-template-columns: 1fr 1fr"] { grid-template-columns: 1fr !important; }
+        }
+
+        /* ═══════════════════════════════════════════
+           COSMIC SECTIONS — scoped to homepage only
+        ═══════════════════════════════════════════ */
+
+        /* Shared eyebrow + title used across all 4 sections */
+        .cs-eyebrow {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 0.75rem;
+            opacity: 0.8;
+        }
+        .cs-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+            font-weight: 900;
+            background: linear-gradient(135deg, #fff, var(--accent), var(--accent-2));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.65rem;
+        }
+        .cs-sub {
+            color: rgba(255,255,255,0.6);
+            font-size: 1.05rem;
+            max-width: 560px;
+            margin: 0 auto 3rem;
+            line-height: 1.65;
+        }
+
+        /* ── #constellations ── */
+        #constellations {
+            text-align: center;
+            padding: 5rem 1.25rem;
+            position: relative;
+        }
+        #constellations .cs-inner { max-width: 1100px; margin: 0 auto; }
+        .cs-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 1.25rem;
+        }
+        .constellation {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 1.75rem 1rem;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.1);
+            cursor: pointer;
+            will-change: transform;
+            transition: border-color 0.3s ease, background 0.3s ease;
+            aspect-ratio: 1;
+            justify-content: center;
+        }
+        .constellation:hover {
+            border-color: var(--accent);
+            background: rgba(0,240,255,0.07);
+        }
+        .cs-orb { font-size: 2rem; line-height: 1; }
+        .cs-name {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.85);
+            text-align: center;
+        }
+        .cs-count {
+            font-size: 0.78rem;
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* ── #vortex ── */
+        #vortex {
+            text-align: center;
+            padding: 5rem 1.25rem;
+        }
+        #vortex .vx-inner { max-width: 1100px; margin: 0 auto; }
+        .vx-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+        .vortex-card {
+            position: relative;
+            padding: 2.5rem 1.75rem;
+            border-radius: 24px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.1);
+            cursor: pointer;
+            will-change: transform;
+            transition: border-color 0.3s ease;
+            overflow: hidden;
+            text-align: left;
+        }
+        .vortex-card:hover { border-color: var(--accent-2); }
+        .vx-glow {
+            position: absolute;
+            inset: -40px;
+            background: radial-gradient(circle at 50% 50%, rgba(255,0,170,0.18), transparent 65%);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        .vortex-card:hover .vx-glow { opacity: 1; }
+        .vx-icon { font-size: 3rem; margin-bottom: 1rem; display: block; }
+        .vx-badge {
+            display: inline-block;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+            padding: 0.25rem 0.65rem;
+            border-radius: 999px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            color: #000;
+            margin-bottom: 0.75rem;
+        }
+        .vx-name {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 900;
+            color: #fff;
+            margin-bottom: 0.4rem;
+        }
+        .vx-desc {
+            color: rgba(255,255,255,0.6);
+            font-size: 0.92rem;
+            line-height: 1.55;
+            margin-bottom: 1.1rem;
+        }
+        .vx-price {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 900;
+            color: var(--accent);
+            margin-bottom: 1.1rem;
+        }
+        .vx-btn {
+            display: inline-block;
+            padding: 0.65rem 1.4rem;
+            border-radius: 999px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            color: #000;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.72rem;
+            font-weight: 900;
+            letter-spacing: 1px;
+            text-decoration: none;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+        .vx-btn:hover { opacity: 0.85; transform: translateY(-2px); }
+
+        /* ── #journey ── */
+        #journey {
+            text-align: center;
+            padding: 5rem 1.25rem;
+        }
+        #journey .jn-inner { max-width: 1100px; margin: 0 auto; }
+        .jn-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+        .planet {
+            position: relative;
+            padding: 3rem 2rem;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(51,51,255,0.25), rgba(255,0,204,0.2));
+            border: 1px solid rgba(255,255,255,0.12);
+            cursor: pointer;
+            will-change: transform;
+            aspect-ratio: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            overflow: visible;
+        }
+        .planet-ring {
+            position: absolute;
+            inset: -12px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.08);
+            pointer-events: none;
+            animation: planetRingSpin 20s linear infinite;
+        }
+        .planet-ring::before {
+            content: '';
+            position: absolute;
+            inset: 10px;
+            border-radius: 50%;
+            border: 1px dashed rgba(0,240,255,0.15);
+        }
+        @keyframes planetRingSpin { to { transform: rotate(360deg); } }
+        .planet-icon { font-size: 2.5rem; line-height: 1; }
+        .planet-name {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 900;
+            color: #fff;
+            letter-spacing: 1px;
+        }
+        .planet-desc {
+            color: rgba(255,255,255,0.6);
+            font-size: 0.82rem;
+            line-height: 1.55;
+            max-width: 180px;
+        }
+
+        /* ── #deals ── */
+        #deals {
+            text-align: center;
+            padding: 5rem 1.25rem;
+            overflow: hidden;
+        }
+        #deals .dl-inner { max-width: 1100px; margin: 0 auto; }
+        .dl-track {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+            margin-bottom: 2.5rem;
+            overflow: hidden;
+        }
+        .meteor {
+            position: relative;
+            display: flex;
+            align-items: center;
+            height: 60px;
+            border-radius: 30px;
+            background: linear-gradient(90deg, rgba(255,204,0,0.15), rgba(255,51,0,0.15));
+            border: 1px solid rgba(255,204,0,0.25);
+            overflow: hidden;
+            cursor: pointer;
+            will-change: transform;
+        }
+        .meteor:hover { border-color: rgba(255,204,0,0.6); }
+        .meteor-tail {
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 60%;
+            background: linear-gradient(90deg, transparent, rgba(255,204,0,0.25), transparent);
+            animation: meteorShimmer 2.5s ease-in-out infinite;
+        }
+        @keyframes meteorShimmer {
+            0%   { transform: translateX(-100%); }
+            100% { transform: translateX(200%); }
+        }
+        .meteor-label {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            text-align: center;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+            color: #ffcc00;
+            text-shadow: 0 0 20px rgba(255,204,0,0.5);
+        }
+        .dl-cta {
+            display: inline-block;
+            padding: 0.9rem 2.5rem;
+            border-radius: 999px;
+            background: linear-gradient(90deg, #ffcc00, #ff3300);
+            color: #000;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 900;
+            letter-spacing: 1.5px;
+            text-decoration: none;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+            box-shadow: 0 0 30px rgba(255,204,0,0.3);
+        }
+        .dl-cta:hover { opacity: 0.88; transform: translateY(-3px); }
+
+        /* ── #testimonials ── */
+        #testimonials {
+            text-align: center;
+            padding: 5rem 1.25rem;
+        }
+        #testimonials .tst-inner { max-width: 1100px; margin: 0 auto; }
+        .tst-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            text-align: left;
+        }
+        .hologram {
+            position: relative;
+            padding: 2rem;
+            border-radius: 20px;
+            background: rgba(0,255,255,0.05);
+            border: 1px solid rgba(0,255,255,0.2);
+            overflow: hidden;
+            cursor: pointer;
+            will-change: transform;
+            transition: border-color 0.3s ease;
+        }
+        .hologram:hover { border-color: rgba(0,255,255,0.6); box-shadow: 0 0 30px rgba(0,255,255,0.15); }
+        .holo-scan {
+            position: absolute;
+            top: -40%; left: 0; right: 0;
+            height: 40%;
+            background: linear-gradient(180deg, transparent, rgba(0,255,255,0.06), transparent);
+            animation: holoScan 4s ease-in-out infinite;
+            pointer-events: none;
+        }
+        @keyframes holoScan { 0% { top: -40%; } 100% { top: 120%; } }
+        .holo-stars { font-size: 0.9rem; margin-bottom: 0.75rem; letter-spacing: 2px; }
+        .holo-quote {
+            color: rgba(255,255,255,0.82);
+            font-size: 0.97rem;
+            line-height: 1.65;
+            margin-bottom: 1.25rem;
+            font-style: italic;
+        }
+        .holo-author { display: flex; align-items: center; gap: 0.75rem; }
+        .holo-avatar {
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(0,255,255,0.2), rgba(255,0,170,0.2));
+            border: 1px solid rgba(0,255,255,0.3);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.1rem; flex-shrink: 0;
+        }
+        .holo-name {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.78rem; font-weight: 800;
+            color: #00ffff; letter-spacing: 1px;
+        }
+        .holo-tag { font-size: 0.78rem; color: rgba(255,255,255,0.45); margin-top: 0.1rem; }
+
+        /* ── #blackhole ── */
+        #blackhole {
+            position: relative;
+            text-align: center;
+            padding: 6rem 1.25rem;
+            overflow: hidden;
+            background: transparent;
+        }
+        .bh-ring {
+            position: absolute;
+            border-radius: 50%;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+        }
+        .bh-ring--1 { width: 320px; height: 320px; border: 1px solid rgba(0,240,255,0.12); animation: bhSpin 18s linear infinite; }
+        .bh-ring--2 { width: 520px; height: 520px; border: 1px solid rgba(255,0,170,0.08); animation: bhSpin 28s linear infinite reverse; }
+        .bh-ring--3 { width: 720px; height: 720px; border: 1px solid rgba(0,255,136,0.05); animation: bhSpin 40s linear infinite; }
+        @keyframes bhSpin { to { transform: translate(-50%, -50%) rotate(360deg); } }
+        .bh-core {
+            position: absolute;
+            width: 80px; height: 80px; border-radius: 50%;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            background: radial-gradient(circle, rgba(0,240,255,0.35) 0%, transparent 70%);
+            filter: blur(18px); pointer-events: none;
+            animation: bhCorePulse 3s ease-in-out infinite alternate;
+        }
+        @keyframes bhCorePulse {
+            from { opacity: 0.5; transform: translate(-50%,-50%) scale(1); }
+            to   { opacity: 1;   transform: translate(-50%,-50%) scale(1.4); }
+        }
+        .bh-inner { position: relative; z-index: 2; max-width: 700px; margin: 0 auto; }
+        .bh-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 900;
+            background: linear-gradient(135deg, #fff, #00f0ff, #ff00aa);
+            background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin-bottom: 0.75rem;
+        }
+        .bh-sub { color: rgba(255,255,255,0.55); font-size: 1rem; line-height: 1.65; margin-bottom: 2.5rem; }
+        .bh-icons { display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 2.5rem; }
+        .social-icon {
+            display: flex; flex-direction: column; align-items: center; gap: 0.4rem;
+            width: 80px; height: 80px; border-radius: 50%;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.12);
+            justify-content: center; text-decoration: none; color: #fff;
+            cursor: pointer; will-change: transform;
+            transition: border-color 0.3s ease, background 0.3s ease;
+        }
+        .social-icon:hover { border-color: var(--accent); background: rgba(0,240,255,0.1); }
+        .si-icon { font-size: 1.5rem; line-height: 1; }
+        .si-label {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.55rem; font-weight: 700;
+            letter-spacing: 1px; text-transform: uppercase;
+            color: rgba(255,255,255,0.6);
+        }
+        .bh-cta {
+            display: inline-block; padding: 0.9rem 2.5rem; border-radius: 999px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            color: #000; font-family: 'Orbitron', sans-serif;
+            font-size: 0.85rem; font-weight: 900; letter-spacing: 1.5px;
+            text-decoration: none; box-shadow: 0 0 40px rgba(0,240,255,0.3);
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+        .bh-cta:hover { opacity: 0.88; transform: translateY(-3px); }
+
+        /* Responsive for new sections */
+        @media (max-width: 900px) {
+            .cs-grid { grid-template-columns: repeat(3, 1fr); }
+            .vx-grid { grid-template-columns: 1fr; }
+            .jn-grid { grid-template-columns: 1fr; }
+            .planet { border-radius: 24px; aspect-ratio: auto; padding: 2rem; }
+            .planet-ring { display: none; }
+            .tst-grid { grid-template-columns: 1fr; }
+            .bh-ring--2, .bh-ring--3 { display: none; }
+        }
+        @media (max-width: 480px) {
+            .cs-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Trendaryo",
+  "url": "https://trendaryo.com",
+  "description": "Premium 3D shopping experience for electronics, fashion, and accessories",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://trendaryo.com/search.html?q={search_term_string}",
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Trendaryo",
+  "url": "https://trendaryo.com",
+  "logo": "https://trendaryo.com/assets/trendaryo-crown-star-logo.svg",
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "telephone": "+1-800-TRENDAR",
+    "contactType": "Customer Service",
+    "availableLanguage": "English"
+  },
+  "sameAs": [
+    "https://facebook.com/trendaryo",
+    "https://twitter.com/trendaryo",
+    "https://instagram.com/trendaryo"
+  ]
+}
+</script>
+</head>
+<body class="safe-area">
+    <div class="preloader-3d" id="preloader">
+        <div class="preloader-logo-3d">TRENDARYO</div>
+        <div class="preloader-spinner-3d"></div>
+    </div>
+    <canvas id="three-canvas" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;pointer-events:none;"></canvas>
+    
+    <header class="store-header" id="store-header">
+        <div class="store-header-inner">
+            <div class="store-brand">
+                <a href="index.html" class="store-logo">TRENDARYO</a>
+            </div>
+
+            <div class="store-search" role="search">
+                <span aria-hidden="true">🔎</span>
+                <input type="search" placeholder="Search products..." />
+            </div>
+
+            <div class="store-actions">
+                <a href="wishlist.html" class="store-icon-btn" aria-label="Wishlist">❤</a>
+                <a href="compare.html" class="store-icon-btn" aria-label="Compare">⇄</a>
+                <a href="cart.html" class="store-icon-btn" aria-label="Cart">🛒</a>
+                <a href="account.html" class="store-icon-btn" aria-label="Account">👤</a>
+                <button class="store-mobile-toggle" id="store-mobile-toggle" aria-label="Menu" aria-expanded="false">☰</button>
+                <button id="theme-toggle" class="store-icon-btn" aria-label="Theme">☼</button>
+            </div>
+        </div>
+
+        <nav class="store-nav" aria-label="Primary">
+            <ul class="store-nav-list">
+                <li class="store-nav-item">
+                    <a href="index.html" class="store-nav-link" aria-current="page">Home</a>
+                </li>
+
+                <li class="store-nav-item" data-dropdown>
+                    <a href="shop.html" class="store-nav-link">Shop <span class="store-caret" aria-hidden="true">▾</span></a>
+                    <div class="store-dropdown" role="menu">
+                        <a href="shop.html">Shop All <small>Browse everything</small></a>
+                        <a href="product.html">Product Page <small>Example product</small></a>
+                        <a href="wishlist.html">Wishlist <small>Saved items</small></a>
+                        <a href="compare.html">Compare <small>Compare products</small></a>
+                    </div>
+                </li>
+
+                <li class="store-nav-item" data-dropdown>
+                    <a href="cart.html" class="store-nav-link">Cart <span class="store-caret" aria-hidden="true">▾</span></a>
+                    <div class="store-dropdown" role="menu">
+                        <a href="cart.html">View Cart <small>Items & totals</small></a>
+                        <a href="checkout.html">Checkout <small>Complete purchase</small></a>
+                        <a href="track-order.html">Track Order <small>Shipping status</small></a>
+                    </div>
+                </li>
+
+                <li class="store-nav-item" data-dropdown>
+                    <a href="account.html" class="store-nav-link">Account <span class="store-caret" aria-hidden="true">▾</span></a>
+                    <div class="store-dropdown" role="menu">
+                        <a href="account.html">My Account <small>Profile</small></a>
+                        <a href="login.html">Login <small>Access account</small></a>
+                        <a href="register.html">Register <small>Create account</small></a>
+                    </div>
+                </li>
+
+                <li class="store-nav-item" data-dropdown>
+                    <a href="faq.html" class="store-nav-link">Support <span class="store-caret" aria-hidden="true">▾</span></a>
+                    <div class="store-dropdown" role="menu">
+                        <a href="faq.html">FAQ <small>Help center</small></a>
+                        <a href="contact.html">Contact <small>Get in touch</small></a>
+                        <a href="shipping.html">Shipping <small>Delivery info</small></a>
+                        <a href="returns.html">Returns <small>Return policy</small></a>
+                    </div>
+                </li>
+
+                <li class="store-nav-item">
+                    <a href="about.html" class="store-nav-link">About</a>
+                </li>
+                <li class="store-nav-item">
+                    <a href="contact.html" class="store-nav-link">Contact</a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="page-offset">
+    
+    <!-- ═══════════════════════════════════════════
+         COSMIC HERO SECTION — homepage only
+    ═══════════════════════════════════════════ -->
+    <section id="hero">
+
+        <!-- Starfield canvas -->
+        <canvas id="hero-starfield"></canvas>
+
+        <!-- Nebula glow orbs -->
+        <div class="hero-nebula hero-nebula--1"></div>
+        <div class="hero-nebula hero-nebula--2"></div>
+        <div class="hero-nebula hero-nebula--3"></div>
+
+        <!-- Orbit ring -->
+        <div class="hero-orbit-ring"></div>
+
+        <!-- Content -->
+        <div class="hero-content">
+            <div class="hero-tagline" id="hero-tagline">Explore the Extraordinary</div>
+            <p class="hero-sub">Premium electronics, fashion &amp; accessories — delivered at the speed of light.</p>
+
+            <!-- Orbiting product pods with particle interaction -->
+            <div class="orbiting-products" id="orbiting-products">
+                <div class="product-pod" id="pod1" data-href="shop.html" data-particle-zone="true">
+                    <div class="pod-glow"></div>
+                    <div class="pod-icon">🎧</div>
+                    <div class="pod-label">Headphones</div>
+                </div>
+                <div class="product-pod" id="pod2" data-href="shop.html" data-particle-zone="true">
+                    <div class="pod-glow"></div>
+                    <div class="pod-icon">⌚</div>
+                    <div class="pod-label">Smartwatch</div>
+                </div>
+                <div class="product-pod" id="pod3" data-href="shop.html" data-particle-zone="true">
+                    <div class="pod-glow"></div>
+                    <div class="pod-icon">👟</div>
+                    <div class="pod-label">Sneakers</div>
+                </div>
+                <div class="product-pod" id="pod4" data-href="shop.html" data-particle-zone="true">
+                    <div class="pod-glow"></div>
+                    <div class="pod-icon">💻</div>
+                    <div class="pod-label">Laptops</div>
+                </div>
+            </div>
+
+            <!-- CTA buttons with particle effects -->
+            <div class="hero-cta-row">
+                <a href="shop.html" class="hero-cta hero-cta--primary" data-particle-burst="true">Shop Now</a>
+                <a href="shop.html" class="hero-cta hero-cta--secondary" data-particle-burst="true">Explore Deals</a>
+            </div>
+
+            <!-- Trust strip -->
+            <div class="hero-trust">
+                <span>⭐ 4.9 Rating</span>
+                <span class="hero-trust-sep">|</span>
+                <span>🚀 Free Shipping $50+</span>
+                <span class="hero-trust-sep">|</span>
+                <span>🔒 Secure Checkout</span>
+                <span class="hero-trust-sep">|</span>
+                <span>50K+ Happy Customers</span>
+            </div>
+        </div>
+
+
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         CONSTELLATION CATEGORIES
+    ═══════════════════════════════════════════ -->
+    <section id="constellations">
+        <div class="cs-inner">
+            <div class="cs-eyebrow">✦ Explore ✦</div>
+            <h2 class="cs-title">Discover Our Universe</h2>
+            <p class="cs-sub">Navigate through our cosmic collections and find your perfect match.</p>
+            <div class="cs-grid">
+                <div class="constellation" data-category="fashion">
+                    <div class="cs-orb">👗</div>
+                    <div class="cs-name">Celestial Fashion</div>
+                    <div class="cs-count">240+ items</div>
+                </div>
+                <div class="constellation" data-category="gadgets">
+                    <div class="cs-orb">🔭</div>
+                    <div class="cs-name">Galactic Gadgets</div>
+                    <div class="cs-count">180+ items</div>
+                </div>
+                <div class="constellation" data-category="beauty">
+                    <div class="cs-orb">✨</div>
+                    <div class="cs-name">Stellar Beauty</div>
+                    <div class="cs-count">320+ items</div>
+                </div>
+                <div class="constellation" data-category="audio">
+                    <div class="cs-orb">🎧</div>
+                    <div class="cs-name">Sonic Orbit</div>
+                    <div class="cs-count">95+ items</div>
+                </div>
+                <div class="constellation" data-category="watches">
+                    <div class="cs-orb">⌚</div>
+                    <div class="cs-name">Time Warp</div>
+                    <div class="cs-count">60+ items</div>
+                </div>
+                <div class="constellation" data-category="footwear">
+                    <div class="cs-orb">👟</div>
+                    <div class="cs-name">Lunar Steps</div>
+                    <div class="cs-count">150+ items</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         VORTEX FEATURED PRODUCTS
+    ═══════════════════════════════════════════ -->
+    <section id="vortex">
+        <div class="vx-inner">
+            <div class="cs-eyebrow">✦ Featured ✦</div>
+            <h2 class="cs-title">Featured in the Vortex</h2>
+            <p class="cs-sub">Hand-picked products pulling you into their orbit.</p>
+            <div class="vx-grid">
+                <div class="vortex-card" data-product="sneaker">
+                    <div class="vx-glow"></div>
+                    <div class="vx-icon">👟</div>
+                    <div class="vx-badge">NEW</div>
+                    <div class="vx-name">Nebula Sneaker</div>
+                    <div class="vx-desc">Lightweight cosmic comfort for every step.</div>
+                    <div class="vx-price">$119</div>
+                    <a href="shop.html" class="vx-btn">Add to Cart</a>
+                </div>
+                <div class="vortex-card" data-product="watch">
+                    <div class="vx-glow"></div>
+                    <div class="vx-icon">⌚</div>
+                    <div class="vx-badge">HOT</div>
+                    <div class="vx-name">Orbit Smartwatch</div>
+                    <div class="vx-desc">Track time across galaxies in style.</div>
+                    <div class="vx-price">$249</div>
+                    <a href="shop.html" class="vx-btn">Add to Cart</a>
+                </div>
+                <div class="vortex-card" data-product="jacket">
+                    <div class="vx-glow"></div>
+                    <div class="vx-icon">🧥</div>
+                    <div class="vx-badge">LIMITED</div>
+                    <div class="vx-name">Futuristic Jacket</div>
+                    <div class="vx-desc">Engineered for the explorer of tomorrow.</div>
+                    <div class="vx-price">$189</div>
+                    <a href="shop.html" class="vx-btn">Add to Cart</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         STORYTELLING SCROLL — JOURNEY
+    ═══════════════════════════════════════════ -->
+    <section id="journey">
+        <div class="jn-inner">
+            <div class="cs-eyebrow">✦ Our Story ✦</div>
+            <h2 class="cs-title">Journey Through Our World</h2>
+            <p class="cs-sub">Three pillars that define everything we do.</p>
+            <div class="jn-grid">
+                <a href="innovation.html" class="planet" data-theme="innovation">
+                    <div class="planet-ring"></div>
+                    <div class="planet-icon">🚀</div>
+                    <div class="planet-name">Innovation Planet</div>
+                    <div class="planet-desc">Cutting-edge products built for the future. We source only what pushes boundaries.</div>
+                </a>
+                <a href="sustainability.html" class="planet" data-theme="sustainability">
+                    <div class="planet-ring"></div>
+                    <div class="planet-icon">🌿</div>
+                    <div class="planet-name">Sustainability Zone</div>
+                    <div class="planet-desc">Every product, every package — designed with the planet in mind.</div>
+                </a>
+                <a href="luxury.html" class="planet" data-theme="luxury">
+                    <div class="planet-ring"></div>
+                    <div class="planet-icon">💎</div>
+                    <div class="planet-name">Luxury Nebula</div>
+                    <div class="planet-desc">Premium quality that feels as good as it looks. No compromises.</div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         METEOR DEALS
+    ═══════════════════════════════════════════ -->
+    <section id="deals">
+        <div class="dl-inner">
+            <div class="cs-eyebrow">✦ Limited Time ✦</div>
+            <h2 class="cs-title">Cosmic Deals Incoming</h2>
+            <p class="cs-sub">Catch them before they burn up. These deals won't last.</p>
+            <div class="dl-track">
+                <div class="meteor" data-deal="50% OFF FLASH SALE">
+                    <span class="meteor-tail"></span>
+                    <span class="meteor-label">⚡ 50% OFF FLASH SALE</span>
+                </div>
+                <div class="meteor" data-deal="BUY 1 GET 1 FREE">
+                    <span class="meteor-tail"></span>
+                    <span class="meteor-label">🎁 BUY 1 GET 1 FREE</span>
+                </div>
+                <div class="meteor" data-deal="Limited Time Offer">
+                    <span class="meteor-tail"></span>
+                    <span class="meteor-label">🔥 LIMITED TIME OFFER</span>
+                </div>
+            </div>
+            <a href="shop.html" class="dl-cta">Grab the Deals</a>
+        </div>
+    </section>
+
+    <!-- HOLOGRAPHIC TESTIMONIALS -->
+    <section id="testimonials">
+        <div class="tst-inner">
+            <div class="cs-eyebrow">&#10022; Reviews &#10022;</div>
+            <h2 class="cs-title">Voices from the Stars</h2>
+            <p class="cs-sub">Real customers. Real experiences. From across the galaxy.</p>
+            <div class="tst-grid">
+                <div class="hologram" data-quote="Amazing quality!">
+                    <div class="holo-scan"></div>
+                    <div class="holo-stars">&#11088;&#11088;&#11088;&#11088;&#11088;</div>
+                    <div class="holo-quote">&ldquo;Amazing quality! Every product exceeded my expectations. This store is out of this world.&rdquo;</div>
+                    <div class="holo-author"><div class="holo-avatar">&#128100;</div><div><div class="holo-name">Sarah K.</div><div class="holo-tag">Verified Buyer</div></div></div>
+                </div>
+                <div class="hologram" data-quote="Fast Shipping!">
+                    <div class="holo-scan"></div>
+                    <div class="holo-stars">&#11088;&#11088;&#11088;&#11088;&#11088;</div>
+                    <div class="holo-quote">&ldquo;Fast shipping &mdash; arrived in two days. Premium packaging, exactly as described.&rdquo;</div>
+                    <div class="holo-author"><div class="holo-avatar">&#128100;</div><div><div class="holo-name">Marcus T.</div><div class="holo-tag">Verified Buyer</div></div></div>
+                </div>
+                <div class="hologram" data-quote="Love this shop!">
+                    <div class="holo-scan"></div>
+                    <div class="holo-stars">&#11088;&#11088;&#11088;&#11088;&#11088;</div>
+                    <div class="holo-quote">&ldquo;Love this shop! The cosmic theme, quality, and service are on another level. 10/10.&rdquo;</div>
+                    <div class="holo-author"><div class="holo-avatar">&#128100;</div><div><div class="holo-name">Priya M.</div><div class="holo-tag">Verified Buyer</div></div></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- BLACK HOLE FOOTER CTA -->
+    <div id="blackhole">
+        <div class="bh-ring bh-ring--1"></div>
+        <div class="bh-ring bh-ring--2"></div>
+        <div class="bh-ring bh-ring--3"></div>
+        <div class="bh-core"></div>
+        <div class="bh-inner">
+            <div class="cs-eyebrow">&#10022; Connect &#10022;</div>
+            <h2 class="bh-title">Enter the Void</h2>
+            <p class="bh-sub">Follow us across the cosmos. Stay updated on drops, deals, and dispatches.</p>
+            <div class="bh-icons">
+                <a href="twitter.html" class="social-icon" data-icon="twitter" aria-label="Twitter"><span class="si-icon">&#128038;</span><span class="si-label">Twitter</span></a>
+                <a href="instagram.html" class="social-icon" data-icon="instagram" aria-label="Instagram"><span class="si-icon">&#128248;</span><span class="si-label">Instagram</span></a>
+                <a href="youtube.html" class="social-icon" data-icon="youtube" aria-label="YouTube"><span class="si-icon">&#9654;</span><span class="si-label">YouTube</span></a>
+                <a href="contact.html" class="social-icon" data-icon="contact" aria-label="Contact"><span class="si-icon">&#9993;</span><span class="si-label">Contact</span></a>
+            </div>
+            <a href="shop.html" class="bh-cta">Launch Into Shop</a>
+        </div>
+    </div>
+
+
+    <section class="section-pad">
+        <div class="section-wrap">
+            <h2 class="section-title">Shop by Category</h2>
+            <p class="section-subtitle">Jump straight to what you need. Clean categories, quick browsing, and consistent product pages.</p>
+
+            <div class="cards-grid">
+                <a class="card" href="shop.html">
+                    <div class="card-icon">📦</div>
+                    <div class="card-title">All Products</div>
+                    <div class="card-sub">Browse the full catalog</div>
+                </a>
+                <a class="card" href="wishlist.html">
+                    <div class="card-icon">❤</div>
+                    <div class="card-title">Wishlist</div>
+                    <div class="card-sub">Save items for later</div>
+                </a>
+                <a class="card" href="compare.html">
+                    <div class="card-icon">⇄</div>
+                    <div class="card-title">Compare</div>
+                    <div class="card-sub">Side-by-side view</div>
+                </a>
+                <a class="card" href="track-order.html">
+                    <div class="card-icon">🚚</div>
+                    <div class="card-title">Track Order</div>
+                    <div class="card-sub">Delivery status updates</div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-pad" style="padding-top:0;">
+        <div class="section-wrap">
+            <h2 class="section-title">Featured Picks</h2>
+            <p class="section-subtitle">A professional storefront needs clear featured items. These link to your existing product and shop pages.</p>
+
+            <div class="product-grid">
+                <a class="product" href="product.html">
+                    <div class="product-media">
+                        <span class="product-badge">Featured</span>
+                        <span class="product-price">$129</span>
+                    </div>
+                    <div class="product-body">
+                        <div class="product-name">Signature Item</div>
+                        <div class="product-desc">Modern layout, clean product card, quick actions.</div>
+                        <div class="product-actions">
+                            <span class="btn-3d">View</span>
+                            <span class="btn-3d btn-3d-secondary">Shop More</span>
+                        </div>
+                    </div>
+                </a>
+                <a class="product" href="shop.html">
+                    <div class="product-media">
+                        <span class="product-badge">New</span>
+                        <span class="product-price">$89</span>
+                    </div>
+                    <div class="product-body">
+                        <div class="product-name">New Arrival</div>
+                        <div class="product-desc">Use this space for real product images later.</div>
+                        <div class="product-actions">
+                            <span class="btn-3d">Browse</span>
+                            <span class="btn-3d btn-3d-secondary">Wishlist</span>
+                        </div>
+                    </div>
+                </a>
+                <a class="product" href="checkout.html">
+                    <div class="product-media">
+                        <span class="product-badge">Deal</span>
+                        <span class="product-price">-20%</span>
+                    </div>
+                    <div class="product-body">
+                        <div class="product-name">Today’s Offer</div>
+                        <div class="product-desc">Designed to push conversion with a clean CTA.</div>
+                        <div class="product-actions">
+                            <span class="btn-3d">Checkout</span>
+                            <span class="btn-3d btn-3d-secondary">Cart</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+    
+    <section class="features-section-3d">
+        <div class="features-grid-3d">
+            <div class="feature-card-3d">
+                <div class="feature-icon-3d">🚀</div>
+                <h3 class="feature-title-3d">Fast Delivery</h3>
+                <p class="feature-text-3d">Lightning-fast shipping to your doorstep with real-time tracking and updates.</p>
+            </div>
+            <div class="feature-card-3d">
+                <div class="feature-icon-3d">🚚</div>
+                <h3 class="feature-title-3d">Fast Shipping</h3>
+                <p class="feature-text-3d">Free express shipping on orders over $50. <a href="shipping.html" style="color: var(--accent); text-decoration: none;">View shipping details</a>.</p>
+            </div>
+            <div class="feature-card-3d">
+                <div class="feature-icon-3d">🔄</div>
+                <h3 class="feature-title-3d">Easy Returns</h3>
+                <p class="feature-text-3d">30-day hassle-free return policy. <a href="returns.html" style="color: var(--accent); text-decoration: none;">Read our return policy</a>.</p>
+            </div>
+            <div class="feature-card-3d">
+                <div class="feature-icon-3d">🔒</div>
+                <h3 class="feature-title-3d">Secure Shopping</h3>
+                <p class="feature-text-3d">Bank-level security for all your transactions and personal information.</p>
+            </div>
+            <div class="feature-card-3d">
+                <div class="feature-icon-3d">⭐</div>
+                <h3 class="feature-title-3d">Premium Quality</h3>
+                <p class="feature-text-3d">Curated selection of high-quality products from trusted brands worldwide.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-pad" style="background: rgba(0,240,255,0.03); border-top: 1px solid var(--glass-border); border-bottom: 1px solid var(--glass-border);">
+        <div class="section-wrap text-center">
+            <h2 class="section-title">Trusted by Thousands</h2>
+            <p class="section-subtitle" style="margin: 0 auto;">See what our customers are saying about their shopping experience</p>
+            <div class="testimonials-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 2.5rem;">
+                <div class="testimonial-card" style="background: var(--glass); border: 1px solid var(--glass-border); border-radius: 18px; padding: 2rem; text-align: left;">
+                    <div style="color: #FFD700; font-size: 1.5rem; margin-bottom: 1rem;">⭐⭐⭐⭐⭐</div>
+                    <p style="color: rgba(255,255,255,0.85); line-height: 1.7; margin-bottom: 1.5rem;">"Amazing quality and fast shipping! The products exceeded my expectations. Will definitely shop here again."</p>
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <div style="width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent-2)); display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">👤</div>
+                        <div>
+                            <div style="font-weight: 700; color: var(--accent);">Sarah Johnson</div>
+                            <div style="color: rgba(255,255,255,0.6); font-size: 0.9rem;">Verified Buyer</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card" style="background: var(--glass); border: 1px solid var(--glass-border); border-radius: 18px; padding: 2rem; text-align: left;">
+                    <div style="color: #FFD700; font-size: 1.5rem; margin-bottom: 1rem;">⭐⭐⭐⭐⭐</div>
+                    <p style="color: rgba(255,255,255,0.85); line-height: 1.7; margin-bottom: 1.5rem;">"Best online shopping experience! The website is easy to navigate and customer service is top-notch."</p>
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <div style="width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-2), var(--accent-3)); display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">👤</div>
+                        <div>
+                            <div style="font-weight: 700; color: var(--accent);">Michael Chen</div>
+                            <div style="color: rgba(255,255,255,0.6); font-size: 0.9rem;">Verified Buyer</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card" style="background: var(--glass); border: 1px solid var(--glass-border); border-radius: 18px; padding: 2rem; text-align: left;">
+                    <div style="color: #FFD700; font-size: 1.5rem; margin-bottom: 1rem;">⭐⭐⭐⭐⭐</div>
+                    <p style="color: rgba(255,255,255,0.85); line-height: 1.7; margin-bottom: 1.5rem;">"Love the variety of products! Found exactly what I was looking for. Highly recommend to everyone!"</p>
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <div style="width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-3), var(--accent)); display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">👤</div>
+                        <div>
+                            <div style="font-weight: 700; color: var(--accent);">Emma Davis</div>
+                            <div style="color: rgba(255,255,255,0.6); font-size: 0.9rem;">Verified Buyer</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-pad">
+        <div class="section-wrap text-center">
+            <h2 class="section-title">Why Choose Trendaryo?</h2>
+            <p class="section-subtitle" style="margin: 0 auto;">Numbers that speak for themselves</p>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-top: 3rem;">
+                <div style="text-align: center;">
+                    <div style="font-family: 'Orbitron', sans-serif; font-size: 3rem; font-weight: 900; background: linear-gradient(135deg, var(--accent), var(--accent-2)); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 0.5rem;">50K+</div>
+                    <div style="color: rgba(255,255,255,0.8); font-size: 1.1rem;">Happy Customers</div>
+                </div>
+                <div style="text-align: center;">
+                    <div style="font-family: 'Orbitron', sans-serif; font-size: 3rem; font-weight: 900; background: linear-gradient(135deg, var(--accent-2), var(--accent-3)); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 0.5rem;">1000+</div>
+                    <div style="color: rgba(255,255,255,0.8); font-size: 1.1rem;">Products Available</div>
+                </div>
+                <div style="text-align: center;">
+                    <div style="font-family: 'Orbitron', sans-serif; font-size: 3rem; font-weight: 900; background: linear-gradient(135deg, var(--accent-3), var(--accent)); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 0.5rem;">24/7</div>
+                    <div style="color: rgba(255,255,255,0.8); font-size: 1.1rem;">Customer Support</div>
+                </div>
+                <div style="text-align: center;">
+                    <div style="font-family: 'Orbitron', sans-serif; font-size: 3rem; font-weight: 900; background: linear-gradient(135deg, var(--accent), var(--accent-3)); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 0.5rem;">99%</div>
+                    <div style="color: rgba(255,255,255,0.8); font-size: 1.1rem;">Satisfaction Rate</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-pad" style="background: linear-gradient(135deg, rgba(0,240,255,0.08), rgba(255,0,170,0.08)); border-top: 1px solid var(--glass-border); border-bottom: 1px solid var(--glass-border);">
+        <div class="section-wrap">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center;">
+                <div>
+                    <div style="display: inline-block; background: rgba(0,240,255,0.15); border: 1px solid rgba(0,240,255,0.3); padding: 0.5rem 1rem; border-radius: 999px; color: var(--accent); font-weight: 700; margin-bottom: 1.5rem; font-size: 0.9rem;">🎉 LIMITED TIME OFFER</div>
+                    <h2 class="section-title" style="margin-bottom: 1rem;">Get 20% Off Your First Order!</h2>
+                    <p style="color: rgba(255,255,255,0.8); font-size: 1.1rem; line-height: 1.7; margin-bottom: 2rem;">Join thousands of satisfied customers and enjoy exclusive discounts, early access to new products, and special member-only deals. <a href="about.html" style="color: var(--accent); text-decoration: none;">Learn more about Trendaryo</a>.</p>
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                        <a href="register.html" class="btn-3d" style="padding: 1rem 2rem; font-size: 1.1rem;">Sign Up Now</a>
+                        <a href="shop.html" class="btn-3d btn-3d-secondary" style="padding: 1rem 2rem; font-size: 1.1rem;">Browse Deals</a>
+                    </div>
+                </div>
+                <div style="background: var(--glass); border: 2px solid var(--glass-border); border-radius: 20px; padding: 3rem; text-align: center;">
+                    <div style="font-size: 5rem; margin-bottom: 1rem;">🎁</div>
+                    <div style="font-family: 'Orbitron', sans-serif; font-size: 2.5rem; font-weight: 900; color: var(--accent); margin-bottom: 0.5rem;">WELCOME10</div>
+                    <div style="color: rgba(255,255,255,0.7); font-size: 1rem;">Use this code at checkout</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-pad">
+        <div class="section-wrap text-center">
+            <h2 class="section-title">Trending This Week</h2>
+            <p class="section-subtitle" style="margin: 0 auto;">Most popular items our customers are loving right now</p>
+            <div class="product-grid" style="margin-top: 2.5rem;">
+                <a class="product" href="shop.html">
+                    <div class="product-media" style="background: radial-gradient(circle at 30% 30%, rgba(255,215,0,0.3), transparent 55%), radial-gradient(circle at 70% 60%, rgba(255,0,170,0.25), transparent 55%), rgba(0,0,0,0.25);">
+                        <span class="product-badge" style="background: rgba(255,215,0,0.2); border-color: rgba(255,215,0,0.3); color: #FFD700;">🔥 HOT</span>
+                        <span class="product-price">$149</span>
+                    </div>
+                    <div class="product-body">
+                        <div class="product-name">Wireless Headphones</div>
+                        <div class="product-desc">Premium sound quality with noise cancellation</div>
+                        <div class="product-actions">
+                            <span class="btn-3d">Add to Cart</span>
+                            <span class="btn-3d btn-3d-secondary">❤</span>
+                        </div>
+                    </div>
+                </a>
+                <a class="product" href="shop.html">
+                    <div class="product-media" style="background: radial-gradient(circle at 30% 30%, rgba(0,255,136,0.3), transparent 55%), radial-gradient(circle at 70% 60%, rgba(0,240,255,0.25), transparent 55%), rgba(0,0,0,0.25);">
+                        <span class="product-badge" style="background: rgba(0,255,136,0.2); border-color: rgba(0,255,136,0.3); color: var(--accent-3);">✨ TRENDING</span>
+                        <span class="product-price">$79</span>
+                    </div>
+                    <div class="product-body">
+                        <div class="product-name">Smart Fitness Band</div>
+                        <div class="product-desc">Track your health and fitness goals</div>
+                        <div class="product-actions">
+                            <span class="btn-3d">Add to Cart</span>
+                            <span class="btn-3d btn-3d-secondary">❤</span>
+                        </div>
+                    </div>
+                </a>
+                <a class="product" href="shop.html">
+                    <div class="product-media" style="background: radial-gradient(circle at 30% 30%, rgba(138,43,226,0.3), transparent 55%), radial-gradient(circle at 70% 60%, rgba(255,0,170,0.25), transparent 55%), rgba(0,0,0,0.25);">
+                        <span class="product-badge" style="background: rgba(138,43,226,0.2); border-color: rgba(138,43,226,0.3); color: #DA70D6;">💎 PREMIUM</span>
+                        <span class="product-price">$199</span>
+                    </div>
+                    <div class="product-body">
+                        <div class="product-name">Designer Backpack</div>
+                        <div class="product-desc">Stylish and functional for everyday use</div>
+                        <div class="product-actions">
+                            <span class="btn-3d">Add to Cart</span>
+                            <span class="btn-3d btn-3d-secondary">❤</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-pad" style="background: rgba(255,0,170,0.03); border-top: 1px solid var(--glass-border); border-bottom: 1px solid var(--glass-border);">
+        <div class="section-wrap text-center">
+            <h2 class="section-title">Shop by Brand</h2>
+            <p class="section-subtitle" style="margin: 0 auto;">Explore our collection from world-renowned brands</p>
+            <div class="brands-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1.5rem; margin-top: 2.5rem;">
+                <a href="brand-techpro.html" class="brand-card" onclick="window.location.href='brand-techpro.html';">
+                    <div class="brand-name" style="font-family: 'Orbitron', sans-serif; font-size: 1.3rem; font-weight: 900; color: var(--accent);">TECH PRO</div>
+                </a>
+                <a href="brand-styleco.html" class="brand-card" onclick="window.location.href='brand-styleco.html';">
+                    <div class="brand-name" style="font-family: 'Orbitron', sans-serif; font-size: 1.3rem; font-weight: 900; color: var(--accent-2);">STYLE CO</div>
+                </a>
+                <a href="brand-luxe.html" class="brand-card" onclick="window.location.href='brand-luxe.html';">
+                    <div class="brand-name" style="font-family: 'Orbitron', sans-serif; font-size: 1.3rem; font-weight: 900; color: var(--accent-3);">LUXE</div>
+                </a>
+                <a href="brand-urban.html" class="brand-card" onclick="window.location.href='brand-urban.html';">
+                    <div class="brand-name" style="font-family: 'Orbitron', sans-serif; font-size: 1.3rem; font-weight: 900; color: var(--accent);">URBAN</div>
+                </a>
+                <a href="brand-elite.html" class="brand-card" onclick="window.location.href='brand-elite.html';">
+                    <div class="brand-name" style="font-family: 'Orbitron', sans-serif; font-size: 1.3rem; font-weight: 900; color: var(--accent-2);">ELITE</div>
+                </a>
+                <a href="brand-nova.html" class="brand-card" onclick="window.location.href='brand-nova.html';">
+                    <div class="brand-name" style="font-family: 'Orbitron', sans-serif; font-size: 1.3rem; font-weight: 900; color: var(--accent-3);">NOVA</div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-pad">
+        <div class="section-wrap">
+            <div style="background: linear-gradient(135deg, rgba(0,240,255,0.1), rgba(255,0,170,0.1)); border: 2px solid var(--glass-border); border-radius: 24px; padding: 4rem 3rem; text-align: center;">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">📧</div>
+                <h2 class="section-title" style="margin-bottom: 1rem;">Stay in the Loop</h2>
+                <p style="color: rgba(255,255,255,0.8); font-size: 1.1rem; max-width: 600px; margin: 0 auto 2rem;">Subscribe to our newsletter for exclusive deals, new arrivals, and special promotions delivered straight to your inbox.</p>
+                <div style="max-width: 500px; margin: 0 auto; display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;">
+                    <input type="email" placeholder="Enter your email" style="flex: 1; min-width: 250px; padding: 1rem 1.5rem; border-radius: 999px; border: 1px solid var(--glass-border); background: var(--glass); color: #fff; font-size: 1rem; outline: none;" />
+                    <button class="btn-3d" style="padding: 1rem 2.5rem; font-size: 1rem; white-space: nowrap;">Subscribe</button>
+                </div>
+                <p style="color: rgba(255,255,255,0.5); font-size: 0.85rem; margin-top: 1rem;">We respect your privacy. Unsubscribe anytime.</p>
+            </div>
+        </div>
+    </section>
+    
+    <section class="section-pad" style="background: rgba(0,240,255,0.02); border-top: 1px solid var(--glass-border);">
+        <div class="section-wrap text-center">
+            <div style="display: flex; align-items: center; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+                <span style="color: rgba(255,255,255,0.6); font-size: 0.9rem;">🔐 Admin Access</span>
+                <a href="admin-analytics.html" class="btn-3d" style="padding: 0.8rem 1.8rem; font-size: 0.9rem; background: linear-gradient(135deg, rgba(0,240,255,0.3), rgba(0,255,136,0.3)); border: 1px solid rgba(0,240,255,0.4);">
+                    📊 Analytics Dashboard
+                </a>
+            </div>
+        </div>
+    </section>
+    
+
+
+    </main>
+
+    <!-- Cookie Consent -->
+    <!-- Removed: cookie-consent.js (not needed) -->
+    
+    <!-- Service Worker Registration -->
+    <!-- Removed: sw.js (not needed for basic functionality) -->
+
+    <script src="advanced-features.js"></script>
+    <script src="components.js"></script>
+    <script src="bg-optimized.js"></script>
+    <script src="hero-particles.js"></script>
+    <script src="storytelling-animations.js"></script>
+    <script src="surprise-interactions.js"></script>
+    <script>
+        // Initialize Analytics on page load
+        window.addEventListener('load', () => {
+            if (typeof Analytics !== 'undefined') {
+                Analytics.trackPageView('index.html', 'Home');
+            }
+        });
+
+        // Track product pod interactions
+        document.querySelectorAll('#hero .product-pod').forEach(pod => {
+            pod.addEventListener('click', () => {
+                const label = pod.querySelector('.pod-label').textContent;
+                if (typeof Analytics !== 'undefined') {
+                    Analytics.trackProductView(pod.id, label);
+                }
+            });
+        });
+
+        // Mouse movement tracking for particles.js
+        let mouseX = 0, mouseY = 0;
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        // Theme toggle logic
+        const themes = [
+            {
+                name: "Cyber Blue",
+                background: "linear-gradient(180deg, #0a0a2a 0%, #1a1a40 100%)",
+                accent: "#00f0ff",
+                accent2: "#ff00aa",
+                accent3: "#00ff88"
+            },
+            {
+                name: "Neon Purple",
+                background: "linear-gradient(180deg, #1a0033 0%, #2d0052 100%)",
+                accent: "#bf00ff",
+                accent2: "#ff00ff",
+                accent3: "#00ffff"
+            },
+            {
+                name: "Matrix Green",
+                background: "linear-gradient(180deg, #001a00 0%, #003300 100%)",
+                accent: "#00ff41",
+                accent2: "#39ff14",
+                accent3: "#00ff88"
+            },
+            {
+                name: "Sunset Orange",
+                background: "linear-gradient(180deg, #1a0a00 0%, #331400 100%)",
+                accent: "#ff6b35",
+                accent2: "#ff9f1c",
+                accent3: "#ffbf69"
+            },
+            {
+                name: "Ocean Teal",
+                background: "linear-gradient(180deg, #001a1a 0%, #003333 100%)",
+                accent: "#00d9ff",
+                accent2: "#00ffcc",
+                accent3: "#00ff99"
+            },
+            {
+                name: "Royal Gold",
+                background: "linear-gradient(180deg, #1a1200 0%, #332400 100%)",
+                accent: "#ffd700",
+                accent2: "#ffaa00",
+                accent3: "#ff8c00"
+            },
+            {
+                name: "Crimson Red",
+                background: "linear-gradient(180deg, #1a0000 0%, #330000 100%)",
+                accent: "#ff0055",
+                accent2: "#ff3366",
+                accent3: "#ff6699"
+            },
+            {
+                name: "Arctic Ice",
+                background: "linear-gradient(180deg, #0a1a2a 0%, #142840 100%)",
+                accent: "#00d4ff",
+                accent2: "#66e0ff",
+                accent3: "#99ebff"
+            }
+        ];
+
+        let currentTheme = parseInt(localStorage.getItem('themeIndex')) || 0;
+        const themeToggle = document.getElementById("theme-toggle");
+        
+        function applyTheme(theme) {
+            // Ensure __themeBgDiv exists before applying theme (fix for bg.js timing issue)
+            if (!window.__themeBgDiv) {
+                const bg = document.getElementById('__theme-bg');
+                if (!bg) {
+                    const newBg = document.createElement('div');
+                    newBg.id = '__theme-bg';
+                    newBg.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;z-index:-2;pointer-events:none;transition:background 0.4s ease;background:linear-gradient(180deg,#0a0a2a,#1a1a40);';
+                    document.body.insertBefore(newBg, document.body.firstChild);
+                    window.__themeBgDiv = newBg;
+                } else {
+                    window.__themeBgDiv = bg;
+                }
+            }
+            
+            window.__themeBgDiv.style.background = theme.background;
+            document.body.style.background = 'transparent';
+            document.documentElement.style.setProperty('--accent', theme.accent);
+            document.documentElement.style.setProperty('--accent-2', theme.accent2);
+            document.documentElement.style.setProperty('--accent-3', theme.accent3);
+            
+            // Update 3D particle colors if unified background is available
+            if (window.unifiedBackground && window.unifiedBackground.updateThemeColors) {
+                window.unifiedBackground.updateThemeColors(theme);
+            }
+            
+            // Update original bg.js particles if available
+            if (typeof updateParticlesTheme === 'function') {
+                updateParticlesTheme(theme);
+            }
+            
+            // Force refresh of any 3D background systems
+            if (window.unifiedBackground && window.unifiedBackground.refresh) {
+                window.unifiedBackground.refresh();
+            }
+            
+            // Show theme name notification
+            showThemeNotification(theme.name);
+        }
+        
+        function showThemeNotification(themeName) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 100px;
+                right: 20px;
+                
+        param($m)
+        $m.Value -replace 'rgba\(0,0,0,0\.(65|72|8|85|9|92)\)', 'rgba(0,0,0,0.08)'
+    : blur(20px);
+                animation: slideInRight 0.3s ease;
+                box-shadow: 0 0 30px var(--accent);
+            `;
+            notification.innerHTML = `🎨 ${themeName} Theme`;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOutRight 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 2000);
+        }
+        
+        applyTheme(themes[currentTheme]);
+        if (themeToggle) {
+            themeToggle.addEventListener("click", () => {
+                currentTheme = (currentTheme + 1) % themes.length;
+                localStorage.setItem('themeIndex', currentTheme);
+                applyTheme(themes[currentTheme]);
+            });
+        }
+        
+        // Add animation styles
+        const themeStyle = document.createElement('style');
+        themeStyle.textContent = `
+            @keyframes slideInRight {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOutRight {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(themeStyle);
+
+        const storeHeader = document.getElementById('store-header');
+        const mobileToggle = document.getElementById('store-mobile-toggle');
+        const dropdownItems = Array.from(document.querySelectorAll('.store-nav-item[data-dropdown]'));
+
+        if (mobileToggle && storeHeader) {
+            mobileToggle.addEventListener('click', () => {
+                const isOpen = storeHeader.classList.toggle('is-open');
+                mobileToggle.setAttribute('aria-expanded', String(isOpen));
+                if (!isOpen) dropdownItems.forEach(i => i.classList.remove('is-open'));
+            });
+        }
+
+        // Mobile/touch dropdown behavior: tap to open, second tap follows link.
+        dropdownItems.forEach(item => {
+            const link = item.querySelector('.store-nav-link');
+            if (!link) return;
+
+            link.addEventListener('click', (e) => {
+                const isMobile = window.matchMedia('(max-width: 900px)').matches;
+                if (!isMobile) return;
+
+                const isOpen = item.classList.contains('is-open');
+                if (!isOpen) {
+                    e.preventDefault();
+                    dropdownItems.forEach(i => i.classList.remove('is-open'));
+                    item.classList.add('is-open');
+                }
+            });
+        });
+
+        // Close menus when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!storeHeader) return;
+            if (storeHeader.contains(e.target)) return;
+            dropdownItems.forEach(i => i.classList.remove('is-open'));
+            storeHeader.classList.remove('is-open');
+            if (mobileToggle) mobileToggle.setAttribute('aria-expanded', 'false');
+        });
+
+        // Hide preloader when page loads
+        if (document.readyState === 'complete') {
+            setTimeout(() => {
+                document.getElementById('preloader').classList.add('hidden');
+            }, 1000);
+        } else {
+            window.addEventListener('load', function() {
+                setTimeout(() => {
+                    document.getElementById('preloader').classList.add('hidden');
+                }, 1000);
+            });
+        }
+    </script>
+    <script src="advanced-features.js"></script>
+    <script src="components.js"></script>
+    <script src="bg-optimized.js"></script>
+    <script src="hero-particles.js"></script>
+    <script src="storytelling-animations.js"></script>
+    <script src="surprise-interactions.js"></script>
+
+    <!-- GSAP CDN — used only for homepage hero interactions -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script>
+    /* ═══════════════════════════════════════════
+       COSMIC SECTIONS — GSAP interactions
+    ═══════════════════════════════════════════ */
+    (function () {
+        if (typeof gsap === 'undefined') return;
+
+        gsap.registerPlugin(ScrollTrigger);
+
+        /* ── Constellation hover glow ── */
+        document.querySelectorAll('.constellation').forEach(star => {
+            star.addEventListener('mouseenter', () => gsap.to(star, { scale: 1.18, duration: 0.3, ease: 'power2.out' }));
+            star.addEventListener('mouseleave', () => gsap.to(star, { scale: 1, duration: 0.4, ease: 'elastic.out(1,0.5)' }));
+            star.addEventListener('click', () => {
+                const cat = star.dataset.category;
+                if (cat) window.location.href = `shop.html?cat=${cat}`;
+            });
+        });
+
+        /* ── Vortex card 3D tilt ── */
+        document.querySelectorAll('.vortex-card').forEach(card => {
+            card.addEventListener('mousemove', e => {
+                const rect = card.getBoundingClientRect();
+                const x = (e.clientX - rect.left - rect.width  / 2) / (rect.width  / 2);
+                const y = (e.clientY - rect.top  - rect.height / 2) / (rect.height / 2);
+                gsap.to(card, { rotationY: x * 12, rotationX: -y * 8, duration: 0.35, ease: 'power2.out', transformPerspective: 800, overwrite: 'auto' });
+            });
+            card.addEventListener('mouseleave', () => {
+                gsap.to(card, { rotationY: 0, rotationX: 0, duration: 0.5, ease: 'elastic.out(1,0.5)', overwrite: 'auto' });
+            });
+        });
+
+        /* ── Planet hover pulse ── */
+        document.querySelectorAll('.planet').forEach(planet => {
+            planet.addEventListener('mouseenter', () => gsap.to(planet, { scale: 1.08, duration: 0.35, ease: 'power2.out' }));
+            planet.addEventListener('mouseleave', () => gsap.to(planet, { scale: 1, duration: 0.5, ease: 'elastic.out(1,0.5)' }));
+        });
+
+        /* ── Meteor hover pause ── */
+        document.querySelectorAll('.meteor').forEach(m => {
+            m.addEventListener('mouseenter', () => gsap.to(m, { scale: 1.03, duration: 0.25, ease: 'power2.out' }));
+            m.addEventListener('mouseleave', () => gsap.to(m, { scale: 1, duration: 0.3, ease: 'power2.out' }));
+            m.addEventListener('click', () => window.location.href = 'shop.html');
+        });
+
+        /* ── ScrollTrigger entrance animations ── */
+        // Constellations fade-in stagger
+        gsap.from('.constellation', {
+            scrollTrigger: { trigger: '#constellations', start: 'top 80%' },
+            opacity: 0, y: 40, scale: 0.85,
+            duration: 0.6, stagger: 0.08, ease: 'power3.out'
+        });
+
+        // Vortex cards slide up
+        gsap.from('.vortex-card', {
+            scrollTrigger: { trigger: '#vortex', start: 'top 80%' },
+            opacity: 0, y: 60,
+            duration: 0.7, stagger: 0.15, ease: 'power3.out'
+        });
+
+        // Planets scale in
+        gsap.from('.planet', {
+            scrollTrigger: { trigger: '#journey', start: 'top 80%' },
+            opacity: 0, scale: 0.6,
+            duration: 0.8, stagger: 0.2, ease: 'back.out(1.4)'
+        });
+
+        // Meteors slide in from left
+        gsap.from('.meteor', {
+            scrollTrigger: { trigger: '#deals', start: 'top 80%' },
+            opacity: 0, x: -80,
+            duration: 0.6, stagger: 0.15, ease: 'power3.out'
+        });
+
+        /* ── Hologram hover pulse ── */
+        document.querySelectorAll('.hologram').forEach(holo => {
+            holo.addEventListener('mouseenter', () => gsap.to(holo, { scale: 1.04, duration: 0.3, ease: 'power2.out' }));
+            holo.addEventListener('mouseleave', () => gsap.to(holo, { scale: 1, duration: 0.4, ease: 'elastic.out(1,0.5)' }));
+        });
+        gsap.from('.hologram', {
+            scrollTrigger: { trigger: '#testimonials', start: 'top 80%' },
+            opacity: 0, y: 50, duration: 0.7, stagger: 0.15, ease: 'power3.out'
+        });
+
+        /* ── Black hole social icons pull effect ── */
+        document.querySelectorAll('.social-icon').forEach(icon => {
+            icon.addEventListener('mouseenter', () => gsap.to(icon, { y: -10, scale: 1.2, duration: 0.3, ease: 'power2.out' }));
+            icon.addEventListener('mouseleave', () => gsap.to(icon, { y: 0, scale: 1, duration: 0.4, ease: 'elastic.out(1,0.5)' }));
+        });
+        gsap.from('#blackhole .bh-inner > *', {
+            scrollTrigger: { trigger: '#blackhole', start: 'top 80%' },
+            opacity: 0, y: 40, duration: 0.7, stagger: 0.12, ease: 'power3.out'
+        });
+        gsap.from('.social-icon', {
+            scrollTrigger: { trigger: '#blackhole', start: 'top 75%' },
+            opacity: 0, scale: 0.5, duration: 0.5, stagger: 0.1, ease: 'back.out(1.7)'
+        });
+    })();
+    </script>
+    <script>
+    /* ═══════════════════════════════════════════
+       COSMIC HERO — GSAP animations + starfield
+       Scoped: only runs when #hero exists
+    ═══════════════════════════════════════════ */
+    (function () {
+        if (!document.getElementById('hero')) return;
+
+        /* ── Starfield — disabled, bg.js Three.js canvas handles this ── */
+        // const canvas = document.getElementById('hero-starfield'); // hidden via CSS
+
+        /* ── GSAP entrance timeline ── */
+        const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+        tl.to('#hero-tagline',              { opacity: 1, y: 0, duration: 0.8, delay: 0.3 })
+          .to('#hero .hero-sub',            { opacity: 1, y: 0, duration: 0.7 }, '-=0.4')
+          .to('#hero .orbiting-products',   { opacity: 1, y: 0, duration: 0.7 }, '-=0.3')
+          .to('#hero .hero-cta-row',        { opacity: 1, y: 0, duration: 0.6 }, '-=0.3')
+          .to('#hero .hero-trust',          { opacity: 1, y: 0, duration: 0.6 }, '-=0.2');
+
+        /* Set initial hidden state for GSAP targets */
+        gsap.set(['#hero-tagline','#hero .hero-sub',
+                  '#hero .orbiting-products','#hero .hero-cta-row','#hero .hero-trust'],
+                  { y: 28 });
+
+        /* ── Magnetic pod hover (GSAP) ── */
+        document.querySelectorAll('#hero .product-pod').forEach(pod => {
+            pod.addEventListener('mousemove', e => {
+                const rect = pod.getBoundingClientRect();
+                const x = (e.clientX - rect.left - rect.width  / 2) * 0.28;
+                const y = (e.clientY - rect.top  - rect.height / 2) * 0.28;
+                gsap.to(pod, { x, y, duration: 0.35, ease: 'power2.out', overwrite: 'auto' });
+            });
+            pod.addEventListener('mouseleave', () => {
+                gsap.to(pod, { x: 0, y: 0, duration: 0.5, ease: 'elastic.out(1,0.5)', overwrite: 'auto' });
+            });
+            pod.addEventListener('click', () => {
+                const href = pod.dataset.href;
+                if (href) window.location.href = href;
+            });
+        });
+
+        /* ── CTA button pulse on hover ── */
+        document.querySelectorAll('#hero .hero-cta--primary').forEach(btn => {
+            btn.addEventListener('mouseenter', () => {
+                gsap.to(btn, { scale: 1.05, duration: 0.25, ease: 'power2.out' });
+            });
+            btn.addEventListener('mouseleave', () => {
+                gsap.to(btn, { scale: 1, duration: 0.35, ease: 'elastic.out(1,0.6)' });
+            });
+        });
+
+        /* ── Parallax — synced to bg.js Three.js camera via window.__bgMouse ──
+           bg.js writes __bgMouse.nx / .ny (normalised -1..1) on every mousemove.
+           We read those same values each rAF frame so the hero nebulas and
+           orbit ring move in exact lockstep with the 3D particle field.       */
+        let heroRafId;
+        const heroParallaxTargets = {
+            neb1: { el: document.querySelector('.hero-nebula--1'), sx: 30,  sy: 22  },
+            neb2: { el: document.querySelector('.hero-nebula--2'), sx: -24, sy: -18 },
+            neb3: { el: document.querySelector('.hero-nebula--3'), sx: 14,  sy: 10  },
+            ring: { el: document.querySelector('.hero-orbit-ring'), rx: 10, ry: -10 }
+        };
+
+        // Smoothed values that lerp toward __bgMouse each frame (same 5% lerp as bg.js camera)
+        let hx = 0, hy = 0;
+
+        function heroSyncLoop() {
+            const m = window.__bgMouse || { nx: 0, ny: 0 };
+            // Match bg.js lerp factor exactly (0.05)
+            hx += (m.nx - hx) * 0.05;
+            hy += (m.ny - hy) * 0.05;
+
+            const t = heroParallaxTargets;
+            if (t.neb1.el) gsap.set(t.neb1.el, { x: hx * t.neb1.sx, y: hy * t.neb1.sy });
+            if (t.neb2.el) gsap.set(t.neb2.el, { x: hx * t.neb2.sx, y: hy * t.neb2.sy });
+            if (t.neb3.el) gsap.set(t.neb3.el, { x: hx * t.neb3.sx, y: hy * t.neb3.sy });
+            if (t.ring.el)  gsap.set(t.ring.el,  { rotateX: hy * t.ring.rx, rotateY: hx * t.ring.ry });
+
+            heroRafId = requestAnimationFrame(heroSyncLoop);
+        }
+        heroSyncLoop();
+
+        // Clean up if hero is ever removed from DOM
+        new MutationObserver(() => {
+            if (!document.getElementById('hero')) cancelAnimationFrame(heroRafId);
+        }).observe(document.body, { childList: true });
+    })();
+    </script>
+    <!-- Self-Healing System -->
+<script>
+window.onerror = function(msg, url, lineNo, columnNo, error) {
+  console.log('Error caught:', msg);
+  // Show a friendly message
+  const errorDiv = document.createElement('div');
+  errorDiv.style.cssText = 'position:fixed; bottom:20px; right:20px; background:#f3f4f6; padding:10px; border-radius:5px; z-index:9999; border:1px solid #ccc;';
+  errorDiv.innerHTML = '⚠️ Something went wrong. Retrying...';
+  document.body.appendChild(errorDiv);
+  
+  // Remove after 3 seconds
+  setTimeout(() => errorDiv.remove(), 3000);
+  return false;
+};
+
+// Remove floating notifications/toasts that appear dynamically
+setInterval(() => {
+  document.querySelectorAll('[class*="notification"], [class*="toast"], [id*="notification"], [id*="toast"]').forEach(el => {
+    if (el.classList && !el.classList.contains('trendaryo-footer')) {
+      el.remove();
+    }
+  });
+}, 500);
+</script>
+</body>
+</html>

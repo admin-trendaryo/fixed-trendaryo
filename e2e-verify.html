@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="shared.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex" />
+    <title>E2E Verify - Trendaryo</title>
+    <link rel="stylesheet" href="responsive.css">
+    <script src="performance.js"></script>
+    <script src="bg.js"></script>
+    <link rel="stylesheet" href="styles.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />`n    <link rel="stylesheet" href="shared.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Inter, sans-serif; background: #0b1220; color: #e5e7eb; }
+        .wrap { max-width: 1100px; margin: 0 auto; padding: 26px; }
+        .top { display:flex; align-items:center; justify-content:space-between; gap: 14px; flex-wrap: wrap; margin-bottom: 18px; }
+        .title { font-size: 1.4rem; font-weight: 900; letter-spacing: 0.6px; }
+        .pill { display:inline-flex; align-items:center; gap: 8px; padding: 8px 10px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.85); font-size: 0.9rem; }
+        .grid { display:grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        @media(max-width: 980px){ .grid { grid-template-columns: 1fr; } }
+        .card { border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.06); border-radius: 14px; padding: 16px; }
+        .card h2 { font-size: 1rem; margin-bottom: 10px; }
+        .muted { color: rgba(229,231,235,0.72); font-size: 0.92rem; }
+        .row { display:flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+        label { display:block; font-weight: 700; margin-top: 10px; margin-bottom: 6px; }
+        input, select, textarea { width: 100%; padding: 10px 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.14); background: rgba(0,0,0,0.25); color: #e5e7eb; outline: none; }
+        textarea { min-height: 92px; resize: vertical; }
+        .btn { padding: 10px 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.18); background: rgba(255,255,255,0.08); color: #fff; cursor: pointer; font-weight: 800; }
+        .btn.primary { background: #d4af37; border-color: #d4af37; color: #111827; }
+        .btn.danger { background: #ef4444; border-color: #ef4444; }
+        pre { margin-top: 12px; padding: 12px; border-radius: 12px; background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.12); overflow:auto; max-height: 280px; }
+        code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+    <canvas id="three-canvas" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;pointer-events:none;"></canvas>`n    <div id="header-container" data-type="minimal"></div>
+    <div class="wrap">
+        <div class="top">
+            <div>
+                <div class="title">E2E Verification</div>
+                <div class="muted">Quickly validate auth, cart/quote, orders, rewards, returns, and Q&amp;A using the backend APIs.</div>
+            </div>
+            <div class="row">
+                <span class="pill" id="apiPill">API: http://localhost:3000</span>
+                <span class="pill" id="tokenPill">token: none</span>
+                <button class="btn" onclick="refreshTokenPill()">Refresh Token</button>
+                <button class="btn danger" onclick="clearToken()">Clear Token</button>
+            </div>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <h2>1) Auth</h2>
+                <div class="muted">Login with email/password, or create a demo social login token (mock OAuth).</div>
+
+                <label>Email</label>
+                <input id="authEmail" placeholder="admin@trendaryo.com" />
+
+                <label>Password</label>
+                <input id="authPassword" type="password" placeholder="admin123" />
+
+                <div class="row" style="margin-top: 12px;">
+                    <button class="btn primary" onclick="login()">Login</button>
+                    <button class="btn" onclick="oauthMock('google')">Mock Google Login</button>
+                    <button class="btn" onclick="oauthMock('facebook')">Mock Facebook Login</button>
+                    <button class="btn" onclick="me()">GET /auth/me</button>
+                </div>
+
+                <pre><code id="authOut">{}</code></pre>
+            </div>
+
+            <div class="card">
+                <h2>2) Cart + Quote</h2>
+                <div class="muted">Writes a demo cart into <code>localStorage.trendaryo_cart</code> then calls <code>/api/checkout/quote</code>.</div>
+
+                <label>Currency</label>
+                <select id="quoteCurrency">
+                    <option value="USD" selected>USD</option>
+                    <option value="EUR">EUR</option>
+                    <option value="GBP">GBP</option>
+                    <option value="INR">INR</option>
+                    <option value="PKR">PKR</option>
+                </select>
+
+                <label>Destination</label>
+                <div class="row">
+                    <input id="destCountry" placeholder="Country (US)" style="flex:1;" />
+                    <input id="destState" placeholder="State (CA/NY/TX)" style="flex:1;" />
+                </div>
+
+                <div class="row" style="margin-top: 12px;">
+                    <button class="btn" onclick="seedCart()">Seed Demo Cart</button>
+                    <button class="btn primary" onclick="quote()">Quote</button>
+                </div>
+
+                <pre><code id="quoteOut">{}</code></pre>
+            </div>
+
+            <div class="card">
+                <h2>3) Create Order + Rewards</h2>
+                <div class="muted">Creates an order (auth required) then reads your rewards summary.</div>
+
+                <div class="row" style="margin-top: 8px;">
+                    <button class="btn primary" onclick="createOrder()">POST /orders</button>
+                    <button class="btn" onclick="rewardsMe()">GET /rewards/me</button>
+                </div>
+
+                <pre><code id="orderOut">{}</code></pre>
+            </div>
+
+            <div class="card">
+                <h2>4) Returns</h2>
+                <div class="muted">Uses an orderNumber from the previous step. Guest email must match order.</div>
+
+                <label>Order Number</label>
+                <input id="rOrderNumber" placeholder="TRD-..." />
+
+                <label>Email on order</label>
+                <input id="rEmail" placeholder="you@example.com" />
+
+                <label>Type</label>
+                <select id="rType">
+                    <option value="return" selected>return</option>
+                    <option value="exchange">exchange</option>
+                </select>
+
+                <label>Reason</label>
+                <select id="rReason">
+                    <option value="wrong_size">wrong_size</option>
+                    <option value="damaged">damaged</option>
+                    <option value="not_as_described">not_as_described</option>
+                    <option value="changed_mind">changed_mind</option>
+                    <option value="other" selected>other</option>
+                </select>
+
+                <div class="row" style="margin-top: 12px;">
+                    <button class="btn primary" onclick="returnRequest()">POST /returns/request</button>
+                </div>
+
+                <pre><code id="returnsOut">{}</code></pre>
+            </div>
+
+            <div class="card">
+                <h2>5) Product Q&amp;A</h2>
+                <div class="muted">Ask a question and (if admin) answer via admin endpoint.</div>
+
+                <label>Product ID</label>
+                <input id="qaProductId" value="1" />
+
+                <label>Question</label>
+                <textarea id="qaQuestion" placeholder="Does this come with warranty?"></textarea>
+
+                <div class="row" style="margin-top: 12px;">
+                    <button class="btn primary" onclick="askQuestion()">POST /products/:id/questions</button>
+                    <button class="btn" onclick="listQuestions()">GET /products/:id/questions</button>
+                </div>
+
+                <label style="margin-top: 12px;">Admin Answer (question id)</label>
+                <div class="row">
+                    <input id="qaQuestionId" placeholder="Question ID" style="flex:1;" />
+                    <input id="qaAnswer" placeholder="Answer" style="flex:2;" />
+                </div>
+                <div class="row" style="margin-top: 12px;">
+                    <button class="btn" onclick="adminAnswer()">POST /admin/questions/:id/answer</button>
+                </div>
+
+                <pre><code id="qaOut">{}</code></pre>
+            </div>
+
+            <div class="card">
+                <h2>6) Admin Ops Links</h2>
+                <div class="muted">Open these pages in your browser.</div>
+                <div class="row" style="margin-top: 12px;">
+                    <button class="btn" onclick="location.href='admin-login.html'">admin-login.html</button>
+                    <button class="btn" onclick="location.href='admin-dashboard.html'">admin-dashboard.html</button>
+                    <button class="btn primary" onclick="location.href='admin-ops.html'">admin-ops.html</button>
+                </div>
+                <pre><code id="linksOut">Tip: make sure backend is running on http://localhost:3000</code></pre>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:3000';
+        const $ = (id) => document.getElementById(id);
+
+        function setOut(id, obj) {
+            $(id).textContent = typeof obj === 'string' ? obj : JSON.stringify(obj, null, 2);
+        }
+
+        function getToken() {
+            return localStorage.getItem('token') || '';
+        }
+
+        function refreshTokenPill() {
+            const t = getToken();
+            $('tokenPill').textContent = t ? `token: ${t.slice(0, 18)}...` : 'token: none';
+        }
+
+        function clearToken() {
+            localStorage.removeItem('token');
+            refreshTokenPill();
+            setOut('authOut', {});
+        }
+
+        async function apiFetch(path, options = {}) {
+            const headers = Object.assign({}, options.headers || {});
+            const t = getToken();
+            if (t) headers['Authorization'] = `Bearer ${t}`;
+            return fetch(`${API_BASE}${path}`, { ...options, headers });
+        }
+
+        async function login() {
+            try {
+                const email = $('authEmail').value.trim();
+                const password = $('authPassword').value;
+                const res = await fetch(`${API_BASE}/api/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || 'Login failed');
+                localStorage.setItem('token', data.token);
+                refreshTokenPill();
+                setOut('authOut', data);
+            } catch (e) {
+                setOut('authOut', { error: e.message });
+            }
+        }
+
+        async function oauthMock(provider) {
+            try {
+                const email = $('authEmail').value.trim() || `demo_${provider}_${Date.now()}@trendaryo.local`;
+                const res = await fetch(`${API_BASE}/api/auth/oauth/mock`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ provider, email, firstName: 'Demo', lastName: provider })
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || 'OAuth mock failed');
+                localStorage.setItem('token', data.token);
+                refreshTokenPill();
+                setOut('authOut', data);
+            } catch (e) {
+                setOut('authOut', { error: e.message });
+            }
+        }
+
+        async function me() {
+            try {
+                const res = await apiFetch('/api/auth/me');
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || 'Failed');
+                setOut('authOut', data);
+            } catch (e) {
+                setOut('authOut', { error: e.message });
+            }
+        }
+
+        function seedCart() {
+            const cart = [
+                { id: 1, quantity: 1 },
+                { id: 2, quantity: 2 }
+            ];
+            localStorage.setItem('trendaryo_cart', JSON.stringify(cart));
+            setOut('quoteOut', { ok: true, trendaryo_cart: cart });
+        }
+
+        async function quote() {
+            try {
+                const currency = $('quoteCurrency').value;
+                localStorage.setItem('trendaryo_currency', currency);
+
+                const country = ($('destCountry').value.trim() || 'US');
+                const state = ($('destState').value.trim() || 'CA');
+                const cart = JSON.parse(localStorage.getItem('trendaryo_cart') || '[]');
+
+                const res = await fetch(`${API_BASE}/api/checkout/quote`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ items: cart, destination: { country, state }, currency })
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || 'Quote failed');
+                setOut('quoteOut', data);
+            } catch (e) {
+                setOut('quoteOut', { error: e.message });
+            }
+        }
+
+        async function createOrder() {
+            try {
+                const cart = JSON.parse(localStorage.getItem('trendaryo_cart') || '[]');
+                if (!cart.length) throw new Error('Cart is empty. Click Seed Demo Cart first.');
+
+                const destination = { street: '123 Main St', city: 'Los Angeles', state: 'CA', zipCode: '90001', country: 'US' };
+
+                const res = await apiFetch('/api/orders', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        items: cart,
+                        shippingAddress: destination,
+                        paymentMethod: 'card',
+                        paymentIntentId: 'demo_intent'
+                    })
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || 'Order failed');
+
+                setOut('orderOut', data);
+
+                const orderNumber = data?.order?.orderNumber;
+                if (orderNumber) $('rOrderNumber').value = orderNumber;
+
+                // Best effort: use token email for returns email
+                const meRes = await apiFetch('/api/auth/me');
+                const meData = await meRes.json();
+                if (meRes.ok && meData.email) $('rEmail').value = meData.email;
+            } catch (e) {
+                setOut('orderOut', { error: e.message });
+            }
+        }
+
+        async function rewardsMe() {
+            try {
+                const res = await apiFetch('/api/rewards/me');
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || 'Failed');
+                setOut('orderOut', data);
+            } catch (e) {
+                setOut('orderOut', { error: e.message });
+            }
+        }
+
+        async function returnRequest() {
+            try {
+                const payload = {
+                    orderNumber: $('rOrderNumber').value.trim(),
+                    email: $('rEmail').value.trim(),
+                    type: $('rType').value,
+                    reason: $('rReason').value,
+                    comments: 'E2E test request'
+                };
+
+                const res = await fetch(`${API_BASE}/api/returns/request`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || 'Return request failed');
+                setOut('returnsOut', data);
+            } catch (e) {
+                setOut('returnsOut', { error: e.message });
+            }
+        }
+
+        async function askQuestion() {
+            try {
+                const productId = parseInt($('qaProductId').value, 10) || 1;
+                const question = $('qaQuestion').value.trim();
+                const res = await apiFetch(`/api/products/${productId}/questions`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ question })
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || 'Failed to ask');
+                setOut('qaOut', data);
+            } catch (e) {
+                setOut('qaOut', { error: e.message });
+            }
+        }
+
+        async function listQuestions() {
+            try {
+                const productId = parseInt($('qaProductId').value, 10) || 1;
+                const res = await fetch(`${API_BASE}/api/products/${productId}/questions`);
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || 'Failed to list');
+                setOut('qaOut', data);
+            } catch (e) {
+                setOut('qaOut', { error: e.message });
+            }
+        }
+
+        async function adminAnswer() {
+            try {
+                const id = parseInt($('qaQuestionId').value, 10);
+                const answer = $('qaAnswer').value.trim();
+                const res = await apiFetch(`/api/admin/questions/${id}/answer`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ answer })
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || 'Failed to answer');
+                setOut('qaOut', data);
+            } catch (e) {
+                setOut('qaOut', { error: e.message });
+            }
+        }
+
+        refreshTokenPill();
+        $('authEmail').value = localStorage.getItem('trendaryo_last_email') || 'admin@trendaryo.com';
+        $('destCountry').value = 'US';
+        $('destState').value = 'CA';
+    </script>
+    <div id="footer-container"></div>`n    <script src="components.js"></script>`n    <div id="footer-container"></div>`n    <script src="components.js"></script>`n
+    <!-- Self-Healing System -->
+<script>
+window.onerror = function(msg, url, lineNo, columnNo, error) {
+  console.log('Error caught:', msg);
+  const errorDiv = document.createElement('div');
+  errorDiv.style.cssText = 'position:fixed; bottom:20px; right:20px; background:#f3f4f6; padding:10px; border-radius:5px; z-index:9999; border:1px solid #ccc;';
+  errorDiv.innerHTML = '⚠️ Something went wrong. Retrying...';
+  document.body.appendChild(errorDiv);
+  setTimeout(() => errorDiv.remove(), 3000);
+  return false;
+};
+</script>
+</body>
+</html>

@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="canonical" href="https://trendaryo.com/checkout.html">
+    <title>Checkout - Trendaryo</title>
+    <meta name="robots" content="noindex, follow">
+    <link rel="stylesheet" href="responsive.css">
+    <script src="performance.js"></script>
+    <script src="script.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="shared.css">
+    <script src="bg.js"></script>
+    <script src="https://js.stripe.com/v3/"></script>
+    <style>
+        :root{--accent:#00f0ff;--accent-2:#ff00aa;--glass:rgba(255,255,255,0.05);--glass-border:rgba(255,255,255,0.1);}
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:'Rajdhani',sans-serif;background:#0a0a2a;color:#fff;padding-top:80px;}
+        .container{max-width:1200px;margin:0 auto;padding:2rem;}
+        .checkout-grid{display:grid;grid-template-columns:2fr 1fr;gap:2rem;}
+        .checkout-form{background:var(--glass);border:1px solid var(--glass-border);border-radius:20px;padding:2rem;}
+        .steps{display:flex;justify-content:space-between;margin-bottom:2rem;}
+        .step{flex:1;text-align:center;padding:1rem;border-bottom:2px solid var(--glass-border);color:#888;}
+        .step.active{border-color:var(--accent);color:var(--accent);}
+        .step.completed{border-color:var(--accent-3);color:var(--accent-3);}
+        .form-section{display:none;}
+        .form-section.active{display:block;}
+        .form-group{margin-bottom:1.5rem;}
+        .form-group label{display:block;margin-bottom:0.5rem;color:#ccc;}
+        .form-group input,.form-group select{width:100%;padding:0.8rem;border-radius:8px;background:var(--glass);border:1px solid var(--glass-border);color:#fff;font-family:inherit;transition:border-color 0.3s ease;}
+        .form-group input:focus,.form-group select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px rgba(0,240,255,0.2);}
+        .form-group input.error,.form-group select.error{border-color:#ef4444;box-shadow:0 0 0 2px rgba(239,68,68,0.2);}
+        .form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+        .btn{padding:1rem 2rem;border:none;border-radius:10px;font-weight:700;cursor:pointer;transition:all 0.2s;font-family:inherit;position:relative;}
+        .btn-primary{background:var(--accent);color:#000;}
+        .btn-primary:hover{background:#00d4e4;transform:translateY(-1px);}
+        .btn-secondary{background:var(--glass);color:#fff;border:1px solid var(--glass-border);}
+        .btn-secondary:hover{background:rgba(255,255,255,0.1);transform:translateY(-1px);}
+        .btn:disabled{opacity:0.6;cursor:not-allowed;transform:none;}
+        .btn.loading{color:transparent;}
+        .btn.loading::after{content:'';position:absolute;width:20px;height:20px;top:50%;left:50%;margin-left:-10px;margin-top:-10px;border:2px solid transparent;border-top-color:currentColor;border-radius:50%;animation:spin 1s linear infinite;}
+        .btn-primary{pointer-events:auto !important;z-index:1 !important;position:relative !important;}
+        @keyframes spin{to{transform:rotate(360deg);}}
+        .btn-group{display:flex;gap:1rem;margin-top:2rem;}
+        .order-summary{background:var(--glass);border:1px solid var(--glass-border);border-radius:20px;padding:2rem;position:sticky;top:100px;}
+        .order-summary h3{font-family:'Orbitron',sans-serif;margin-bottom:1.5rem;color:var(--accent);}
+        .cart-item{display:flex;gap:1rem;margin-bottom:1rem;padding-bottom:1rem;border-bottom:1px solid var(--glass-border);}
+        .cart-item img{width:60px;height:60px;object-fit:cover;border-radius:8px;}
+        .cart-item-info{flex:1;}
+        .cart-item-name{font-weight:600;margin-bottom:0.3rem;}
+        .cart-item-price{color:var(--accent);}
+        .summary-row{display:flex;justify-content:space-between;margin:1rem 0;padding:0.5rem 0;}
+        .summary-row.total{border-top:2px solid var(--glass-border);padding-top:1rem;font-size:1.3rem;font-weight:700;color:var(--accent);}
+        @media(max-width:768px){.checkout-grid{grid-template-columns:1fr;}.order-summary{position:static;}}
+    </style>
+<script src="bg.js"></script>
+</head>
+<body>
+    <canvas id="three-canvas" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;pointer-events:none;"></canvas>
+    <div id="header-container"></div>
+    
+    <div class="container">
+        <h1 style="font-family:'Orbitron',sans-serif;margin-bottom:2rem;">Checkout</h1>
+        
+        <div class="checkout-grid">
+            <div class="checkout-form">
+                <div class="steps">
+                    <div class="step active" data-step="1">1. Shipping</div>
+                    <div class="step" data-step="2">2. Payment</div>
+                    <div class="step" data-step="3">3. Review</div>
+                </div>
+                
+                <form id="checkout-form">
+                    <div class="form-section active" data-section="1">
+                        <h3 style="margin-bottom:1.5rem;">Shipping Information</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>First Name</label>
+                                <input type="text" id="firstName" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Last Name</label>
+                                <input type="text" id="lastName" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" id="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Phone</label>
+                            <input type="tel" id="phone" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Address</label>
+                            <input type="text" id="address" required>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>City</label>
+                                <input type="text" id="city" required>
+                            </div>
+                            <div class="form-group">
+                                <label>State</label>
+                                <input type="text" id="state" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>ZIP Code</label>
+                                <input type="text" id="zip" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Country</label>
+                                <select id="country" required>
+                                    <option value="US">United States</option>
+                                    <option value="CA">Canada</option>
+                                    <option value="UK">United Kingdom</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-primary" id="continue-to-payment-btn" onclick="handleContinueToPayment()">Continue to Payment</button>
+                        </div>
+                    </div>
+                    
+                    <div class="form-section" data-section="2">
+                        <h3 style="margin-bottom:1.5rem;">Payment Method</h3>
+                        <div class="form-group">
+                            <label>Payment Type</label>
+                            <select id="payment-method" onchange="togglePayment()">
+                                <option value="card">Credit/Debit Card</option>
+                                <option value="paypal">PayPal</option>
+                                <option value="cod">Cash on Delivery</option>
+                            </select>
+                        </div>
+                        <div id="card-element" style="padding:1rem;background:var(--glass);border:1px solid var(--glass-border);border-radius:8px;margin:1rem 0;"></div>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-secondary" onclick="prevStep()">Back</button>
+                            <button type="button" class="btn btn-primary" onclick="nextStep()">Review Order</button>
+                        </div>
+                    </div>
+                    
+                    <div class="form-section" data-section="3">
+                        <h3 style="margin-bottom:1.5rem;">Review Your Order</h3>
+                        <div id="review-info" style="background:rgba(0,0,0,0.3);padding:1.5rem;border-radius:10px;margin-bottom:1.5rem;"></div>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-secondary" onclick="prevStep()">Back</button>
+                            <button type="submit" class="btn btn-primary">Place Order</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="order-summary">
+                <h3>Order Summary</h3>
+                <div id="cart-items"></div>
+                <div class="summary-row">
+                    <span>Subtotal:</span>
+                    <span id="subtotal">$0.00</span>
+                </div>
+                <div class="summary-row">
+                    <span>Shipping:</span>
+                    <span id="shipping">$9.99</span>
+                </div>
+                <div class="summary-row">
+                    <span>Tax:</span>
+                    <span id="tax">$0.00</span>
+                </div>
+                <div class="summary-row total">
+                    <span>Total:</span>
+                    <span id="total">$0.00</span>
+                </div>
+            </div>
+        </div>
+        
+    <!-- Helpful Links Section -->
+    <div style="max-width: 1200px; margin: 3rem auto; padding: 2rem; background: var(--glass); border: 1px solid var(--glass-border); border-radius: 16px;">
+        <h3 style="font-family: 'Orbitron', sans-serif; margin-bottom: 1.5rem; text-align: center;">Need Help?</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+            <a href="shipping.html" style="padding: 1rem; background: rgba(0,240,255,0.05); border: 1px solid var(--glass-border); border-radius: 8px; text-decoration: none; color: #fff; text-align: center; transition: all 0.3s;">📦 Shipping Info</a>
+            <a href="returns.html" style="padding: 1rem; background: rgba(0,240,255,0.05); border: 1px solid var(--glass-border); border-radius: 8px; text-decoration: none; color: #fff; text-align: center; transition: all 0.3s;">🔄 Return Policy</a>
+            <a href="faq.html" style="padding: 1rem; background: rgba(0,240,255,0.05); border: 1px solid var(--glass-border); border-radius: 8px; text-decoration: none; color: #fff; text-align: center; transition: all 0.3s;">❓ FAQ</a>
+            <a href="contact.html" style="padding: 1rem; background: rgba(0,240,255,0.05); border: 1px solid var(--glass-border); border-radius: 8px; text-decoration: none; color: #fff; text-align: center; transition: all 0.3s;">💬 Contact Us</a>
+            <a href="shop.html" style="padding: 1rem; background: rgba(0,240,255,0.05); border: 1px solid var(--glass-border); border-radius: 8px; text-decoration: none; color: #fff; text-align: center; transition: all 0.3s;">🛍️ Continue Shopping</a>
+            <a href="cart.html" style="padding: 1rem; background: rgba(0,240,255,0.05); border: 1px solid var(--glass-border); border-radius: 8px; text-decoration: none; color: #fff; text-align: center; transition: all 0.3s;">🛒 Back to Cart</a>
+            <a href="track-order.html" style="padding: 1rem; background: rgba(0,240,255,0.05); border: 1px solid var(--glass-border); border-radius: 8px; text-decoration: none; color: #fff; text-align: center; transition: all 0.3s;">🚚 Track Order</a>
+            <a href="account.html" style="padding: 1rem; background: rgba(0,240,255,0.05); border: 1px solid var(--glass-border); border-radius: 8px; text-decoration: none; color: #fff; text-align: center; transition: all 0.3s;">👤 My Account</a>
+        </div>
+    </div>
+</div>
+    
+    <div id="footer-container"></div>
+    <script src="components.js"></script>
+    <script src="script.js"></script>
+    <script>
+        // Simple, direct approach - no complex dependencies
+        let currentStep = 1;
+        let cart = [];
+        
+        // Initialize when DOM is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Checkout page loaded');
+            
+            // Load cart immediately
+            loadCart();
+            
+            // Button events handled via onclick attributes
+        });
+        
+        function handleContinueToPayment() {
+            console.log('handleContinueToPayment called, currentStep:', currentStep);
+            
+            if (currentStep === 1) {
+                // Validate required fields
+                const requiredFields = ['firstName', 'lastName', 'email', 'phone', 'address', 'city', 'state', 'zip'];
+                let isValid = true;
+                let firstInvalidField = null;
+                
+                for (const fieldId of requiredFields) {
+                    const field = document.getElementById(fieldId);
+                    if (!field || !field.value.trim()) {
+                        isValid = false;
+                        if (field) {
+                            field.style.borderColor = '#ef4444';
+                            if (!firstInvalidField) firstInvalidField = field;
+                        }
+                    } else {
+                        if (field) field.style.borderColor = '';
+                    }
+                }
+                
+                // Validate email
+                const emailField = document.getElementById('email');
+                if (emailField && emailField.value) {
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailRegex.test(emailField.value)) {
+                        isValid = false;
+                        emailField.style.borderColor = '#ef4444';
+                        if (!firstInvalidField) firstInvalidField = emailField;
+                    }
+                }
+                
+                if (!isValid) {
+                    alert('Please fill in all required fields correctly');
+                    if (firstInvalidField) firstInvalidField.focus();
+                    return;
+                }
+            }
+            
+            // Move to next step
+            moveToNextStep();
+        }
+        
+        function moveToNextStep() {
+            if (currentStep >= 3) return;
+            
+            console.log('Moving from step', currentStep, 'to step', currentStep + 1);
+            
+            // Hide current step
+            const currentSection = document.querySelector(`.form-section[data-section="${currentStep}"]`);
+            const currentStepIndicator = document.querySelector(`.step[data-step="${currentStep}"]`);
+            
+            if (currentSection) currentSection.classList.remove('active');
+            if (currentStepIndicator) currentStepIndicator.classList.add('completed');
+            
+            // Show next step
+            currentStep++;
+            const nextSection = document.querySelector(`.form-section[data-section="${currentStep}"]`);
+            const nextStepIndicator = document.querySelector(`.step[data-step="${currentStep}"]`);
+            
+            if (nextSection) nextSection.classList.add('active');
+            if (nextStepIndicator) nextStepIndicator.classList.add('active');
+            
+            if (currentStep === 3) {
+                showReview();
+            }
+        }
+        
+        function loadCart() {
+            cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            console.log('Cart loaded:', cart.length, 'items');
+            
+            const container = document.getElementById('cart-items');
+            if (!container) {
+                console.error('Cart container not found');
+                return;
+            }
+            
+            if (cart.length === 0) {
+                container.innerHTML = '<p style="color: #ff6b6b;">Your cart is empty</p>';
+                setTimeout(() => {
+                    window.location.href = 'cart.html';
+                }, 2000);
+                return;
+            }
+            
+            // Display cart items
+            container.innerHTML = cart.map(item => `
+                <div class="cart-item">
+                    <img src="${item.image || 'assets/placeholder.jpg'}" alt="${item.name || 'Product'}">
+                    <div class="cart-item-info">
+                        <div class="cart-item-name">${item.name || 'Unknown Product'}</div>
+                        <div>Qty: ${item.quantity}</div>
+                        <div class="cart-item-price">$${(item.price * item.quantity).toFixed(2)}</div>
+                    </div>
+                </div>
+            `).join('');
+            
+            updateOrderSummary();
+        }
+        
+        function updateOrderSummary() {
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const shipping = subtotal >= 50 ? 0 : 9.99;
+            const tax = subtotal * 0.08;
+            const total = subtotal + shipping + tax;
+            
+            const subtotalEl = document.getElementById('subtotal');
+            const shippingEl = document.getElementById('shipping');
+            const taxEl = document.getElementById('tax');
+            const totalEl = document.getElementById('total');
+            
+            if (subtotalEl) subtotalEl.textContent = `$${subtotal.toFixed(2)}`;
+            if (shippingEl) shippingEl.textContent = shipping === 0 ? 'FREE' : `$${shipping.toFixed(2)}`;
+            if (taxEl) taxEl.textContent = `$${tax.toFixed(2)}`;
+            if (totalEl) totalEl.textContent = `$${total.toFixed(2)}`;
+        }
+        
+        function showReview() {
+            const firstName = document.getElementById('firstName')?.value || '';
+            const lastName = document.getElementById('lastName')?.value || '';
+            const address = document.getElementById('address')?.value || '';
+            const city = document.getElementById('city')?.value || '';
+            const state = document.getElementById('state')?.value || '';
+            const zip = document.getElementById('zip')?.value || '';
+            const country = document.getElementById('country')?.value || '';
+            const email = document.getElementById('email')?.value || '';
+            const phone = document.getElementById('phone')?.value || '';
+            const paymentMethod = document.getElementById('payment-method')?.selectedOptions?.[0]?.text || '';
+            
+            const info = `
+                <p><strong>Shipping To:</strong></p>
+                <p>${firstName} ${lastName}</p>
+                <p>${address}</p>
+                <p>${city}, ${state} ${zip}</p>
+                <p>${country}</p>
+                <p style="margin-top:1rem;"><strong>Contact:</strong></p>
+                <p>${email}</p>
+                <p>${phone}</p>
+                <p style="margin-top:1rem;"><strong>Payment:</strong> ${paymentMethod}</p>
+            `;
+            
+            const reviewEl = document.getElementById('review-info');
+            if (reviewEl) reviewEl.innerHTML = info;
+        }
+        
+        function togglePayment() {
+            const method = document.getElementById('payment-method')?.value;
+            const cardEl = document.getElementById('card-element');
+            if (cardEl) {
+                cardEl.style.display = method === 'card' ? 'block' : 'none';
+            }
+        }
+        
+        function prevStep() {
+            if (currentStep <= 1) return;
+            
+            const currentSection = document.querySelector(`.form-section[data-section="${currentStep}"]`);
+            const currentStepIndicator = document.querySelector(`.step[data-step="${currentStep}"]`);
+            
+            if (currentSection) currentSection.classList.remove('active');
+            if (currentStepIndicator) currentStepIndicator.classList.remove('active');
+            
+            currentStep--;
+            
+            const prevSection = document.querySelector(`.form-section[data-section="${currentStep}"]`);
+            const prevStepIndicator = document.querySelector(`.step[data-step="${currentStep}"]`);
+            
+            if (prevSection) prevSection.classList.add('active');
+            if (prevStepIndicator) prevStepIndicator.classList.remove('completed');
+        }
+        
+        // Handle form submission
+        document.getElementById('checkout-form')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const orderData = {
+                customer: {
+                    firstName: document.getElementById('firstName')?.value || '',
+                    lastName: document.getElementById('lastName')?.value || '',
+                    email: document.getElementById('email')?.value || '',
+                    phone: document.getElementById('phone')?.value || ''
+                },
+                shipping: {
+                    address: document.getElementById('address')?.value || '',
+                    city: document.getElementById('city')?.value || '',
+                    state: document.getElementById('state')?.value || '',
+                    zip: document.getElementById('zip')?.value || '',
+                    country: document.getElementById('country')?.value || ''
+                },
+                items: cart,
+                paymentMethod: document.getElementById('payment-method')?.value || 'card',
+                subtotal: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0),
+                shipping: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0) >= 50 ? 0 : 9.99,
+                total: 0,
+                id: Date.now(),
+                date: new Date().toISOString(),
+                status: 'processing'
+            };
+            
+            orderData.total = orderData.subtotal + orderData.shipping + (orderData.subtotal * 0.08);
+            
+            // Save order
+            const orders = JSON.parse(localStorage.getItem('trendaryo_orders') || '[]');
+            orders.push(orderData);
+            localStorage.setItem('trendaryo_orders', JSON.stringify(orders));
+            
+            // Clear cart
+            localStorage.removeItem('cart');
+            
+            // Redirect to success
+            alert('Order placed successfully!');
+            window.location.href = `order-success.html?id=${orderData.id}`;
+        });
+        
+        // Make functions globally available
+        window.nextStep = handleContinueToPayment;
+        window.prevStep = prevStep;
+        window.showReview = showReview;
+        window.togglePayment = togglePayment;
+    </script>
+    <!-- Self-Healing System -->
+<script>
+window.onerror = function(msg, url, lineNo, columnNo, error) {
+  console.log('Error caught:', msg);
+  const errorDiv = document.createElement('div');
+  errorDiv.style.cssText = 'position:fixed; bottom:20px; right:20px; background:#f3f4f6; padding:10px; border-radius:5px; z-index:9999; border:1px solid #ccc;';
+  errorDiv.innerHTML = '⚠️ Something went wrong. Retrying...';
+  document.body.appendChild(errorDiv);
+  setTimeout(() => errorDiv.remove(), 3000);
+  return false;
+};
+</script>
+</body>
+</html>

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Follow Trendaryo on Instagram for stunning visuals, style inspiration, and exclusive content.">
+    <title>Trendaryo on Instagram - Visual Inspiration & Style</title>
+    <link rel="stylesheet" href="responsive.css">
+    <link rel="stylesheet" href="responsive-complete.css">
+    <link rel="stylesheet" href="shared.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --accent: #00f0ff; --accent-2: #ff00aa; --accent-3: #00ff88; --glass: rgba(255,255,255,0.05); --glass-border: rgba(255,255,255,0.1); }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Rajdhani', sans-serif; color: #fff; background: #0a0a2a; overflow-x: hidden; }
+        html { background: #0a0a2a; }
+        #three-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+
+        .page-offset { padding-top: 210px; }
+        .section-wrap { max-width: 1200px; margin: 0 auto; }
+        .section-pad { padding: 3.5rem 1.25rem; }
+        .section-title { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: clamp(1.6rem, 3.5vw, 2.4rem); margin-bottom: 0.65rem; }
+        .section-subtitle { color: rgba(255,255,255,0.75); font-size: 1.05rem; max-width: 720px; }
+
+        .instagram-hero { padding: 4rem 1.25rem; text-align: center; }
+        .instagram-hero-content { max-width: 900px; margin: 0 auto; }
+        .instagram-icon { font-size: 5rem; margin-bottom: 1.5rem; animation: float 3s ease-in-out infinite; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+
+        .instagram-title { font-family: 'Orbitron', sans-serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 900; background: linear-gradient(135deg, #E4405F, #ff00aa); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1rem; }
+        .instagram-subtitle { color: rgba(255,255,255,0.8); font-size: 1.2rem; margin-bottom: 2rem; line-height: 1.7; }
+
+        .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 3rem; }
+        .btn-primary { display: inline-block; padding: 1rem 2.5rem; border-radius: 999px; background: linear-gradient(135deg, #E4405F, #ff00aa); color: #fff; font-family: 'Orbitron', sans-serif; font-weight: 900; text-decoration: none; transition: all 0.3s; box-shadow: 0 0 30px rgba(228, 64, 95, 0.4); }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 0 50px rgba(228, 64, 95, 0.7); }
+        .btn-secondary { display: inline-block; padding: 1rem 2.5rem; border-radius: 999px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2); color: #fff; font-family: 'Orbitron', sans-serif; font-weight: 900; text-decoration: none; transition: all 0.3s; }
+        .btn-secondary:hover { background: rgba(255,255,255,0.12); border-color: #E4405F; }
+
+        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
+        .gallery-item { position: relative; aspect-ratio: 1; border-radius: 18px; overflow: hidden; cursor: pointer; transition: all 0.3s; border: 1px solid var(--glass-border); }
+        .gallery-item:hover { transform: scale(1.05); border-color: #E4405F; }
+        .gallery-image { width: 100%; height: 100%; background: linear-gradient(135deg, rgba(228, 64, 95, 0.3), rgba(255, 0, 170, 0.2)); display: flex; align-items: center; justify-content: center; font-size: 3rem; }
+        .gallery-overlay { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.6); display: flex; align-items: center; justify-content: center; gap: 1.5rem; opacity: 0; transition: opacity 0.3s; }
+        .gallery-item:hover .gallery-overlay { opacity: 1; }
+        .gallery-stat { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; color: #fff; }
+        .gallery-stat-number { font-family: 'Orbitron', sans-serif; font-size: 1.5rem; font-weight: 900; }
+        .gallery-stat-label { font-size: 0.8rem; color: rgba(255,255,255,0.8); }
+
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; margin-top: 2rem; }
+        .feature-card { background: var(--glass); border: 1px solid var(--glass-border); border-radius: 18px; padding: 2.5rem; text-align: center; transition: all 0.3s; }
+        .feature-card:hover { transform: translateY(-8px); border-color: #E4405F; }
+        .feature-icon { font-size: 3rem; margin-bottom: 1rem; }
+        .feature-title { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 1.2rem; margin-bottom: 0.75rem; color: #E4405F; }
+        .feature-desc { color: rgba(255,255,255,0.7); line-height: 1.6; }
+
+        .stats-section { background: linear-gradient(135deg, rgba(228, 64, 95, 0.1), rgba(255, 0, 170, 0.1)); border: 1px solid rgba(228, 64, 95, 0.2); border-radius: 20px; padding: 3rem; text-align: center; margin-top: 3rem; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 2rem; margin-top: 2rem; }
+        .stat-item { }
+        .stat-number { font-family: 'Orbitron', sans-serif; font-size: 2.5rem; font-weight: 900; color: #E4405F; margin-bottom: 0.5rem; }
+        .stat-label { color: rgba(255,255,255,0.7); font-size: 0.95rem; }
+
+        @media (max-width: 900px) {
+            .page-offset { padding-top: 180px; }
+            .cta-buttons { flex-direction: column; align-items: center; }
+            .btn-primary, .btn-secondary { width: 100%; max-width: 300px; }
+            .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="three-canvas"></canvas>
+    
+    <main class="page-offset">
+        <section class="instagram-hero">
+            <div class="instagram-hero-content">
+                <div class="instagram-icon">📸</div>
+                <h1 class="instagram-title">Follow Trendaryo on Instagram</h1>
+                <p class="instagram-subtitle">Discover stunning visuals, style inspiration, product showcases, and exclusive behind-the-scenes content from the Trendaryo universe.</p>
+                
+                <div class="cta-buttons">
+                    <a href="https://www.instagram.com/trendaryo" target="_blank" rel="noopener noreferrer" class="btn-primary">Follow @trendaryo</a>
+                    <a href="index.html" class="btn-secondary">Back to Shop</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="section-pad">
+            <div class="section-wrap">
+                <h2 class="section-title" style="text-align: center;">Visual Gallery</h2>
+                <p class="section-subtitle" style="text-align: center; margin: 0 auto 2rem;">Explore our latest posts and stories</p>
+                
+                <div class="gallery-grid">
+                    <div class="gallery-item">
+                        <div class="gallery-image">👗</div>
+                        <div class="gallery-overlay">
+                            <div class="gallery-stat">
+                                <div class="gallery-stat-number">2.4K</div>
+                                <div class="gallery-stat-label">Likes</div>
+                            </div>
+                            <div class="gallery-stat">
+                                <div class="gallery-stat-number">340</div>
+                                <div class="gallery-stat-label">Comments</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="gallery-item">
+                        <div class="gallery-image">⌚</div>
+                        <div class="gallery-overlay">
+                            <div class="gallery-stat">
+                                <div class="gallery-stat-number">5.8K</div>
+                                <div class="gallery-stat-label">Likes</div>
+                            </div>
+                            <div class="gallery-stat">
+                                <div class="gallery-stat-number">890</div>
+                                <div class="gallery-stat-label">Comments</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="gallery-item">
+                        <div class="gallery-image">🎧</div>
+                        <div class="gallery-overlay">
+                            <div class="gallery-stat">
+                                <div class="gallery-stat-number">3.1K</div>
+                                <div class="gallery-stat-label">Likes</div>
+                            </div>
+                            <div class="gallery-stat">
+                                <div class="gallery-stat-number">520</div>
+                                <div class="gallery-stat-label">Comments</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="gallery-item">
+                        <div class="gallery-image">👟</div>
+                        <div class="gallery-overlay">
+                            <div class="gallery-stat">
+                                <div class="gallery-stat-number">4.2K</div>
+                                <div class="gallery-stat-label">Likes</div>
+                            </div>
+                            <div class="gallery-stat">
+                                <div class="gallery-stat-number">670</div>
+                                <div class="gallery-stat-label">Comments</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="gallery-item">
+                        <div class="gallery-image">💼</div>
+                        <div class="gallery-overlay">
+                            <div class="gallery-stat">
+                                <div class="gallery-stat-number">3.7K</div>
+                                <div class="gallery-stat-label">Likes</div>
+                            </div>
+                            <div class="gallery-stat">
+                                <div class="gallery-stat-number">450</div>
+                                <div class="gallery-stat-label">Comments</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="gallery-item">
+                        <div class="gallery-image">🌟</div>
+                        <div class="gallery-overlay">
+                            <div class="gallery-stat">
+                                <div class="gallery-stat-number">6.1K</div>
+                                <div class="gallery-stat-label">Likes</div>
+                            </div>
+                            <div class="gallery-stat">
+                                <div class="gallery-stat-number">920</div>
+                                <div class="gallery-stat-label">Comments</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section-pad">
+            <div class="section-wrap">
+                <h2 class="section-title" style="text-align: center;">Why Follow Us</h2>
+                <p class="section-subtitle" style="text-align: center; margin: 0 auto 2rem;">Get inspired and stay connected</p>
+                
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">📸</div>
+                        <div class="feature-title">Daily Posts</div>
+                        <div class="feature-desc">Fresh content every day featuring new products and style inspiration.</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🎬</div>
+                        <div class="feature-title">Stories & Reels</div>
+                        <div class="feature-desc">Behind-the-scenes clips, product demos, and trending content.</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🎁</div>
+                        <div class="feature-title">Exclusive Giveaways</div>
+                        <div class="feature-desc">Instagram-only contests and special prizes for our followers.</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">👥</div>
+                        <div class="feature-title">Community Features</div>
+                        <div class="feature-desc">Shoutouts to amazing customers and their Trendaryo moments.</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">💡</div>
+                        <div class="feature-title">Style Tips</div>
+                        <div class="feature-desc">Fashion advice, styling guides, and trend forecasts.</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🚀</div>
+                        <div class="feature-title">Early Access</div>
+                        <div class="feature-desc">Be first to know about new launches and limited editions.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section-pad">
+            <div class="section-wrap">
+                <div class="stats-section">
+                    <h2 class="section-title" style="text-align: center; margin-bottom: 0;">Join Our Instagram Community</h2>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-number">75K+</div>
+                            <div class="stat-label">Followers</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">2500+</div>
+                            <div class="stat-label">Posts</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">12%</div>
+                            <div class="stat-label">Avg Engagement</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">50K+</div>
+                            <div class="stat-label">Monthly Reach</div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 2.5rem;">
+                        <a href="https://www.instagram.com/trendaryo" target="_blank" rel="noopener noreferrer" class="btn-primary">Follow Now</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="components.js"></script>
+    <script src="bg.js"></script>
+</body>
+</html>

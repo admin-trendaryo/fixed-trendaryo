@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Follow Trendaryo on Twitter for the latest updates, deals, and announcements.">
+    <title>Trendaryo on Twitter - Latest Updates & Deals</title>
+    <link rel="stylesheet" href="responsive.css">
+    <link rel="stylesheet" href="responsive-complete.css">
+    <link rel="stylesheet" href="shared.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --accent: #00f0ff; --accent-2: #ff00aa; --accent-3: #00ff88; --glass: rgba(255,255,255,0.05); --glass-border: rgba(255,255,255,0.1); }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Rajdhani', sans-serif; color: #fff; background: #0a0a2a; overflow-x: hidden; }
+        html { background: #0a0a2a; }
+        #three-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+
+        .page-offset { padding-top: 210px; }
+        .section-wrap { max-width: 1200px; margin: 0 auto; }
+        .section-pad { padding: 3.5rem 1.25rem; }
+        .section-title { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: clamp(1.6rem, 3.5vw, 2.4rem); margin-bottom: 0.65rem; }
+        .section-subtitle { color: rgba(255,255,255,0.75); font-size: 1.05rem; max-width: 720px; }
+
+        .twitter-hero { padding: 4rem 1.25rem; text-align: center; }
+        .twitter-hero-content { max-width: 900px; margin: 0 auto; }
+        .twitter-icon { font-size: 5rem; margin-bottom: 1.5rem; animation: float 3s ease-in-out infinite; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+
+        .twitter-title { font-family: 'Orbitron', sans-serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 900; background: linear-gradient(135deg, #1DA1F2, #00f0ff); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1rem; }
+        .twitter-subtitle { color: rgba(255,255,255,0.8); font-size: 1.2rem; margin-bottom: 2rem; line-height: 1.7; }
+
+        .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 3rem; }
+        .btn-primary { display: inline-block; padding: 1rem 2.5rem; border-radius: 999px; background: linear-gradient(135deg, #1DA1F2, #00f0ff); color: #000; font-family: 'Orbitron', sans-serif; font-weight: 900; text-decoration: none; transition: all 0.3s; box-shadow: 0 0 30px rgba(29, 161, 242, 0.4); }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 0 50px rgba(29, 161, 242, 0.7); }
+        .btn-secondary { display: inline-block; padding: 1rem 2.5rem; border-radius: 999px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2); color: #fff; font-family: 'Orbitron', sans-serif; font-weight: 900; text-decoration: none; transition: all 0.3s; }
+        .btn-secondary:hover { background: rgba(255,255,255,0.12); border-color: #1DA1F2; }
+
+        .tweets-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
+        .tweet-card { background: var(--glass); border: 1px solid var(--glass-border); border-radius: 18px; padding: 2rem; transition: all 0.3s; }
+        .tweet-card:hover { transform: translateY(-8px); border-color: #1DA1F2; background: rgba(29, 161, 242, 0.08); }
+        .tweet-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+        .tweet-avatar { width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(135deg, #1DA1F2, #00f0ff); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+        .tweet-meta { flex: 1; }
+        .tweet-author { font-family: 'Orbitron', sans-serif; font-weight: 900; color: #fff; }
+        .tweet-handle { color: rgba(255,255,255,0.6); font-size: 0.9rem; }
+        .tweet-content { color: rgba(255,255,255,0.85); line-height: 1.7; margin-bottom: 1rem; }
+        .tweet-stats { display: flex; gap: 1.5rem; color: rgba(255,255,255,0.6); font-size: 0.9rem; }
+        .tweet-stat { display: flex; align-items: center; gap: 0.5rem; }
+
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; margin-top: 2rem; }
+        .feature-card { background: var(--glass); border: 1px solid var(--glass-border); border-radius: 18px; padding: 2.5rem; text-align: center; transition: all 0.3s; }
+        .feature-card:hover { transform: translateY(-8px); border-color: #1DA1F2; }
+        .feature-icon { font-size: 3rem; margin-bottom: 1rem; }
+        .feature-title { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 1.2rem; margin-bottom: 0.75rem; color: #1DA1F2; }
+        .feature-desc { color: rgba(255,255,255,0.7); line-height: 1.6; }
+
+        .stats-section { background: linear-gradient(135deg, rgba(29, 161, 242, 0.1), rgba(0, 240, 255, 0.1)); border: 1px solid rgba(29, 161, 242, 0.2); border-radius: 20px; padding: 3rem; text-align: center; margin-top: 3rem; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 2rem; margin-top: 2rem; }
+        .stat-item { }
+        .stat-number { font-family: 'Orbitron', sans-serif; font-size: 2.5rem; font-weight: 900; color: #1DA1F2; margin-bottom: 0.5rem; }
+        .stat-label { color: rgba(255,255,255,0.7); font-size: 0.95rem; }
+
+        @media (max-width: 900px) {
+            .page-offset { padding-top: 180px; }
+            .cta-buttons { flex-direction: column; align-items: center; }
+            .btn-primary, .btn-secondary { width: 100%; max-width: 300px; }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="three-canvas"></canvas>
+    
+    <main class="page-offset">
+        <section class="twitter-hero">
+            <div class="twitter-hero-content">
+                <div class="twitter-icon">🐦</div>
+                <h1 class="twitter-title">Follow Trendaryo on Twitter</h1>
+                <p class="twitter-subtitle">Stay connected with the latest drops, exclusive deals, behind-the-scenes content, and real-time updates from the Trendaryo universe.</p>
+                
+                <div class="cta-buttons">
+                    <a href="https://twitter.com/trendaryo" target="_blank" rel="noopener noreferrer" class="btn-primary">Follow @trendaryo</a>
+                    <a href="index.html" class="btn-secondary">Back to Shop</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="section-pad">
+            <div class="section-wrap">
+                <h2 class="section-title" style="text-align: center;">What We Tweet About</h2>
+                <p class="section-subtitle" style="text-align: center; margin: 0 auto 2rem;">Get the inside scoop on everything Trendaryo</p>
+                
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🚀</div>
+                        <div class="feature-title">New Launches</div>
+                        <div class="feature-desc">Be the first to know about new product drops and exclusive collections.</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">⚡</div>
+                        <div class="feature-title">Flash Deals</div>
+                        <div class="feature-desc">Real-time notifications for limited-time offers and flash sales.</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">💬</div>
+                        <div class="feature-title">Community</div>
+                        <div class="feature-desc">Join conversations with fellow Trendaryo enthusiasts and share your style.</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🎁</div>
+                        <div class="feature-title">Giveaways</div>
+                        <div class="feature-desc">Exclusive Twitter-only contests and giveaways for our followers.</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📸</div>
+                        <div class="feature-title">Behind the Scenes</div>
+                        <div class="feature-desc">Sneak peeks into our design process and team stories.</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🌟</div>
+                        <div class="feature-title">Customer Spotlights</div>
+                        <div class="feature-desc">Featuring amazing customers and their Trendaryo moments.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section-pad">
+            <div class="section-wrap">
+                <h2 class="section-title" style="text-align: center;">Recent Tweets</h2>
+                <p class="section-subtitle" style="text-align: center; margin: 0 auto 2rem;">Latest updates from our Twitter feed</p>
+                
+                <div class="tweets-grid">
+                    <div class="tweet-card">
+                        <div class="tweet-header">
+                            <div class="tweet-avatar">🐦</div>
+                            <div class="tweet-meta">
+                                <div class="tweet-author">Trendaryo</div>
+                                <div class="tweet-handle">@trendaryo</div>
+                            </div>
+                        </div>
+                        <div class="tweet-content">🚀 NEW DROP ALERT! Our latest collection is live now. Limited quantities available. Shop the cosmic collection before it's gone! 🌌✨</div>
+                        <div class="tweet-stats">
+                            <div class="tweet-stat">❤️ 2.4K</div>
+                            <div class="tweet-stat">🔄 1.2K</div>
+                            <div class="tweet-stat">💬 340</div>
+                        </div>
+                    </div>
+
+                    <div class="tweet-card">
+                        <div class="tweet-header">
+                            <div class="tweet-avatar">🐦</div>
+                            <div class="tweet-meta">
+                                <div class="tweet-author">Trendaryo</div>
+                                <div class="tweet-handle">@trendaryo</div>
+                            </div>
+                        </div>
+                        <div class="tweet-content">⚡ FLASH SALE: 50% OFF selected items for the next 24 hours! Use code COSMIC50 at checkout. Don't miss out! 🎉</div>
+                        <div class="tweet-stats">
+                            <div class="tweet-stat">❤️ 5.8K</div>
+                            <div class="tweet-stat">🔄 3.2K</div>
+                            <div class="tweet-stat">💬 890</div>
+                        </div>
+                    </div>
+
+                    <div class="tweet-card">
+                        <div class="tweet-header">
+                            <div class="tweet-avatar">🐦</div>
+                            <div class="tweet-meta">
+                                <div class="tweet-author">Trendaryo</div>
+                                <div class="tweet-handle">@trendaryo</div>
+                            </div>
+                        </div>
+                        <div class="tweet-content">🌟 Shoutout to our amazing community! Thank you for 50K+ followers. You make Trendaryo what it is. Let's keep pushing boundaries together! 💫</div>
+                        <div class="tweet-stats">
+                            <div class="tweet-stat">❤️ 3.1K</div>
+                            <div class="tweet-stat">🔄 1.8K</div>
+                            <div class="tweet-stat">💬 520</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section-pad">
+            <div class="section-wrap">
+                <div class="stats-section">
+                    <h2 class="section-title" style="text-align: center; margin-bottom: 0;">Join Our Twitter Community</h2>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-number">50K+</div>
+                            <div class="stat-label">Followers</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">1000+</div>
+                            <div class="stat-label">Daily Tweets</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">98%</div>
+                            <div class="stat-label">Engagement Rate</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">24/7</div>
+                            <div class="stat-label">Support</div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 2.5rem;">
+                        <a href="https://twitter.com/trendaryo" target="_blank" rel="noopener noreferrer" class="btn-primary">Follow Now</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="components.js"></script>
+    <script src="bg.js"></script>
+</body>
+</html>

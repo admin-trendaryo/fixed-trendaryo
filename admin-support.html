@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support - Admin Dashboard</title>
+    <link rel="stylesheet" href="responsive.css">
+    <script src="performance.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root{--accent:#00f0ff;--accent-2:#ff00aa;--accent-3:#00ff88;--glass:rgba(255,255,255,0.05);--glass-border:rgba(255,255,255,0.1);}
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:'Rajdhani',sans-serif;background:linear-gradient(180deg,#0a0a2a,#1a1a40);color:#fff;display:flex;min-height:100vh;}
+        .sidebar{width:260px;background:rgba(0,0,0,0.4);border-right:1px solid var(--glass-border);padding:2rem 1rem;position:fixed;height:100vh;overflow-y:auto;}
+        .logo{font-family:'Orbitron',sans-serif;font-size:1.5rem;font-weight:900;background:linear-gradient(135deg,var(--accent),var(--accent-2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:2rem;text-align:center;}
+        .nav-link{display:block;padding:0.8rem 1rem;margin:0.5rem 0;border-radius:10px;color:rgba(255,255,255,0.8);text-decoration:none;transition:all 0.2s;}
+        .nav-link:hover,.nav-link.active{background:rgba(0,240,255,0.1);color:#fff;}
+        .main-content{margin-left:260px;flex:1;padding:2rem;}
+        .page-header{margin-bottom:2rem;}
+        .page-title{font-family:'Orbitron',sans-serif;font-size:2rem;margin-bottom:0.5rem;}
+        .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:2rem;}
+        .stat-card{background:var(--glass);border:1px solid var(--glass-border);border-radius:15px;padding:1.5rem;backdrop-filter:blur(10px);}
+        .stat-label{color:#888;font-size:0.9rem;margin-bottom:0.5rem;}
+        .stat-value{font-size:1.8rem;font-weight:700;color:var(--accent);}
+        .filters{display:flex;gap:1rem;margin-bottom:2rem;flex-wrap:wrap;}
+        .filter-btn{padding:0.6rem 1.2rem;border-radius:8px;background:var(--glass);border:1px solid var(--glass-border);color:#fff;cursor:pointer;transition:all 0.2s;}
+        .filter-btn.active{background:rgba(0,240,255,0.2);border-color:var(--accent);}
+        .tickets-grid{display:grid;gap:1rem;}
+        .ticket-card{background:var(--glass);border:1px solid var(--glass-border);border-radius:15px;padding:1.5rem;backdrop-filter:blur(10px);cursor:pointer;transition:all 0.2s;}
+        .ticket-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+        .ticket-header{display:flex;justify-content:space-between;align-items:start;margin-bottom:1rem;}
+        .ticket-title{font-size:1.1rem;font-weight:600;margin-bottom:0.3rem;}
+        .ticket-meta{color:#888;font-size:0.85rem;}
+        .ticket-status{padding:0.3rem 0.8rem;border-radius:20px;font-size:0.85rem;font-weight:600;}
+        .ticket-status.open{background:rgba(0,240,255,0.2);color:var(--accent);}
+        .ticket-status.pending{background:rgba(255,170,0,0.2);color:#ffaa00;}
+        .ticket-status.resolved{background:rgba(0,255,136,0.2);color:var(--accent-3);}
+        .ticket-status.closed{background:rgba(128,128,128,0.2);color:#888;}
+        .ticket-body{color:#ccc;line-height:1.6;}
+        .ticket-actions{display:flex;gap:0.5rem;margin-top:1rem;}
+        .btn{padding:0.6rem 1.2rem;border-radius:8px;border:none;cursor:pointer;font-weight:600;transition:all 0.2s;font-family:inherit;}
+        .btn-primary{background:var(--accent);color:#000;}
+        .btn-secondary{background:var(--glass);color:#fff;border:1px solid var(--glass-border);}
+        .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:1000;align-items:center;justify-content:center;}
+        .modal.active{display:flex;}
+        .modal-content{background:linear-gradient(180deg,#1a1a40,#0a0a2a);border:1px solid var(--glass-border);border-radius:15px;padding:2rem;max-width:600px;width:90%;max-height:80vh;overflow-y:auto;}
+        .modal-title{font-family:'Orbitron',sans-serif;font-size:1.5rem;margin-bottom:1.5rem;color:var(--accent);}
+        .form-group{margin-bottom:1.5rem;}
+        .form-group label{display:block;margin-bottom:0.5rem;color:#888;}
+        .form-group textarea{width:100%;padding:0.8rem;border-radius:8px;background:var(--glass);border:1px solid var(--glass-border);color:#fff;font-family:inherit;min-height:100px;}
+        .modal-actions{display:flex;gap:1rem;justify-content:flex-end;margin-top:1.5rem;}
+        .message-thread{margin-top:1.5rem;}
+        .message{background:rgba(0,0,0,0.3);border-radius:10px;padding:1rem;margin-bottom:1rem;}
+        .message-header{display:flex;justify-content:space-between;margin-bottom:0.5rem;color:#888;font-size:0.85rem;}
+        .message-body{color:#fff;}
+        @media(max-width:768px){.sidebar{width:100%;height:auto;position:relative;}.main-content{margin-left:0;}}
+    </style>
+<script src="bg.js"></script>
+</head>
+<body>
+    <canvas id="three-canvas" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;pointer-events:none;"></canvas>
+    <aside class="sidebar">
+        <div class="logo">TRENDARYO</div>
+        <nav>
+            <a href="admin-dashboard.html" class="nav-link">📊 Dashboard</a>
+            <a href="admin-analytics.html" class="nav-link">📈 Analytics</a>
+            <a href="admin-users.html" class="nav-link">👥 Users</a>
+            <a href="admin-inventory.html" class="nav-link">📦 Inventory</a>
+            <a href="admin-content.html" class="nav-link">✏️ Content</a>
+            <a href="admin-support.html" class="nav-link active">💬 Support</a>
+            <a href="index.html" class="nav-link">🏠 Store</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <h1 class="page-title">Customer Support</h1>
+            <p style="color:#888;">Manage tickets and customer inquiries</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Open Tickets</div>
+                <div class="stat-value" id="open-tickets">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Pending</div>
+                <div class="stat-value" id="pending-tickets" style="color:#ffaa00;">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Resolved Today</div>
+                <div class="stat-value" id="resolved-tickets" style="color:var(--accent-3);">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Avg Response Time</div>
+                <div class="stat-value" id="avg-response">2.5h</div>
+            </div>
+        </div>
+
+        <div class="filters">
+            <button class="filter-btn active" data-filter="all" onclick="filterTickets('all')">All</button>
+            <button class="filter-btn" data-filter="open" onclick="filterTickets('open')">Open</button>
+            <button class="filter-btn" data-filter="pending" onclick="filterTickets('pending')">Pending</button>
+            <button class="filter-btn" data-filter="resolved" onclick="filterTickets('resolved')">Resolved</button>
+            <button class="filter-btn" data-filter="closed" onclick="filterTickets('closed')">Closed</button>
+        </div>
+
+        <div class="tickets-grid" id="tickets-grid"></div>
+    </main>
+
+    <div id="ticket-modal" class="modal">
+        <div class="modal-content">
+            <h2 class="modal-title" id="modal-ticket-title">Ticket Details</h2>
+            <div id="ticket-details"></div>
+            <div class="message-thread" id="message-thread"></div>
+            <div class="form-group">
+                <label>Reply to Customer</label>
+                <textarea id="reply-text" placeholder="Type your response..."></textarea>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeModal()">Close</button>
+                <button class="btn btn-primary" onclick="sendReply()">Send Reply</button>
+                <button class="btn btn-secondary" onclick="updateStatus('resolved')">Mark Resolved</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let tickets = JSON.parse(localStorage.getItem('trendaryo_tickets')) || [
+            {id:1,customer:'John Doe',email:'john@example.com',subject:'Order not received',message:'I ordered 2 weeks ago but haven\'t received my package yet.',status:'open',created:new Date(Date.now()-2*24*60*60*1000).toISOString(),replies:[]},
+            {id:2,customer:'Jane Smith',email:'jane@example.com',subject:'Product defect',message:'The watch I received has a scratch on the screen.',status:'pending',created:new Date(Date.now()-1*24*60*60*1000).toISOString(),replies:[{from:'Support',text:'We apologize for the inconvenience. We will send a replacement.',time:new Date(Date.now()-12*60*60*1000).toISOString()}]},
+            {id:3,customer:'Bob Johnson',email:'bob@example.com',subject:'Refund request',message:'I want to return my purchase and get a refund.',status:'resolved',created:new Date(Date.now()-5*24*60*60*1000).toISOString(),replies:[{from:'Support',text:'Your refund has been processed.',time:new Date(Date.now()-4*24*60*60*1000).toISOString()}]}
+        ];
+        let currentTicket = null;
+        let currentFilter = 'all';
+
+        function updateStats() {
+            const open = tickets.filter(t => t.status === 'open').length;
+            const pending = tickets.filter(t => t.status === 'pending').length;
+            const today = new Date().toDateString();
+            const resolved = tickets.filter(t => t.status === 'resolved' && new Date(t.created).toDateString() === today).length;
+
+            document.getElementById('open-tickets').textContent = open;
+            document.getElementById('pending-tickets').textContent = pending;
+            document.getElementById('resolved-tickets').textContent = resolved;
+        }
+
+        function renderTickets() {
+            const filtered = currentFilter === 'all' ? tickets : tickets.filter(t => t.status === currentFilter);
+            const grid = document.getElementById('tickets-grid');
+            
+            if (filtered.length === 0) {
+                grid.innerHTML = '<p style="color:#888;text-align:center;padding:2rem;">No tickets found</p>';
+                return;
+            }
+
+            grid.innerHTML = filtered.map(t => `
+                <div class="ticket-card" onclick="openTicket(${t.id})">
+                    <div class="ticket-header">
+                        <div>
+                            <div class="ticket-title">${t.subject}</div>
+                            <div class="ticket-meta">${t.customer} • ${t.email}</div>
+                        </div>
+                        <span class="ticket-status ${t.status}">${t.status}</span>
+                    </div>
+                    <div class="ticket-body">${t.message.substring(0, 150)}${t.message.length > 150 ? '...' : ''}</div>
+                    <div class="ticket-meta" style="margin-top:1rem;">${new Date(t.created).toLocaleString()}</div>
+                </div>
+            `).join('');
+        }
+
+        function filterTickets(filter) {
+            currentFilter = filter;
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            renderTickets();
+        }
+
+        function openTicket(id) {
+            currentTicket = tickets.find(t => t.id === id);
+            if (!currentTicket) return;
+
+            document.getElementById('modal-ticket-title').textContent = `Ticket #${currentTicket.id}: ${currentTicket.subject}`;
+            document.getElementById('ticket-details').innerHTML = `
+                <div style="background:rgba(0,0,0,0.3);padding:1rem;border-radius:10px;margin-bottom:1rem;">
+                    <p><strong>Customer:</strong> ${currentTicket.customer}</p>
+                    <p><strong>Email:</strong> ${currentTicket.email}</p>
+                    <p><strong>Status:</strong> <span class="ticket-status ${currentTicket.status}">${currentTicket.status}</span></p>
+                    <p><strong>Created:</strong> ${new Date(currentTicket.created).toLocaleString()}</p>
+                    <p style="margin-top:1rem;"><strong>Message:</strong></p>
+                    <p style="color:#ccc;">${currentTicket.message}</p>
+                </div>
+            `;
+
+            const thread = document.getElementById('message-thread');
+            if (currentTicket.replies && currentTicket.replies.length > 0) {
+                thread.innerHTML = '<h4 style="margin-bottom:1rem;color:var(--accent);">Conversation</h4>' +
+                    currentTicket.replies.map(r => `
+                        <div class="message">
+                            <div class="message-header">
+                                <strong>${r.from}</strong>
+                                <span>${new Date(r.time).toLocaleString()}</span>
+                            </div>
+                            <div class="message-body">${r.text}</div>
+                        </div>
+                    `).join('');
+            } else {
+                thread.innerHTML = '';
+            }
+
+            document.getElementById('reply-text').value = '';
+            document.getElementById('ticket-modal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('ticket-modal').classList.remove('active');
+            currentTicket = null;
+        }
+
+        function sendReply() {
+            if (!currentTicket) return;
+            const text = document.getElementById('reply-text').value.trim();
+            if (!text) return alert('Please enter a reply');
+
+            if (!currentTicket.replies) currentTicket.replies = [];
+            currentTicket.replies.push({
+                from: 'Support',
+                text,
+                time: new Date().toISOString()
+            });
+            currentTicket.status = 'pending';
+
+            localStorage.setItem('trendaryo_tickets', JSON.stringify(tickets));
+            openTicket(currentTicket.id);
+            updateStats();
+            renderTickets();
+        }
+
+        function updateStatus(status) {
+            if (!currentTicket) return;
+            currentTicket.status = status;
+            localStorage.setItem('trendaryo_tickets', JSON.stringify(tickets));
+            closeModal();
+            updateStats();
+            renderTickets();
+        }
+
+        updateStats();
+        renderTickets();
+    </script>
+
+    <!-- Self-Healing System -->
+<script>
+window.onerror = function(msg, url, lineNo, columnNo, error) {
+  console.log('Error caught:', msg);
+  const errorDiv = document.createElement('div');
+  errorDiv.style.cssText = 'position:fixed; bottom:20px; right:20px; background:#f3f4f6; padding:10px; border-radius:5px; z-index:9999; border:1px solid #ccc;';
+  errorDiv.innerHTML = '⚠️ Something went wrong. Retrying...';
+  document.body.appendChild(errorDiv);
+  setTimeout(() => errorDiv.remove(), 3000);
+  return false;
+};
+</script>
+</body>
+</html>

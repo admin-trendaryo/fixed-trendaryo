@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Search thousands of premium products. Find electronics, fashion, and accessories with advanced filters.">
+    <meta name="keywords" content="search, find products, product search">
+    <meta name="robots" content="noindex, follow">
+    <meta name="author" content="Trendaryo">
+    <link rel="canonical" href="https://trendaryo.com/search.html">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://trendaryo.com/search.html">
+    <meta property="og:title" content="Search Products - Trendaryo">
+    <meta property="og:description" content="Search thousands of premium products. Find electronics, fashion, and accessories with advanced filters.">
+    <meta property="og:image" content="https://trendaryo.com/assets/trendaryo-crown-star-logo.svg">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://trendaryo.com/search.html">
+    <meta property="twitter:title" content="Search Products - Trendaryo">
+    <meta property="twitter:description" content="Search thousands of premium products. Find electronics, fashion, and accessories with advanced filters.">
+    <meta property="twitter:image" content="https://trendaryo.com/assets/trendaryo-crown-star-logo.svg">
+    <title>Search Products - Trendaryo</title>
+    <link rel="stylesheet" href="responsive.css">
+    <script src="performance.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="shared.css">
+    <style>
+        :root{--accent:#00f0ff;--accent-2:#ff00aa;--glass:rgba(255,255,255,0.05);--glass-border:rgba(255,255,255,0.1);}
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:'Rajdhani',sans-serif;background:linear-gradient(180deg,#0a0a2a,#1a1a40);color:#fff;padding-top:80px;}
+        .container{max-width:1200px;margin:0 auto;padding:2rem;}
+        .search-header{margin-bottom:2rem;}
+        .search-header h1{font-family:'Orbitron',sans-serif;margin-bottom:0.5rem;}
+        .search-meta{color:#888;}
+        .filters{display:flex;gap:1rem;margin-bottom:2rem;flex-wrap:wrap;}
+        .filter-select{padding:0.6rem 1rem;border-radius:8px;background:var(--glass);border:1px solid var(--glass-border);color:#fff;font-family:inherit;}
+        .products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:2rem;}
+        .product-card{background:var(--glass);border:1px solid var(--glass-border);border-radius:15px;padding:1rem;cursor:pointer;transition:all 0.2s;}
+        .product-card:hover{transform:translateY(-5px);border-color:var(--accent);}
+        .product-card img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:10px;margin-bottom:1rem;}
+        .product-badge{position:absolute;top:1rem;right:1rem;padding:0.3rem 0.8rem;border-radius:20px;font-size:0.8rem;font-weight:600;background:var(--accent);color:#000;}
+        .product-name{font-weight:600;margin-bottom:0.5rem;}
+        .product-price{color:var(--accent);font-size:1.3rem;font-weight:700;}
+        .old-price{text-decoration:line-through;color:#888;margin-left:0.5rem;font-size:1rem;}
+        .product-rating{color:#ffa500;margin:0.5rem 0;}
+        .empty-state{text-align:center;padding:4rem 2rem;color:#888;}
+        @media(max-width:768px){.products-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));}}
+    </style>
+<script src="bg.js"></script>
+</head>
+<body>
+    <canvas id="three-canvas" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;pointer-events:none;"></canvas>
+    <div id="header-container"></div>
+    
+    <div class="container">
+        <div class="search-header">
+            <h1>Search Results</h1>
+            <p class="search-meta" id="search-meta"></p>
+        </div>
+        
+        <div class="filters">
+            <select class="filter-select" id="category-filter" onchange="filterProducts()">
+                <option value="">All Categories</option>
+                <option value="Electronics">Electronics</option>
+                <option value="Fashion">Fashion</option>
+                <option value="Accessories">Accessories</option>
+            </select>
+            <select class="filter-select" id="sort-filter" onchange="filterProducts()">
+                <option value="">Sort By</option>
+                <option value="price-asc">Price: Low to High</option>
+                <option value="price-desc">Price: High to Low</option>
+                <option value="name-asc">Name: A-Z</option>
+                <option value="rating">Rating</option>
+            </select>
+        </div>
+        
+        <div class="products-grid" id="products-grid"></div>
+    </div>
+    
+    <div id="footer-container"></div>
+    <script src="components.js"></script>
+    <script src="script.js"></script>
+    <script>
+        const searchQuery = new URLSearchParams(window.location.search).get('q') || '';
+        let allProducts = [];
+        
+        async function loadProducts() {
+            try {
+                const res = await fetch(`http://localhost:3000/api/products?search=${searchQuery}`);
+                const data = await res.json();
+                allProducts = data.products || data;
+                
+                document.getElementById('search-meta').textContent = 
+                    `Found ${allProducts.length} result${allProducts.length !== 1 ? 's' : ''} for "${searchQuery}"`;
+                
+                filterProducts();
+            } catch (err) {
+                console.error('Failed to load products');
+            }
+        }
+        
+        function filterProducts() {
+            let filtered = [...allProducts];
+            
+            const category = document.getElementById('category-filter').value;
+            if (category) {
+                filtered = filtered.filter(p => p.category === category);
+            }
+            
+            const sort = document.getElementById('sort-filter').value;
+            if (sort === 'price-asc') {
+                filtered.sort((a, b) => a.price - b.price);
+            } else if (sort === 'price-desc') {
+                filtered.sort((a, b) => b.price - a.price);
+            } else if (sort === 'name-asc') {
+                filtered.sort((a, b) => a.name.localeCompare(b.name));
+            } else if (sort === 'rating') {
+                filtered.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+            }
+            
+            renderProducts(filtered);
+        }
+        
+        function renderProducts(products) {
+            const grid = document.getElementById('products-grid');
+            
+            if (products.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state" style="grid-column:1/-1;">
+                        <h2>No products found</h2>
+                        <p>Try adjusting your search or filters</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            grid.innerHTML = products.map(p => `
+                <div class="product-card" onclick="window.location.href='product-detail.html?id=${p.id}'">
+                    <div style="position:relative;">
+                        <img src="${p.image}" alt="${p.name}">
+                        ${p.badge ? `<span class="product-badge">${p.badge}</span>` : ''}
+                    </div>
+                    <div class="product-name">${p.name}</div>
+                    <div class="product-rating">${'★'.repeat(Math.floor(p.rating || 0))}${'☆'.repeat(5 - Math.floor(p.rating || 0))}</div>
+                    <div class="product-price">
+                        $${p.price.toFixed(2)}
+                        ${p.oldPrice ? `<span class="old-price">$${p.oldPrice.toFixed(2)}</span>` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        loadProducts();
+    </script>
+
+    <!-- Self-Healing System -->
+<script>
+window.onerror = function(msg, url, lineNo, columnNo, error) {
+  console.log('Error caught:', msg);
+  const errorDiv = document.createElement('div');
+  errorDiv.style.cssText = 'position:fixed; bottom:20px; right:20px; background:#f3f4f6; padding:10px; border-radius:5px; z-index:9999; border:1px solid #ccc;';
+  errorDiv.innerHTML = '⚠️ Something went wrong. Retrying...';
+  document.body.appendChild(errorDiv);
+  setTimeout(() => errorDiv.remove(), 3000);
+  return false;
+};
+</script>
+</body>
+</html>

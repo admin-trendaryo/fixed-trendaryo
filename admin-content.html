@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content Management - Admin Dashboard</title>
+    <link rel="stylesheet" href="responsive.css">
+    <script src="performance.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family:Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root{--accent:#00f0ff;--accent-2:#ff00aa;--accent-3:#00ff88;--glass:rgba(255,255,255,0.05);--glass-border:rgba(255,255,255,0.1);}
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:'Rajdhani',sans-serif;background:linear-gradient(180deg,#0a0a2a,#1a1a40);color:#fff;display:flex;min-height:100vh;}
+        .sidebar{width:260px;background:rgba(0,0,0,0.4);border-right:1px solid var(--glass-border);padding:2rem 1rem;position:fixed;height:100vh;overflow-y:auto;}
+        .logo{font-family:'Orbitron',sans-serif;font-size:1.5rem;font-weight:900;background:linear-gradient(135deg,var(--accent),var(--accent-2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:2rem;text-align:center;}
+        .nav-link{display:block;padding:0.8rem 1rem;margin:0.5rem 0;border-radius:10px;color:rgba(255,255,255,0.8);text-decoration:none;transition:all 0.2s;}
+        .nav-link:hover,.nav-link.active{background:rgba(0,240,255,0.1);color:#fff;}
+        .main-content{margin-left:260px;flex:1;padding:2rem;}
+        .page-header{margin-bottom:2rem;}
+        .page-title{font-family:'Orbitron',sans-serif;font-size:2rem;margin-bottom:0.5rem;}
+        .tabs{display:flex;gap:1rem;margin-bottom:2rem;border-bottom:1px solid var(--glass-border);}
+        .tab{padding:1rem 1.5rem;cursor:pointer;border-bottom:2px solid transparent;transition:all 0.2s;color:rgba(255,255,255,0.7);}
+        .tab.active{border-bottom-color:var(--accent);color:#fff;}
+        .tab-content{display:none;}
+        .tab-content.active{display:block;}
+        .content-card{background:var(--glass);border:1px solid var(--glass-border);border-radius:15px;padding:2rem;margin-bottom:2rem;backdrop-filter:blur(10px);}
+        .card-title{font-family:'Orbitron',sans-serif;font-size:1.3rem;margin-bottom:1.5rem;color:var(--accent);}
+        .form-group{margin-bottom:1.5rem;}
+        .form-group label{display:block;margin-bottom:0.5rem;color:#888;font-weight:600;}
+        .form-group input,.form-group textarea,.form-group select{width:100%;padding:0.8rem;border-radius:8px;background:var(--glass);border:1px solid var(--glass-border);color:#fff;font-family:inherit;}
+        .form-group textarea{min-height:100px;resize:vertical;}
+        .btn{padding:0.8rem 1.5rem;border-radius:8px;border:none;cursor:pointer;font-weight:600;transition:all 0.2s;font-family:inherit;}
+        .btn-primary{background:var(--accent);color:#000;}
+        .btn-primary:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,240,255,0.3);}
+        .btn-secondary{background:var(--glass);color:#fff;border:1px solid var(--glass-border);}
+        .banner-list{display:grid;gap:1rem;}
+        .banner-item{background:rgba(0,0,0,0.3);border:1px solid var(--glass-border);border-radius:10px;padding:1.5rem;display:flex;justify-content:space-between;align-items:center;}
+        .banner-info h4{margin-bottom:0.5rem;}
+        .banner-info p{color:#888;font-size:0.9rem;}
+        .banner-actions{display:flex;gap:0.5rem;}
+        .toggle{position:relative;width:50px;height:26px;background:var(--glass);border-radius:13px;cursor:pointer;border:1px solid var(--glass-border);}
+        .toggle.active{background:var(--accent);}
+        .toggle-slider{position:absolute;top:2px;left:2px;width:20px;height:20px;background:#fff;border-radius:50%;transition:all 0.2s;}
+        .toggle.active .toggle-slider{left:26px;}
+        .featured-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;}
+        .featured-item{background:rgba(0,0,0,0.3);border:1px solid var(--glass-border);border-radius:10px;padding:1rem;text-align:center;}
+        .featured-item img{width:100%;height:150px;object-fit:cover;border-radius:8px;margin-bottom:0.5rem;}
+        .featured-item h5{margin-bottom:0.5rem;font-size:0.9rem;}
+        .featured-item button{width:100%;margin-top:0.5rem;}
+        @media(max-width:768px){.sidebar{width:100%;height:auto;position:relative;}.main-content{margin-left:0;}}
+    </style>
+<script src="bg.js"></script>
+</head>
+<body>
+    <canvas id="three-canvas" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;pointer-events:none;"></canvas>
+    <aside class="sidebar">
+        <div class="logo">TRENDARYO</div>
+        <nav>
+            <a href="admin-dashboard.html" class="nav-link">📊 Dashboard</a>
+            <a href="admin-analytics.html" class="nav-link">📈 Analytics</a>
+            <a href="admin-users.html" class="nav-link">👥 Users</a>
+            <a href="admin-inventory.html" class="nav-link">📦 Inventory</a>
+            <a href="admin-content.html" class="nav-link active">✏️ Content</a>
+            <a href="admin-support.html" class="nav-link">💬 Support</a>
+            <a href="index.html" class="nav-link">🏠 Store</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <h1 class="page-title">Content Management</h1>
+            <p style="color:#888;">Manage homepage content and promotions</p>
+        </div>
+
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('banners')">Hero Banners</div>
+            <div class="tab" onclick="switchTab('featured')">Featured Products</div>
+            <div class="tab" onclick="switchTab('promos')">Promotions</div>
+        </div>
+
+        <div id="banners-tab" class="tab-content active">
+            <div class="content-card">
+                <h3 class="card-title">Add New Banner</h3>
+                <form id="banner-form">
+                    <div class="form-group">
+                        <label>Banner Title</label>
+                        <input type="text" id="banner-title" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Subtitle</label>
+                        <input type="text" id="banner-subtitle">
+                    </div>
+                    <div class="form-group">
+                        <label>Image URL</label>
+                        <input type="url" id="banner-image" placeholder="https://">
+                    </div>
+                    <div class="form-group">
+                        <label>Button Text</label>
+                        <input type="text" id="banner-btn-text" value="Shop Now">
+                    </div>
+                    <div class="form-group">
+                        <label>Button Link</label>
+                        <input type="text" id="banner-btn-link" value="/shop.html">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Banner</button>
+                </form>
+            </div>
+
+            <div class="content-card">
+                <h3 class="card-title">Active Banners</h3>
+                <div class="banner-list" id="banner-list"></div>
+            </div>
+        </div>
+
+        <div id="featured-tab" class="tab-content">
+            <div class="content-card">
+                <h3 class="card-title">Featured Products</h3>
+                <p style="color:#888;margin-bottom:1.5rem;">Select products to feature on homepage</p>
+                <div class="featured-grid" id="featured-grid"></div>
+            </div>
+        </div>
+
+        <div id="promos-tab" class="tab-content">
+            <div class="content-card">
+                <h3 class="card-title">Create Promotion</h3>
+                <form id="promo-form">
+                    <div class="form-group">
+                        <label>Promotion Title</label>
+                        <input type="text" id="promo-title" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="promo-desc"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Discount Code</label>
+                        <input type="text" id="promo-code">
+                    </div>
+                    <div class="form-group">
+                        <label>Valid Until</label>
+                        <input type="date" id="promo-expiry">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Create Promotion</button>
+                </form>
+            </div>
+
+            <div class="content-card">
+                <h3 class="card-title">Active Promotions</h3>
+                <div class="banner-list" id="promo-list"></div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let banners = JSON.parse(localStorage.getItem('trendaryo_banners')) || [];
+        let featured = JSON.parse(localStorage.getItem('trendaryo_featured')) || [];
+        let promos = JSON.parse(localStorage.getItem('trendaryo_promos')) || [];
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById(tab + '-tab').classList.add('active');
+            
+            if (tab === 'featured') loadProducts();
+        }
+
+        document.getElementById('banner-form').addEventListener('submit', e => {
+            e.preventDefault();
+            const banner = {
+                id: Date.now(),
+                title: document.getElementById('banner-title').value,
+                subtitle: document.getElementById('banner-subtitle').value,
+                image: document.getElementById('banner-image').value,
+                btnText: document.getElementById('banner-btn-text').value,
+                btnLink: document.getElementById('banner-btn-link').value,
+                active: true
+            };
+            banners.push(banner);
+            localStorage.setItem('trendaryo_banners', JSON.stringify(banners));
+            e.target.reset();
+            renderBanners();
+        });
+
+        function renderBanners() {
+            const list = document.getElementById('banner-list');
+            list.innerHTML = banners.map(b => `
+                <div class="banner-item">
+                    <div class="banner-info">
+                        <h4>${b.title}</h4>
+                        <p>${b.subtitle || 'No subtitle'}</p>
+                    </div>
+                    <div class="banner-actions">
+                        <div class="toggle ${b.active ? 'active' : ''}" onclick="toggleBanner(${b.id})">
+                            <div class="toggle-slider"></div>
+                        </div>
+                        <button class="btn btn-secondary" onclick="deleteBanner(${b.id})">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleBanner(id) {
+            const banner = banners.find(b => b.id === id);
+            if (banner) {
+                banner.active = !banner.active;
+                localStorage.setItem('trendaryo_banners', JSON.stringify(banners));
+                renderBanners();
+            }
+        }
+
+        function deleteBanner(id) {
+            if (confirm('Delete this banner?')) {
+                banners = banners.filter(b => b.id !== id);
+                localStorage.setItem('trendaryo_banners', JSON.stringify(banners));
+                renderBanners();
+            }
+        }
+
+        async function loadProducts() {
+            try {
+                const res = await fetch('http://localhost:3000/api/products');
+                const data = await res.json();
+                const products = data.products || data;
+                
+                const grid = document.getElementById('featured-grid');
+                grid.innerHTML = products.slice(0, 12).map(p => {
+                    const isFeatured = featured.includes(p.id);
+                    return `
+                        <div class="featured-item">
+                            <img src="${p.image}" alt="${p.name}">
+                            <h5>${p.name}</h5>
+                            <p style="color:var(--accent);">$${p.price.toFixed(2)}</p>
+                            <button class="btn ${isFeatured ? 'btn-secondary' : 'btn-primary'}" 
+                                    onclick="toggleFeatured(${p.id})">
+                                ${isFeatured ? 'Remove' : 'Feature'}
+                            </button>
+                        </div>
+                    `;
+                }).join('');
+            } catch (err) {
+                console.error('Failed to load products:', err);
+            }
+        }
+
+        function toggleFeatured(id) {
+            if (featured.includes(id)) {
+                featured = featured.filter(f => f !== id);
+            } else {
+                featured.push(id);
+            }
+            localStorage.setItem('trendaryo_featured', JSON.stringify(featured));
+            loadProducts();
+        }
+
+        document.getElementById('promo-form').addEventListener('submit', e => {
+            e.preventDefault();
+            const promo = {
+                id: Date.now(),
+                title: document.getElementById('promo-title').value,
+                desc: document.getElementById('promo-desc').value,
+                code: document.getElementById('promo-code').value,
+                expiry: document.getElementById('promo-expiry').value,
+                active: true
+            };
+            promos.push(promo);
+            localStorage.setItem('trendaryo_promos', JSON.stringify(promos));
+            e.target.reset();
+            renderPromos();
+        });
+
+        function renderPromos() {
+            const list = document.getElementById('promo-list');
+            list.innerHTML = promos.map(p => `
+                <div class="banner-item">
+                    <div class="banner-info">
+                        <h4>${p.title}</h4>
+                        <p>Code: ${p.code} | Expires: ${p.expiry}</p>
+                    </div>
+                    <div class="banner-actions">
+                        <div class="toggle ${p.active ? 'active' : ''}" onclick="togglePromo(${p.id})">
+                            <div class="toggle-slider"></div>
+                        </div>
+                        <button class="btn btn-secondary" onclick="deletePromo(${p.id})">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function togglePromo(id) {
+            const promo = promos.find(p => p.id === id);
+            if (promo) {
+                promo.active = !promo.active;
+                localStorage.setItem('trendaryo_promos', JSON.stringify(promos));
+                renderPromos();
+            }
+        }
+
+        function deletePromo(id) {
+            if (confirm('Delete this promotion?')) {
+                promos = promos.filter(p => p.id !== id);
+                localStorage.setItem('trendaryo_promos', JSON.stringify(promos));
+                renderPromos();
+            }
+        }
+
+        renderBanners();
+        renderPromos();
+    </script>
+
+    <!-- Self-Healing System -->
+<script>
+window.onerror = function(msg, url, lineNo, columnNo, error) {
+  console.log('Error caught:', msg);
+  const errorDiv = document.createElement('div');
+  errorDiv.style.cssText = 'position:fixed; bottom:20px; right:20px; background:#f3f4f6; padding:10px; border-radius:5px; z-index:9999; border:1px solid #ccc;';
+  errorDiv.innerHTML = '⚠️ Something went wrong. Retrying...';
+  document.body.appendChild(errorDiv);
+  setTimeout(() => errorDiv.remove(), 3000);
+  return false;
+};
+</script>
+</body>
+</html>
